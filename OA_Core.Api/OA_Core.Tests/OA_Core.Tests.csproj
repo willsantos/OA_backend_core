@@ -22,4 +22,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OA_Core.Api\OA_Core.Api.csproj" />
+    <ProjectReference Include="..\OA_Core.Domain\OA_Core.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
