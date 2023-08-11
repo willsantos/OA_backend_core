@@ -5,7 +5,7 @@ namespace OA_Core.Tests
         [Fact]
         public void Test1()
         {
-
+            Assert.Equal(0 == 0, true);
         }
     }
 }
