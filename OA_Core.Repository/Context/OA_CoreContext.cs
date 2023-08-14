@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using OA_Core.Domain.Entities;
 
 namespace OA_Core.Repository.Context
 {
@@ -8,6 +8,6 @@ namespace OA_Core.Repository.Context
         public OA_CoreContext(DbContextOptions options) : base(options)
         {
         }
-       // public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
     }
 }
