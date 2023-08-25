@@ -7,11 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OA_Core.Domain\OA_Core.Domain.csproj" />
+    <ProjectReference Include="..\OA_Core.Repository\OA_Core.Repository.csproj" />
+    <ProjectReference Include="..\OA_Core.Service\OA_Core.Service.csproj" />
   </ItemGroup>
 
 </Project>
