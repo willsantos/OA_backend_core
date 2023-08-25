@@ -113,3 +113,57 @@ ALTER TABLE `Certificado_Aluno` ADD FOREIGN KEY (`curso_id`) REFERENCES `Curso` 
 ALTER TABLE `Certificado_Aluno` ADD FOREIGN KEY (`aluno_id`) REFERENCES `Aluno` (`id`);
 
 ALTER TABLE `Certificado_Aluno` ADD FOREIGN KEY (`certificado_id`) REFERENCES `Certificado` (`id`);
+
+USE OA_CORE_TESTES
+
+ALTER TABLE Aluno ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Aluno ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Aluno ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Aula  ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Aula ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Aula ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Avaliacao ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Avaliacao ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Avaliacao ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Certificado ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Certificado ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Certificado ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Certificado_Aluno ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Certificado_Aluno ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Certificado_Aluno ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Curso ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Curso ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Curso ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Professor ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Professor ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Professor ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Questao ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Questao ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Questao ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Resultado ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Resultado ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Resultado ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Usuario ADD COLUMN data_criacao DATETIME NOT NULL;
+ALTER TABLE Usuario ADD COLUMN data_alteracao DATETIME NULL;
+ALTER TABLE Usuario ADD COLUMN data_delecao DATETIME NULL;
+
+ALTER TABLE Aluno DROP FOREIGN KEY Aluno_ibfk_1;
+
+ALTER TABLE Curso DROP FOREIGN KEY Curso_ibfk_1;
+
+ALTER TABLE Professor DROP FOREIGN KEY Professor_ibfk_1;
+
+ALTER TABLE Usuario MODIFY id CHAR(36);
+
+ALTER TABLE Aluno ADD CONSTRAINT Aluno_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES Usuario(id);
+ALTER TABLE Professor ADD CONSTRAINT Professor_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES Usuario(id);
+ALTER TABLE Curso ADD CONSTRAINT Curso_ibfk_1 FOREIGN KEY (professor_id) REFERENCES Professor(id);
