@@ -3,8 +3,6 @@ using MySql.Data.MySqlClient;
 using OA_Core.Domain.Entities;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Repository.Context;
-using System.Data.SqlClient;
-using System.Linq.Expressions;
 
 namespace OA_Core.Repository.Repositories
 {
@@ -31,7 +29,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<Usuario> FindAsync(Guid id)
         {
-            var query = "SELECT id, nome, email, senha, data_nascimento DataNascimento, telefone, endereco, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Usuario WHERE id = @id";
+            var query = "SELECT id, nome, email, senha, data_nascimento DataNascimento, telefone, endereco, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Usuario WHERE id = @id AND data_delecao IS NULL";
             return await _connection.QueryFirstOrDefaultAsync<Usuario>(query, new { id });
         }
 
@@ -43,7 +41,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Usuario>> ListPaginationAsync(int page, int rows)
         {
-            var query = string.Format("SELECT id, nome, email, senha, data_nascimento DataNascimento, telefone, endereco, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Usuario ORDER BY nome LIMIT {1} OFFSET {0};", page * rows, rows);
+            var query = string.Format("SELECT id, nome, email, senha, data_nascimento DataNascimento, telefone, endereco, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Usuario WHERE data_delecao IS NULL ORDER BY nome LIMIT {1} OFFSET {0};", page * rows, rows);
             return await _connection.QueryAsync<Usuario>(query);
         }
 
