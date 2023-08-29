@@ -1,66 +1,66 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
-using OA_Core.Domain.Entities;
 using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Api.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
+
+    [ProducesResponseType(typeof(InformacaoResponse), 400)]
+    [ProducesResponseType(typeof(InformacaoResponse), 401)]
+    [ProducesResponseType(typeof(InformacaoResponse), 403)]
+    [ProducesResponseType(typeof(InformacaoResponse), 404)]
+    [ProducesResponseType(typeof(InformacaoResponse), 500)]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _service;
-        private readonly IMapper _mapper;
 
-        public UsuarioController(IUsuarioService service, IMapper mapper)
+        public UsuarioController(IUsuarioService service)
         {
-            _mapper = mapper;
             _service = service;
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationResponse<UsuarioResponse>>> GetAllUsuariosAsync([FromQuery] int page = 0, [FromQuery]int rows = 25)
         {
-            var listEntity = await _service.GetAllUsuariosAsync(page, rows);
-            var listReponse = _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
-            var paginationResponse = new PaginationResponse<UsuarioResponse>(page, rows, listReponse);
+            var listResponse = await _service.GetAllUsuariosAsync(page, rows);
+            var paginationResponse = new PaginationResponse<UsuarioResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUsuarioByIdAsync")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<UsuarioResponse>> GetUsuarioByIdAsync([FromRoute] Guid id)
         {
-            var entity = await _service.GetUsuarioByIdAsync(id);
-
-            var response = _mapper.Map<UsuarioResponse>(entity);
+            var response = await _service.GetUsuarioByIdAsync(id);
 
             return Ok(response);
         }
 
-        [HttpPost("cadastro")]
-        public async Task<ActionResult> PostUsuarioAsync([FromBody] UsuarioRequest request)
-        {
-            var entity = _mapper.Map<Usuario>(request);
+        [HttpPost("cadastro", Name = "PostUsuarioAsync")]
+        [ProducesResponseType(201)]
+        public async Task<ActionResult<Guid>> PostUsuarioAsync([FromBody] UsuarioRequest request)
+        {         
+            var id = await _service.PostUsuarioAsync(request);
 
-            var id = await _service.PostUsuarioAsync(entity);
-
-            return Created(nameof(PostUsuarioAsync), new { id });
+            return CreatedAtRoute("GetUsuarioByIdAsync", new { id }, id);
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> PutUsuarioAsync([FromRoute] Guid id, [FromBody] UsuarioRequest request)
         {
-            var entity = _mapper.Map<Usuario>(request);
-
-            await _service.PutUsuarioAsync(id, entity);
+            await _service.PutUsuarioAsync(id, request);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteUsuarioAsync([FromRoute] Guid id)
         {
             await _service.DeleteUsuarioAsync(id);
