@@ -1,14 +1,14 @@
-﻿using OA_Core.Domain.Contracts.Response;
-using OA_Core.Domain.Entities;
+﻿using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Contracts.Response;
 
 namespace OA_Core.Domain.Interfaces.Service
 {
     public interface IUsuarioService
     {
-        Task<Guid> PostUsuarioAsync(Usuario usuario);
-        Task PutUsuarioAsync(Guid id, Usuario usuario);
+        Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest);
+        Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest);
         Task DeleteUsuarioAsync(Guid id);
-        Task<Usuario> GetUsuarioByIdAsync(Guid id);
-        Task<IEnumerable<Usuario>> GetAllUsuariosAsync(int page, int rows);
+        Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id);
+        Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows);
     }
 }
