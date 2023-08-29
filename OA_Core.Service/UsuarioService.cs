@@ -1,4 +1,10 @@
-﻿using OA_Core.Domain.Entities;
+﻿using AutoMapper;
+using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Contracts.Response;
+using OA_Core.Domain.Entities;
+using OA_Core.Domain.Enums;
+using OA_Core.Domain.Exceptions;
+using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 
@@ -6,63 +12,77 @@ namespace OA_Core.Service
 {
     public class UsuarioService : IUsuarioService
     {
+        private readonly IMapper _mapper;
         private readonly IUsuarioRepository _repository;
+        private readonly INotificador _notificador;
 
-        public UsuarioService(IUsuarioRepository repository)
+        public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
+            _notificador = notificador;
         }
         public async Task DeleteUsuarioAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id);
-            //Fazer essa verificacão no back ou na query - especificar que nao quero trazer dados onde a data de delecao existe e vericar se o resultado é nulo
-            if (usuario.DataDelecao != null)
-            {
-                throw new Exception("Usuario já foi deletado");
-            }
+            var usuario = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+
             usuario.DataDelecao = DateTime.Now;
             await _repository.RemoveAsync(usuario);
         }
 
-        public async Task<IEnumerable<Usuario>> GetAllUsuariosAsync(int pages, int rows)
+        public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
         {
-            return await _repository.ListPaginationAsync(pages, rows);
+            var listEntity = await _repository.ListPaginationAsync(page, rows);
+
+            return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
         }
 
-        public async Task<Usuario> GetUsuarioByIdAsync(Guid id)
+        public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id);
-            ArgumentNullException.ThrowIfNull(usuario);
-            if (usuario.DataDelecao != null)
-            {
-                throw new Exception("Usuario já foi deletado");
-            }
-            return usuario;
+            var usuario = await _repository.FindAsync(id) ?? 
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+
+            return _mapper.Map<UsuarioResponse>(usuario);
         }
 
-        public async Task<Guid> PostUsuarioAsync(Usuario usuario)
+        public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
         {
             //Encryptar senha
             //Mandar email confirmacao usuario
-            usuario.Id = Guid.NewGuid();
-            usuario.DataCriacao = DateTime.Now;
-            await _repository.AddAsync(usuario);
-            return usuario.Id;
+            var entity = _mapper.Map<Usuario>(usuarioRequest);
+
+            if (!entity.Valid)
+            {
+                _notificador.Handle(entity.ValidationResult);
+                return Guid.Empty;
+
+            }
+
+
+            await _repository.AddAsync(entity);
+            return entity.Id;
         }
 
-        public async Task PutUsuarioAsync(Guid id, Usuario usuario)
+        public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
         {
             //fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
-            var entity = await _repository.FindAsync(id);
-            ArgumentNullException.ThrowIfNull(usuario);
-            if (entity.DataDelecao != null)
+            var entity = _mapper.Map<Usuario>(usuarioRequest);
+
+            if (!entity.Valid)
             {
-                throw new Exception("Usuario já foi deletado");
+                _notificador.Handle(entity.ValidationResult);
+                return;
             }
-            usuario.Id = entity.Id;
-            usuario.DataCriacao = entity.DataCriacao;
-            usuario.DataAlteracao = DateTime.Now;
-            await _repository.EditAsync(usuario);
+
+            var find = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+
+            entity.Id = find.Id;
+            entity.DataCriacao = find.DataCriacao;
+            entity.DataAlteracao = DateTime.Now;
+
+            await _repository.EditAsync(entity);
         }
     }
 }
