@@ -50,6 +50,8 @@ namespace OA_Core.Service
         public async Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
         {
             var entity = _mapper.Map<Professor>(professorRequest);
+            entity.Id = Guid.NewGuid();
+            entity.Valid = true;
 
             if (!entity.Valid)
             {
