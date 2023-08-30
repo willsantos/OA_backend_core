@@ -52,7 +52,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<Professor> FindAsync(Guid id)
         {
-            var query = "SELECT id, usuario_id AS UsuarioId, formacao, experiencia, foto, biografia, data_criacao AS DataCriacao, data_alteracao AS DataAlteracao, data_delecao AS DataDelecao FROM Professor WHERE id = @id AND data_delecao is null";
+            var query = "SELECT id, usuario_id UsuarioId, formacao, experiencia, foto, biografia, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Professor WHERE id = @id AND data_delecao is null";
             return await _connection.QueryFirstOrDefaultAsync<Professor>(query, new { id });
         }
 
