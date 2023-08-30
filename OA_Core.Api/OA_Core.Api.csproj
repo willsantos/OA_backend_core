@@ -4,14 +4,19 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3780a1ce-e8ee-47a5-8da5-9378a53e0969</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OA_Core.Domain\OA_Core.Domain.csproj" />
+    <ProjectReference Include="..\OA_Core.Repository\OA_Core.Repository.csproj" />
+    <ProjectReference Include="..\OA_Core.Service\OA_Core.Service.csproj" />
   </ItemGroup>
 
 </Project>
