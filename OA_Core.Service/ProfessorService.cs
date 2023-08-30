@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
+using OA_Core.Domain.Entities;
+using OA_Core.Domain.Enums;
+using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
@@ -20,29 +23,64 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public Task DeleteProfessorAsync(Guid id)
+        public async Task DeleteProfessorAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var professor = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+
+            professor.DataDelecao = DateTime.Now;
+            await _repository.RemoveAsync(professor);
         }
 
-        public Task<IEnumerable<UsuarioResponse>> GetAllProfessoresAsync(int page, int rows)
+        public async Task<IEnumerable<ProfessorResponse>> GetAllProfessoresAsync(int page, int rows)
         {
-            throw new NotImplementedException();
+            var listEntity = await _repository.ListPaginationAsync(page, rows);
+
+            return _mapper.Map<IEnumerable<ProfessorResponse>>(listEntity);
         }
 
-        public Task<ProfessorResponse> GetProfessorByIdAsync(Guid id)
+        public async Task<ProfessorResponse> GetProfessorByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var professor = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
+
+            return _mapper.Map<ProfessorResponse>(professor);
         }
 
-        public Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
+        public async Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Professor>(professorRequest);
+
+            if (!entity.Valid)
+            {
+                _notificador.Handle(entity.ValidationResult);
+                return Guid.Empty;
+
+            }
+
+
+            await _repository.AddAsync(entity);
+            return entity.Id;
         }
 
-        public Task PutProfessorAsync(Guid id, ProfessorRequest professorRequest)
+        public async Task PutProfessorAsync(Guid id, ProfessorRequest professorRequest)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Professor>(professorRequest);
+
+            if (!entity.Valid)
+            {
+                _notificador.Handle(entity.ValidationResult);
+                return;
+            }
+
+            var find = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
+
+            entity.Id = find.Id;
+            entity.DataCriacao = find.DataCriacao;
+            entity.DataAlteracao = DateTime.Now;
+
+            await _repository.EditAsync(entity);
         }
     }
 }

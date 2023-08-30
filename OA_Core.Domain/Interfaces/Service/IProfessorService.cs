@@ -9,6 +9,6 @@ namespace OA_Core.Domain.Interfaces.Service
         Task PutProfessorAsync(Guid id, ProfessorRequest professorRequest);
         Task DeleteProfessorAsync(Guid id);
         Task<ProfessorResponse> GetProfessorByIdAsync(Guid id);
-        Task<IEnumerable<UsuarioResponse>> GetAllProfessoresAsync(int page, int rows);
+        Task<IEnumerable<ProfessorResponse>> GetAllProfessoresAsync(int page, int rows);
     }
 }
