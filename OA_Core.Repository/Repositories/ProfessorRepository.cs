@@ -53,14 +53,23 @@ namespace OA_Core.Repository.Repositories
             });
         }
 
-        public Task<Professor> FindAsync(Guid id)
+        public async Task<Professor> FindAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var query = "SELECT id, data_criacao DataCriacao, " +
+                "                   data_alteracao DataAlteracao, " +
+                "                   data_delecao DataDelecao, usuario_id UsuarioId, " +
+                "                   formacao, foto, biografia FROM Professor WHERE id = @id AND data_delecao is null";
+            return await _connection.QueryFirstOrDefaultAsync<Professor>(query, new { id });
         }
 
-        public Task<IEnumerable<Professor>> ListAsync()
+        public async Task<IEnumerable<Professor>> ListAsync()
         {
-            throw new NotImplementedException();
+            var query = "SELECT id, data_criacao DataCriacao, " +
+                "                   data_alteracao DataAlteracao, " +
+                "                   data_delecao DataDelecao, usuario_id UsuarioId, " +
+                "                   formacao, foto, biografia FROM Professor WHERE id = @id AND data_delecao is null";
+            return await _connection.QueryAsync<Professor>(query);
+
         }
 
         public Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows)
