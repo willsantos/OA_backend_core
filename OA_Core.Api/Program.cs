@@ -44,6 +44,7 @@ builder.Services.AddScoped<DapperDbConnection>();
 builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 
 #endregion
 
