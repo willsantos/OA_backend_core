@@ -55,31 +55,37 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<Professor> FindAsync(Guid id)
         {
-            var query = "SELECT id, data_criacao DataCriacao, " +
-                "                   data_alteracao DataAlteracao, " +
-                "                   data_delecao DataDelecao, usuario_id UsuarioId, " +
+            var query = "SELECT id, data_criacao AS DataCriacao, " +
+                "                   data_alteracao AS DataAlteracao, " +
+                "                   data_delecao AS DataDelecao, usuario_id AS UsuarioId, " +
                 "                   formacao, foto, biografia FROM Professor WHERE id = @id AND data_delecao is null";
             return await _connection.QueryFirstOrDefaultAsync<Professor>(query, new { id });
         }
 
         public async Task<IEnumerable<Professor>> ListAsync()
         {
-            var query = "SELECT id, data_criacao DataCriacao, " +
-                "                   data_alteracao DataAlteracao, " +
-                "                   data_delecao DataDelecao, usuario_id UsuarioId, " +
+            var query = "SELECT id, data_criacao AS DataCriacao, " +
+                "                   data_alteracao AS DataAlteracao, " +
+                "                   data_delecao AS DataDelecao, usuario_id AS UsuarioId, " +
                 "                   formacao, foto, biografia FROM Professor WHERE id = @id AND data_delecao is null";
             return await _connection.QueryAsync<Professor>(query);
 
         }
 
-        public Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows)
+        public async Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows)
         {
-            throw new NotImplementedException();
+            var query = string.Format("SELECT id, data_criacao AS DataCriacao, " +
+                "                   data_alteracao AS DataAlteracao, " +
+                "                   data_delecao AS DataDelecao, usuario_id AS UsuarioId, " +
+                "                   formacao, foto, biografia FROM Professor JOIN Usuario ON Professor.UsuarioId = usuario.id " +
+                "                   WHERE data_delecao is nulL ORDER BY usuario.nome LIMIT {1} OFFSET {0};", page* rows, rows);
+            return await _connection.QueryAsync<Professor>(query);
         }
 
-        public Task RemoveAsync(Professor professor)
+        public async Task RemoveAsync(Professor professor)
         {
-            throw new NotImplementedException();
+            var sql = "UPDATE Professor SET data_delecao = @data_delecao WHERE Id = @id";
+            await _connection.ExecuteAsync(sql, new { data_delecao = professor.DataDelecao, id = professor.Id });           
         }
     }
 }
