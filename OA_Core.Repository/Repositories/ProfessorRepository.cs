@@ -35,15 +35,15 @@ namespace OA_Core.Repository.Repositories
 
         public async Task EditAsync(Professor professor)
         {
-            var sql = "UPDATE Usuario SET id = @id, usuario_id = @usuario_id, formacao = @formacao, experiencia = @experiencia, foto = @foto, biografia = @biografia, data_criacao = @data_criacao, data_alteracao = @data_alteracao, data_delecao = @data_delecao";
+            var sql = "UPDATE Professor SET usuario_id = @usuario_id, formacao = @formacao, experiencia = @experiencia, foto = @foto, biografia = @biografia, data_criacao = @data_criacao, data_alteracao = @data_alteracao, data_delecao = @data_delecao WHERE id = @id";
             object[] paramItems = new object[]
             {
                 new MySqlParameter("@id", professor.Id),
                 new MySqlParameter("@usuario_id", professor.UsuarioId),
                 new MySqlParameter("@formacao", professor.Formacao),
-                new MySqlParameter("@usuario_id", professor.Experiencia),
+                new MySqlParameter("@experiencia", professor.Experiencia),
                 new MySqlParameter("@foto", professor.Foto),
-                new MySqlParameter("@usuario_id", professor.Biografia),
+                new MySqlParameter("@biografia", professor.Biografia),
                 new MySqlParameter("@data_criacao", professor.DataCriacao),
                 new MySqlParameter("@data_alteracao", professor.DataAlteracao),
                 new MySqlParameter("@data_delecao", professor.DataDelecao)
@@ -89,7 +89,7 @@ namespace OA_Core.Repository.Repositories
                 new MySqlParameter("@id", professor.Id),
                 new MySqlParameter("@data_delecao", professor.DataDelecao),
             };
-            await _context.Database.ExecuteSqlRawAsync(sql, paramItems);
+            await _context.Database.ExecuteSqlRawAsync(sql, paramItems);            
         }
     }
 }

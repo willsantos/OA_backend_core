@@ -74,8 +74,7 @@ namespace OA_Core.Service
 
             var find = await _repository.FindAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
-
-            entity.Id = find.Id;
+          
             entity.DataCriacao = find.DataCriacao;
             entity.DataAlteracao = DateTime.Now;
 
