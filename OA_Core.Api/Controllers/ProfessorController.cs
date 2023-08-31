@@ -33,7 +33,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<UsuarioResponse>>> GetAllUsuariosAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
+        public async Task<ActionResult<PaginationResponse<ProfessorResponse>>> GetAllProfessorAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
             var listResponse = await _service.GetAllProfessoresAsync(page, rows);
             var paginationResponse = new PaginationResponse<ProfessorResponse>(page, rows, listResponse);
@@ -43,7 +43,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpGet("{id}", Name = "GetProfessorByIdAsync")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<ProfessorResponse>> GetUsuarioByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<ProfessorResponse>> GetProfessorByIdAsync([FromRoute] Guid id)
         {
             var response = await _service.GetProfessorByIdAsync(id);
 
