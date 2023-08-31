@@ -49,13 +49,14 @@ namespace OA_Core.Repository.Repositories
         public async Task<IEnumerable<Aluno>> ListPaginationAsync(int page, int rows)
         {
             var query = string.Format("SELECT id, UsuarioId, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao" +
-                " FROM Aluno JOIN Usuario ON Aluno.UsuarioId = Usuario.Id WHERE data_delecao IS NULL ORDER BY nome LIMIT {1} OFFSET {0};", page *rows, rows);
+                " FROM Aluno JOIN Usuario ON Aluno.UsuarioId = usuario.Id WHERE data_delecao IS NULL ORDER BY nome LIMIT {1} OFFSET {0};", page *rows, rows);
             return await _connection.QueryAsync<Aluno>(query);
         }
 
-        public Task RemoveAsync(Aluno aluno)
+        public async Task RemoveAsync(Aluno aluno)
         {
-            throw new NotImplementedException();
+            var sql = "UPDATE Aluno SET data_delecao = @data_delecao WHERE Id = @id";
+            await _connection.ExecuteAsync(sql, new { data_delecao = aluno.DataDelecao, id = aluno.Id });
         }
     }
 }
