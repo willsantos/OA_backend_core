@@ -15,19 +15,7 @@ namespace OA_Core.Domain.Entities
             DataCriacao = DateTime.Now;
             Validate(this, new ProfessorValidator());
         }
-        public Professor(string id, string usuarioId, string formacao, string experiencia, string foto, 
-                         string biografia, DateTime dataCriacao, DateTime dataAlteracao, DateTime dataDelecao)
-        {
-            Id = Guid.Parse(id);
-            UsuarioId = Guid.Parse(usuarioId);
-            Formacao = formacao;
-            Experiencia = experiencia;
-            Foto = foto;
-            Biografia = biografia;
-            DataCriacao = dataCriacao;
-            DataAlteracao = dataAlteracao;
-            DataDelecao = dataDelecao;
-        }
+        
         public Guid UsuarioId { get; set; }
         public string Formacao { get; set; }
         public string Experiencia { get; set; }
