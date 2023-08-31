@@ -72,7 +72,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows)
         {
-            var query = string.Format("SELECT u.nome, p.formacao, u.id  FROM Usuario u INNER JOIN Professor p ON u.id = p.usuario_id ORDER BY u.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
+            var query = string.Format("SELECT u.nome, p.formacao, p.biografia, p.experiencia, p.foto, p.usuario_id AS UsuarioId, u.id, p.data_criacao AS DataCriacao, p.data_alteracao AS DataAlteracao, p.data_delecao AS DataDelecao FROM Usuario u INNER JOIN Professor p ON u.id = p.usuario_id ORDER BY u.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
             object[] paramItems = new object[]
             {
                 new MySqlParameter("@offset", page * rows),
