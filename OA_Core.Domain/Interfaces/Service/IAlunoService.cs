@@ -10,10 +10,10 @@ namespace OA_Core.Domain.Interfaces.Service
 {
     public interface IAlunoService
     {
-        Task<Guid> PostUsuarioAsync(AlunoRequest alunoRequest);
-        Task PutUsuarioAsync(Guid id, AlunoRequest alunoRequest);
-        Task DeleteUsuarioAsync(Guid id);
-        Task<AlunoResponse> GetUsuarioByIdAsync(Guid id);
-        Task<IEnumerable<AlunoResponse>> GetAllUsuariosAsync(int page, int rows);
+        Task<Guid> PostAlunoAsync(AlunoRequest alunoRequest);
+        Task PutAlunoAsync(Guid id, AlunoRequest alunoRequest);
+        Task DeleteAlunoAsync(Guid id);
+        Task<AlunoResponse> GetAlunoByIdAsync(Guid id);
+        Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows);
     }
 }

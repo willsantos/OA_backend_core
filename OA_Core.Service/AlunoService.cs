@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
+using OA_Core.Domain.Entities;
 using OA_Core.Domain.Enums;
 using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
@@ -22,7 +23,7 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteUsuarioAsync(Guid id)
+        public async Task DeleteAlunoAsync(Guid id)
         {
             var aluno = await _repository.FindAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
@@ -31,26 +32,53 @@ namespace OA_Core.Service
             await _repository.RemoveAsync(aluno);
         }
 
-        public async Task<IEnumerable<AlunoResponse>> GetAllUsuariosAsync(int page, int rows)
+        public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)
         {
             var listEntity = await _repository.ListPaginationAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AlunoResponse>>(listEntity);
         }
 
-        public Task<AlunoResponse> GetUsuarioByIdAsync(Guid id)
+        public async Task<AlunoResponse> GetAlunoByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var usuario = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
+
+            return _mapper.Map<AlunoResponse>(usuario);
         }
 
-        public Task<Guid> PostUsuarioAsync(AlunoRequest alunoRequest)
+        public async Task<Guid> PostAlunoAsync(AlunoRequest alunoRequest)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Aluno>(alunoRequest);
+
+            if (!entity.Valid)
+            {
+                _notificador.Handle(entity.ValidationResult);
+                return Guid.Empty;
+            }
+
+            await _repository.AddAsync(entity);
+            return entity.Id;
         }
 
-        public Task PutUsuarioAsync(Guid id, AlunoRequest alunoRequest)
+        public async Task PutAlunoAsync(Guid id, AlunoRequest alunoRequest)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Aluno>(alunoRequest);
+
+            if (!entity.Valid)
+            {
+                _notificador.Handle(entity.ValidationResult);
+                return;
+            }
+
+            var find = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
+
+            entity.Id = find.Id;
+            entity.DataCriacao = find.DataCriacao;
+            entity.DataAlteracao = DateTime.Now;
+
+            await _repository.EditAsync(entity);
         }
     }
 }
