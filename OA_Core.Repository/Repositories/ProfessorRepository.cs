@@ -65,7 +65,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows)
         {
-            var query = string.Format("SELECT id, usuario_id AS UsuarioId, formacao, experiencia, foto, biografia, data_criacao AS DataCriacao, data_alteracao AS DataAlteracao, data_delecao AS DataDelecao FROM Professor JOIN Usuario ON Professor.UsuarioId = Usuario.Id WHERE data_delecao is nulL ORDER BY usuario.nome LIMIT {1} OFFSET {0};", page* rows, rows);
+            var query = string.Format("SELECT u.nome, p.formacao, u.id  FROM Usuario u INNER JOIN Professor p ON u.id = p.usuario_id ORDER BY u.nome LIMIT {1} OFFSET {0};", page* rows, rows);
             return await _connection.QueryAsync<Professor>(query);
         }
 
