@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using OA_Core.Api.Filters;
 using OA_Core.Domain.Config;
 using OA_Core.Domain.Interfaces.Notifications;
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
+
 #region AutoMapper
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -25,6 +27,15 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var appConfig = builder.Configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 builder.Services.AddSingleton(appConfig);
+
+#endregion
+
+#region DbContext
+
+builder.Services.AddDbContext<CoreDbContext>(options =>
+{
+    options.UseMySql(appConfig.ConnectionString, ServerVersion.AutoDetect(appConfig.ConnectionString));
+});
 
 #endregion
 
@@ -40,10 +51,11 @@ builder.Services.AddMvc(options =>
 
 #region Injecao de dependencias
 
-builder.Services.AddScoped<DapperDbConnection>();
 builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IProfessorService, ProfessorService>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 
