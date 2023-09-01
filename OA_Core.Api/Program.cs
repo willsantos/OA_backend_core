@@ -54,6 +54,8 @@ builder.Services.AddMvc(options =>
 builder.Services.AddScoped<INotificador, Notificador>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IProfessorService, ProfessorService>();
 
 #endregion
 

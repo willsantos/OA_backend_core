@@ -6,6 +6,7 @@ namespace OA_Core.Repository.Context
     public class CoreDbContext : DbContext
     {
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Professor> Professor { get; set; }
 
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
@@ -14,6 +15,7 @@ namespace OA_Core.Repository.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
+            modelBuilder.Entity<Professor>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
         }
 
     }

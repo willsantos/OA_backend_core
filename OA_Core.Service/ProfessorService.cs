@@ -10,47 +10,46 @@ using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Service
 {
-    public class UsuarioService : IUsuarioService
+    public class ProfessorService : IProfessorService
     {
         private readonly IMapper _mapper;
-        private readonly IUsuarioRepository _repository;
+        private readonly IProfessorRepository _repository;
         private readonly INotificador _notificador;
 
-        public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
+        public ProfessorService(IMapper mapper, IProfessorRepository repository, INotificador notificador)
         {
             _mapper = mapper;
             _repository = repository;
             _notificador = notificador;
         }
-        public async Task DeleteUsuarioAsync(Guid id)
+
+        public async Task DeleteProfessorAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id) ??
+            var professor = await _repository.FindAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
-            usuario.DataDelecao = DateTime.Now;
-            await _repository.RemoveAsync(usuario);
+            professor.DataDelecao = DateTime.Now;
+            await _repository.RemoveAsync(professor);
         }
 
-        public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
+        public async Task<IEnumerable<ProfessorResponse>> GetAllProfessoresAsync(int page, int rows)
         {
             var listEntity = await _repository.ListPaginationAsync(page, rows);
 
-            return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
+            return _mapper.Map<IEnumerable<ProfessorResponse>>(listEntity);
         }
 
-        public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
+        public async Task<ProfessorResponse> GetProfessorByIdAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id) ?? 
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+            var professor = await _repository.FindAsync(id) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
 
-            return _mapper.Map<UsuarioResponse>(usuario);
+            return _mapper.Map<ProfessorResponse>(professor);
         }
 
-        public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
+        public async Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
         {
-            //Encryptar senha
-            //Mandar email confirmacao usuario
-            var entity = _mapper.Map<Usuario>(usuarioRequest);
+            var entity = _mapper.Map<Professor>(professorRequest);         
 
             if (!entity.Valid)
             {
@@ -63,10 +62,9 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
+        public async Task PutProfessorAsync(Guid id, ProfessorRequest professorRequest)
         {
-            //fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
-            var entity = _mapper.Map<Usuario>(usuarioRequest);
+            var entity = _mapper.Map<Professor>(professorRequest);
 
             if (!entity.Valid)
             {
@@ -75,8 +73,7 @@ namespace OA_Core.Service
             }
 
             var find = await _repository.FindAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
-
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
             entity.Id = find.Id;
             entity.DataCriacao = find.DataCriacao;
             entity.DataAlteracao = DateTime.Now;
