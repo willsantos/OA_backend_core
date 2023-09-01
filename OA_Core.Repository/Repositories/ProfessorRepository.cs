@@ -35,7 +35,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task EditAsync(Professor professor)
         {
-            var sql = "UPDATE Professor SET usuario_id = @usuario_id, formacao = @formacao, experiencia = @experiencia, foto = @foto, biografia = @biografia, data_criacao = @data_criacao, data_alteracao = @data_alteracao, data_delecao = @data_delecao WHERE id = @id";
+            var sql = "UPDATE Professor SET id = @id, usuario_id = @usuario_id, formacao = @formacao, experiencia = @experiencia, foto = @foto, biografia = @biografia, data_criacao = @data_criacao, data_alteracao = @data_alteracao, data_delecao = @data_delecao WHERE id = @id";
             object[] paramItems = new object[]
             {
                 new MySqlParameter("@id", professor.Id),
