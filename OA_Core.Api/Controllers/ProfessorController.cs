@@ -52,7 +52,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutProfessorAsync([FromRoute] Guid id, [FromBody] ProfessorRequest request)
+        public async Task<ActionResult> PutProfessorAsync([FromRoute] Guid id, [FromBody] ProfessorRequestPut request)
         {
             await _service.PutProfessorAsync(id, request);
 
