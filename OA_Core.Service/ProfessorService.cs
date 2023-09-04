@@ -52,7 +52,7 @@ namespace OA_Core.Service
         public async Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
         {
             var entity = _mapper.Map<Professor>(professorRequest);
-            //verificar se id de usuario existe e retornar se for inválido
+       
             if (await _usuarioRepository.FindAsync(professorRequest.UsuarioId) is null)
             {
                 throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {professorRequest.UsuarioId} inválido ou não existente");
