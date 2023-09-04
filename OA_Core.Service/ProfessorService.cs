@@ -54,7 +54,7 @@ namespace OA_Core.Service
             var entity = _mapper.Map<Professor>(professorRequest);
        
             if (await _usuarioRepository.FindAsync(professorRequest.UsuarioId) is null)
-            throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {professorRequest.UsuarioId} inválido ou não existente");
+                throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {professorRequest.UsuarioId} inválido ou não existente");
             
             if (!entity.Valid)
             {
