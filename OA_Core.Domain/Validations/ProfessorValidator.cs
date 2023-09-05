@@ -10,7 +10,7 @@ namespace OA_Core.Domain.Validations
 {
     public class ProfessorValidator : AbstractValidator<Professor>
     {
-        public ProfessorValidator() 
+        public ProfessorValidator()
         {
             RuleFor(u => u.Formacao)
                .NotEmpty()
@@ -19,6 +19,15 @@ namespace OA_Core.Domain.Validations
             RuleFor(u => u.Experiencia)
                 .NotEmpty()
                 .WithMessage("Experiencia precisa ser preenchida");
+
+            RuleFor(u => u.Biografia)
+            .NotEmpty()
+            .WithMessage("Experiencia precisa ser preenchida");
+
+            RuleFor(u => u.Foto)
+            .NotEmpty()
+            .WithMessage("É necessário anexar a foto");
+
         }
     }
 }

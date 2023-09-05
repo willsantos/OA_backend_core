@@ -65,7 +65,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Professor>> ListAsync()
         {
-            var query = "SELECT id, usuario_id AS UsuarioId, formacao, experiencia, foto, biografia, data_criacao AS DataCriacao, data_alteracao AS DataAlteracao, data_delecao AS DataDelecao FROM Professor WHERE id = @id AND data_delecao is null";
+            var query = "SELECT u.nome, p.formacao, p.biografia, p.experiencia, p.foto, p.usuario_id AS UsuarioId, p.id, p.data_criacao AS DataCriacao, p.data_alteracao AS DataAlteracao, p.data_delecao AS DataDelecao FROM Usuario u INNER JOIN Professor p ON u.id = p.usuario_id AND p.data_delecao is null ORDER BY u.nome";
             return await _context.Professor.FromSqlRaw(query).ToListAsync();
 
         }
