@@ -1,6 +1,6 @@
 ﻿namespace OA_Core.Domain.Contracts.Response
 {
-    public class CursoResponse
+    public class CursoResponse : BaseResponse
     {
         public string Nome { get; set; }
         public string Descricao { get; set; }
