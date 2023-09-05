@@ -7,6 +7,7 @@ namespace OA_Core.Repository.Context
     {
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Professor> Professor { get; set; }
+        public DbSet<Curso> Curso { get; set; }
         public DbSet<Aluno> Aluno { get; set; }
 
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
@@ -17,6 +18,7 @@ namespace OA_Core.Repository.Context
         {
             modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
             modelBuilder.Entity<Professor>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
+            modelBuilder.Entity<Curso>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
             modelBuilder.Entity<Aluno>().Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
         }
 
