@@ -12,10 +12,8 @@ namespace OA_Core.Domain.Entities
             DataCriacao = DateTime.Now;
             Validate(this, new AlunoValidator());
         }
-        public Aluno(string id, string usuarioId, DateTime dataCriacao, DateTime dataAlteracao, DateTime dataDelecao)
+        public Aluno(DateTime dataCriacao, DateTime dataAlteracao, DateTime dataDelecao)
         {
-            Id = Guid.Parse(id);
-            UsuarioId = Guid.Parse(usuarioId);
             DataCriacao = dataCriacao;
             DataAlteracao = dataAlteracao;
             DataDelecao = dataDelecao;

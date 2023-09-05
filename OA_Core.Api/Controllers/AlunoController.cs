@@ -46,7 +46,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutAlunoAsync([FromRoute] Guid id, [FromBody] AlunoRequest request)
+        public async Task<ActionResult> PutAlunoAsync([FromRoute] Guid id, [FromBody] AlunoRequestPut request)
         {
             await _service.PutAlunoAsync(id, request);
 
