@@ -21,17 +21,12 @@ namespace OA_Core.Domain.Validations
                 .WithMessage("Descricao precisa ser preenchida");
 
             RuleFor(u => u.Categoria)
-            .NotEmpty()
-            .WithMessage("Categoria precisa ser preenchida");
+                .NotEmpty()
+                .WithMessage("Categoria precisa ser preenchida");
 
             RuleFor(u => u.PreRequisito)
-            .NotEmpty()
-            .WithMessage("Categoria precisa ser preenchida");
-
-            RuleFor(u => u.Preco)
-            .NotEmpty()
-            .WithMessage("Preço precisa ser preenchida");
-
+                .NotEmpty()
+                .WithMessage("PreRequisito precisa ser preenchida");
         }
     }
 }

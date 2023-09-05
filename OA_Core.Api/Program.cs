@@ -43,8 +43,8 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
 
 builder.Services.AddMvc(options =>
 {
-    options.Filters.Add<NotificatonFilter>();
-    options.Filters.Add<ExceptionFilter>();
+    //options.Filters.Add<NotificatonFilter>();
+    //options.Filters.Add<ExceptionFilter>();
 });
 
 #endregion
@@ -56,6 +56,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IProfessorService, ProfessorService>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+builder.Services.AddScoped<ICursoService, CursoService>();
 
 #endregion
 
