@@ -67,7 +67,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutCursoAsync(Guid id, CursoRequest cursoRequest)
+        public async Task PutCursoAsync(Guid id, CursoRequestPut cursoRequest)
         {
             var entity = _mapper.Map<Curso>(cursoRequest);   
 

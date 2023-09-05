@@ -16,6 +16,18 @@ namespace OA_Core.Domain.Entities
             DataCriacao = DateTime.Now;
             Validate(this, new CursoValidator());
         }
+
+        public Curso(string nome, string descricao, string categoria, string preRequisito, double preco)
+        {
+            Nome = nome;
+            Descricao = descricao;
+            Categoria = categoria;
+            PreRequisito = preRequisito;
+            Preco = preco;
+            Validate(this, new CursoValidator());
+        }
+
+
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Categoria { get; set; }
