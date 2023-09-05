@@ -4,12 +4,6 @@ namespace OA_Core.Domain.Entities
 {
     public class Curso : Entidade
     {
-        //public Curso()
-        //{
-        //    Id = Guid.NewGuid();
-        //    Validate(this, new CursoValidator());
-        //}
-
         public Curso(string nome, string descricao, string categoria, string preRequisito, double preco, Guid professorId)
         {
             Id = Guid.NewGuid();
