@@ -65,7 +65,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Curso>> ListAsync()
         {
-            var query = "SELECT c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome";
+            var query = "SELECT c.id, c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome";
             return await _context.Curso.FromSqlRaw(query).ToListAsync();
 
         }
@@ -73,7 +73,7 @@ namespace OA_Core.Repository.Repositories
         public async Task<IEnumerable<Curso>> ListPaginationAsync(int page, int rows)
         {
 
-            var query = string.Format("SELECT c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
+            var query = string.Format("SELECT c.id, c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
             object[] paramItems = new object[]
             {
                 new MySqlParameter("@offset", page * rows),
