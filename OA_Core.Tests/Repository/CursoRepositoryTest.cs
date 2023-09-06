@@ -45,7 +45,7 @@ namespace OA_Core.Tests.Repository
             _repository = new CursoRepository(_context);
         }
 
-        [Fact(DisplayName ="Adiciona um curso")]
+        [Fact(DisplayName = "Adiciona um curso")]
         public async Task TesteCriarCurso()
         {
 
@@ -154,6 +154,7 @@ namespace OA_Core.Tests.Repository
                 Assert.NotNull(cursoDB);
                 Assert.Equal(cursoDB.Nome, entity.Nome);
 
+
                 _context.Curso.Remove(cursoDB);
                 await _context.SaveChangesAsync();
 
@@ -165,5 +166,129 @@ namespace OA_Core.Tests.Repository
             }
         }
 
+        [Fact(DisplayName = "Busca uma lista de cursos")]
+        public async Task TesteBuscarListaDeCursos()
+        {
+            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+            try
+            {
+                var cursoRequest = new CursoRequest
+                {
+                    Nome = "TestEntity",
+                    Descricao = "TestEntity",
+                    Categoria = "TestEntity",
+                    PreRequisito = "TestEntity",
+                    Preco = 100,
+                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+                };
+
+                var entity = _mapper.Map<Curso>(cursoRequest);
+
+                await _repository.AddAsync(entity);
+                await transactionToAdd.CommitAsync();
+
+                var cursosDB = await _repository.ListAsync();
+
+                Assert.NotNull(cursosDB);
+                Assert.IsType<List<Curso>>(cursosDB);
+
+                var cursoCriado = await _context.Curso.FindAsync(entity.Id);
+                _context.Curso.Remove(cursoCriado);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception)
+            {
+                await transactionToAdd.RollbackAsync();
+                throw;
+            }
+        }
+
+        [Fact(DisplayName = "Busca uma lista de cursos com paginação")]
+        public async Task TesteBuscarListaDeCursosComPaginacao()
+        {
+            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+            try
+            {
+                var cursoRequest = new CursoRequest
+                {
+                    Nome = "TestEntity",
+                    Descricao = "TestEntity",
+                    Categoria = "TestEntity",
+                    PreRequisito = "TestEntity",
+                    Preco = 100,
+                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+                };
+
+                var entity = _mapper.Map<Curso>(cursoRequest);
+
+                await _repository.AddAsync(entity);
+                await transactionToAdd.CommitAsync();
+
+                int page = 0;
+                int rows = 20;
+
+                var cursosDB = await _repository.ListPaginationAsync(page, rows);
+
+                Assert.NotNull(cursosDB);
+                Assert.IsType<List<Curso>>(cursosDB);
+
+                var cursoCriado = await _context.Curso.FindAsync(entity.Id);
+                _context.Curso.Remove(cursoCriado);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception)
+            {
+                await transactionToAdd.RollbackAsync();
+                throw;
+            }
+        }
+
+        [Fact(DisplayName = "Deleta um curso criado")]
+        public async Task TesteDeletaCurso()
+        {
+
+            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+            try
+            {
+                var cursoRequest = new CursoRequest
+                {
+                    Nome = "TestEntity",
+                    Descricao = "TestEntity",
+                    Categoria = "TestEntity",
+                    PreRequisito = "TestEntity",
+                    Preco = 100,
+                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+                };
+
+                var entity = _mapper.Map<Curso>(cursoRequest);
+
+                await _repository.AddAsync(entity);
+
+                await transactionToAdd.CommitAsync();
+
+                string alteracao = "nomeAlterado";
+                entity.Nome = alteracao;
+                await _repository.EditAsync(entity);
+                var cursoEditado = await _context.Curso.FindAsync(entity.Id);
+
+                Assert.Equal(cursoEditado.Nome, alteracao);
+
+                _context.Curso.Remove(cursoEditado);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                await transactionToAdd.RollbackAsync();
+                throw;
+            }
+        }
     }
 }

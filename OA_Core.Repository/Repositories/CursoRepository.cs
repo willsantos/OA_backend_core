@@ -55,8 +55,7 @@ namespace OA_Core.Repository.Repositories
         public async Task<Curso> FindAsync(Guid id)
         {
             var query = "SELECT id, nome, descricao, categoria, pre_requisito, preco, professor_id, data_criacao, data_alteracao, data_delecao FROM Curso WHERE id = @id AND data_delecao is null";
-
-            //var query = "SELECT id, nome, descricao, categoria, pre_requisito PreRequisito, preco, professor_id ProfessorId, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao FROM Curso WHERE id = @id AND data_delecao is null";
+            
             object[] paramItems = new object[]
           {
                 new MySqlParameter("@id", id),
@@ -67,15 +66,14 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Curso>> ListAsync()
         {
-            var query = "SELECT c.id, c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome";
-            return await _context.Curso.FromSqlRaw(query).ToListAsync();
+            var query = "SELECT c.id, c.nome, c.descricao, c.categoria, c.pre_requisito, c.preco, c.professor_id, c.data_criacao, c.data_alteracao, c.data_delecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome";
 
+            return await _context.Curso.FromSqlRaw(query).ToListAsync();
         }
 
         public async Task<IEnumerable<Curso>> ListPaginationAsync(int page, int rows)
         {
-
-            var query = string.Format("SELECT c.id, c.nome, c.descricao,c.categoria, c.pre_requisito AS PreRequisito,c.preco, c.professor_id AS ProfessorId,c.data_criacao AS DataCriacao, c.data_alteracao AS DataAlteracao,c.data_delecao AS DataDelecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
+            var query = string.Format("SELECT c.id, c.nome, c.descricao,c.categoria, c.pre_requisito, c.preco, c.professor_id, c.data_criacao, c.data_alteracao ,c.data_delecao FROM Professor p INNER JOIN Curso c ON p.id = c.professor_id AND c.data_delecao is null ORDER BY c.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
             object[] paramItems = new object[]
             {
                 new MySqlParameter("@offset", page * rows),
