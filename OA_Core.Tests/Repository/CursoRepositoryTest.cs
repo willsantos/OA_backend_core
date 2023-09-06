@@ -274,14 +274,14 @@ namespace OA_Core.Tests.Repository
 
                 await transactionToAdd.CommitAsync();
 
-                string alteracao = "nomeAlterado";
-                entity.Nome = alteracao;
-                await _repository.EditAsync(entity);
-                var cursoEditado = await _context.Curso.FindAsync(entity.Id);
+                entity.DataDelecao = DateTime.Now;
 
-                Assert.Equal(cursoEditado.Nome, alteracao);
+                await _repository.RemoveAsync(entity);
+                var cursoDeletado = await _context.Curso.FindAsync(entity.Id);
 
-                _context.Curso.Remove(cursoEditado);
+                Assert.NotNull(cursoDeletado.DataDelecao);
+
+                _context.Curso.Remove(cursoDeletado);
                 await _context.SaveChangesAsync();
             }
             catch (Exception)
