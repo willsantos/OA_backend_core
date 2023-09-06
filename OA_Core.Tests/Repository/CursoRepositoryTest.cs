@@ -45,6 +45,14 @@ namespace OA_Core.Tests.Repository
             _repository = new CursoRepository(_context);
         }
 
+        public void Dispose()
+        {
+            // Limpa as entidades de teste do banco de dados após toda a rodada de testes
+            var entidadesDeTeste = _context.Curso.Where(c => c.Nome == "TestEntity").ToList();
+            _context.Curso.RemoveRange(entidadesDeTeste);
+            _context.SaveChanges();
+        }
+
         [Fact(DisplayName = "Adiciona um curso")]
         public async Task TesteCriarCurso()
         {
