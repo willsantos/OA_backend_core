@@ -44,10 +44,6 @@ namespace OA_Core.Tests.Repository
 
             _repository = new CursoRepository(_context);
         }
-        public void Dispose()
-        {
-            _transaction.Rollback();
-        }
 
         [Fact(DisplayName ="Adiciona um curso")]
         public async Task TesteCriarCurso()
@@ -55,6 +51,7 @@ namespace OA_Core.Tests.Repository
 
             using var transactionToAdd = await _context.Database.BeginTransactionAsync();
 
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
             try
             {
                 var cursoRequest = new CursoRequest
@@ -71,7 +68,6 @@ namespace OA_Core.Tests.Repository
 
                 await _repository.AddAsync(entity);
 
-                // Faz um commit da transação para salvar as alterações no banco de dados
                 await transactionToAdd.CommitAsync();
 
                 var cursoAdicionado = await _context.Curso.FindAsync(entity.Id);
@@ -83,10 +79,91 @@ namespace OA_Core.Tests.Repository
             }
             catch (Exception)
             {
-                // Faz um rollback da transação para desfazer todas as alterações feitas no banco de dados durante o teste
                 await transactionToAdd.RollbackAsync();
                 throw;
             }
         }
+
+        [Fact(DisplayName = "Edita um curso criado")]
+        public async Task TesteEditarCurso()
+        {
+
+            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+            try
+            {
+                var cursoRequest = new CursoRequest
+                {
+                    Nome = "TestEntity",
+                    Descricao = "TestEntity",
+                    Categoria = "TestEntity",
+                    PreRequisito = "TestEntity",
+                    Preco = 100,
+                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+                };
+
+                var entity = _mapper.Map<Curso>(cursoRequest);
+
+                await _repository.AddAsync(entity);
+
+                await transactionToAdd.CommitAsync();
+
+                string alteracao = "nomeAlterado";
+                entity.Nome = alteracao;
+                await _repository.EditAsync(entity);
+                var cursoEditado = await _context.Curso.FindAsync(entity.Id);
+
+                Assert.Equal(cursoEditado.Nome, alteracao);
+
+                _context.Curso.Remove(cursoEditado);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                await transactionToAdd.RollbackAsync();
+                throw;
+            }
+        }
+
+        [Fact(DisplayName = "Busca um curso criado por ID")]
+        public async Task TesteBuscarCursoPorId()
+        {
+            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+
+            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+            try
+            {
+                var cursoRequest = new CursoRequest
+                {
+                    Nome = "TestEntity",
+                    Descricao = "TestEntity",
+                    Categoria = "TestEntity",
+                    PreRequisito = "TestEntity",
+                    Preco = 100,
+                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+                };
+
+                var entity = _mapper.Map<Curso>(cursoRequest);
+
+                await _repository.AddAsync(entity);
+                await transactionToAdd.CommitAsync();
+
+                var cursoDB = await _repository.FindAsync(entity.Id);
+
+                Assert.NotNull(cursoDB);
+                Assert.Equal(cursoDB.Nome, entity.Nome);
+
+                _context.Curso.Remove(cursoDB);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception)
+            {
+                await transactionToAdd.RollbackAsync();
+                throw;
+            }
+        }
+
     }
 }
