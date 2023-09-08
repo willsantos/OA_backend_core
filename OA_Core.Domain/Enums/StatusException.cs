@@ -10,6 +10,8 @@ namespace OA_Core.Domain.Enums
         Erro,
         [Description("Dado não encontrado")]
         NaoEncontrado,
+        [Description("Conflito de dados")]
+        Conflito,
         [Description("Campo(s) com formato(s) incorreto(s)")]
         FormatoIncorreto,
         [Description("Acesso não autorizado")]
