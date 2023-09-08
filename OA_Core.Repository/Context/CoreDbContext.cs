@@ -17,9 +17,15 @@ namespace OA_Core.Repository.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
-            modelBuilder.Entity<Professor>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
-            modelBuilder.Entity<Curso>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
+            modelBuilder.Entity<Professor>().Ignore(p => p.Valid).Ignore(p => p.ValidationResult);
+            modelBuilder.Entity<Curso>().Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
             modelBuilder.Entity<Aluno>().Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
+
+            modelBuilder.Entity<Curso>().Property(c => c.DataAlteracao).HasColumnName("data_alteracao");
+            modelBuilder.Entity<Curso>().Property(c => c.PreRequisito).HasColumnName("pre_requisito");
+            modelBuilder.Entity<Curso>().Property(c => c.ProfessorId).HasColumnName("professor_id");
+            modelBuilder.Entity<Curso>().Property(c => c.DataCriacao).HasColumnName("data_criacao");
+            modelBuilder.Entity<Curso>().Property(c => c.DataDelecao).HasColumnName("data_delecao");
         }
 
     }
