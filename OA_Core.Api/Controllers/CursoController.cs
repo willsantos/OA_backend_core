@@ -24,11 +24,10 @@ namespace OA_Core.Api.Controllers
 
         [HttpPost("cadastro", Name = "PostCursoAsync")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<Guid>> PostCursoAsync([FromBody] CursoRequest request)
+        public async Task<ActionResult> PostCursoAsync([FromBody] CursoRequest request)
         {
             var id = await _service.PostCursoAsync(request);
-
-            return CreatedAtRoute("GetCursoByIdAsync", new { id }, id);
+            return Created(nameof(PostCursoAsync), id);
         }
 
         [HttpGet]
@@ -48,7 +47,7 @@ namespace OA_Core.Api.Controllers
             var response = await _service.GetCursoByIdAsync(id);
 
             return Ok(response);
-        }   
+        }
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
