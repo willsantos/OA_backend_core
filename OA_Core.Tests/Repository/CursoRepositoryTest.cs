@@ -214,7 +214,7 @@ namespace OA_Core.Tests.Repository
             }
         }
 
-        [Fact(DisplayName = "Busca uma lista de cursos com paginação")]
+        [Fact(DisplayName = "Busca uma lista de cursos com paginação", Skip = "Git não possue acesso ao banco")]
         public async Task TesteBuscarListaDeCursosComPaginacao()
         {
             using var transactionToAdd = await _context.Database.BeginTransactionAsync();
