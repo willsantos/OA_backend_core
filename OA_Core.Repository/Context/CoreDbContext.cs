@@ -26,8 +26,6 @@ namespace OA_Core.Repository.Context
             modelBuilder.Entity<Curso>().Property(c => c.ProfessorId).HasColumnName("professor_id");
             modelBuilder.Entity<Curso>().Property(c => c.DataCriacao).HasColumnName("data_criacao");
             modelBuilder.Entity<Curso>().Property(c => c.DataDelecao).HasColumnName("data_delecao");
-
-
         }
 
     }
