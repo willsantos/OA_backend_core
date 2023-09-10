@@ -15,11 +15,6 @@ namespace OA_Core.Repository.Mappings
     {
         public void Configure(EntityTypeBuilder<Aula> builder)
         {
-            //builder.Property(prop => prop.Tipo).HasConversion(
-            //    prop => prop.ToString(),
-            //    prop => (TipoAula)Enum.Parse
-            //        (typeof(TipoAula), prop));
-
             builder.Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
             builder.Property(c => c.CursoId).HasColumnName("curso_id");
             builder.Property(c => c.DataCriacao).HasColumnName("data_criacao");
