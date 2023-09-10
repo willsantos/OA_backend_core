@@ -21,7 +21,6 @@ namespace OA_Core.Repository.Context
             modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
             modelBuilder.Entity<Professor>().Ignore(p => p.Valid).Ignore(p => p.ValidationResult);
             modelBuilder.Entity<Aluno>().Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
-            modelBuilder.Entity<Aula>().Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
 
             modelBuilder.Entity<Curso>(new CursoEntityMap().Configure);
             modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
