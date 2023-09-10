@@ -16,6 +16,8 @@ namespace OA_Core.Tests.Config
                 cfg.AddProfile(new Api.Profiles.CursoEntityToContractMap());
                 cfg.AddProfile(new Api.Profiles.ProfessorEntityToContractMap());
                 cfg.AddProfile(new Api.Profiles.UsuarioEntityToContractMap());
+                cfg.AddProfile(new Api.Profiles.AulaEntityToContractMap());
+
             });
 
             return mockMapper.CreateMapper();
