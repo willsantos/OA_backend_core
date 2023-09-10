@@ -14,7 +14,7 @@ namespace OA_Core.Domain.Validations
         {
             RuleFor(u => u.Nome)
                .NotEmpty()
-               .WithMessage("Nome precisa ser preenchida");
+               .WithMessage("Nome precisa ser preenchido");
 
             RuleFor(u => u.Descricao)
                 .NotEmpty()
