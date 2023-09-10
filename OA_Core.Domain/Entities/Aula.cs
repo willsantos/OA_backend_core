@@ -1,10 +1,11 @@
-﻿using OA_Core.Domain.Validations;
+﻿using OA_Core.Domain.Enums;
+using OA_Core.Domain.Validations;
 
 namespace OA_Core.Domain.Entities
 {
     public class Aula : Entidade
     {
-        public Aula(string nome, string descricao, string caminho, string tipo, int duracao, int ordem, Guid cursoId)
+        public Aula(string nome, string descricao, string caminho, TipoAula tipo, int duracao, int ordem, Guid cursoId)
         { 
             Id = Guid.NewGuid();
             Nome = nome;
@@ -18,7 +19,7 @@ namespace OA_Core.Domain.Entities
             Validate(this, new AulaValidator());
         }
 
-        public Aula(string nome, string descricao, string caminho, string tipo, int duracao, int ordem)
+        public Aula(string nome, string descricao, string caminho, TipoAula tipo, int duracao, int ordem)
         {
             Nome = nome;
             Descricao = descricao;
@@ -32,7 +33,7 @@ namespace OA_Core.Domain.Entities
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Caminho { get; set; }
-        public string Tipo { get; set; }
+        public TipoAula Tipo { get; set; }
         public int Duracao { get; set; }
         public int Ordem { get; set; }
         public Guid CursoId { get; set; }

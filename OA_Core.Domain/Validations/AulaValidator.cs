@@ -27,14 +27,6 @@ namespace OA_Core.Domain.Validations
             RuleFor(u => u.Tipo)
                 .NotEmpty()
                 .WithMessage("Tipo precisa ser preenchido");
-
-            RuleFor(u => u.Duracao)
-                .NotEmpty()
-                .WithMessage("Duração precisa ser preenchida");
-
-            RuleFor(u => u.Ordem)
-                .NotEmpty()
-                .WithMessage("Ordem precisa ser preenchida");
         }
     }
 }
