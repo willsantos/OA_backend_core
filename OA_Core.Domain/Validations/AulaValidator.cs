@@ -22,11 +22,7 @@ namespace OA_Core.Domain.Validations
 
             RuleFor(u => u.Caminho)
                 .NotEmpty()
-                .WithMessage("Caminho precisa ser preenchido");
-
-            RuleFor(u => u.Tipo)
-                .NotEmpty()
-                .WithMessage("Tipo precisa ser preenchido");
+                .WithMessage("Caminho precisa ser preenchido");            
         }
     }
 }

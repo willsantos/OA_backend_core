@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace OA_Core.Repository.Mappings
     {
         public void Configure(EntityTypeBuilder<Aula> builder)
         {
+            builder.Property(prop => prop.Tipo).HasConversion(
+                prop => prop.ToString(),
+                prop => (TipoAula)Enum.Parse
+                    (typeof(TipoAula), prop));
 
             builder.Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
             builder.Property(c => c.CursoId).HasColumnName("curso_id");
