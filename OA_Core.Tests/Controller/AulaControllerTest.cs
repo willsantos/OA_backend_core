@@ -36,7 +36,7 @@ namespace OA_Core.Tests.Controller
             _service = Substitute.For<IAulaService>();
         }
 
-        [Fact(DisplayName = "Adiciona um aula")]
+        [Fact(DisplayName = "Adiciona uma aula")]
         public async Task CriaAula()
         {
             var aulaController = new AulaController(_service);
@@ -65,7 +65,7 @@ namespace OA_Core.Tests.Controller
         }
 
 
-        [Fact(DisplayName = "Busca todos os aulas")]
+        [Fact(DisplayName = "Busca todas as aulas")]
         public async Task GetAllAulaAsync()
         {
             var aulaController = new AulaController(_service);

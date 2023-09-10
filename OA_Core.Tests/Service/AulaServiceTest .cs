@@ -33,7 +33,7 @@ namespace OA_Core.Tests.Service
             _notifier = Substitute.For<INotificador>();
         }
 
-        [Fact(DisplayName = "Cria um Aula Válido")]
+        [Fact(DisplayName = "Cria uma Aula Válido")]
         public async Task CriarAula()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -51,7 +51,7 @@ namespace OA_Core.Tests.Service
             result.Should().NotBe(Guid.Empty);       
         }
                 
-        [Fact(DisplayName = "Deleta um Aula Válido")]
+        [Fact(DisplayName = "Deleta uma Aula Válido")]
         public async Task DeletarAula()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -66,7 +66,7 @@ namespace OA_Core.Tests.Service
             await mockAulaRepository.Received().RemoveAsync(aula);
         }
 
-        [Fact(DisplayName = "Obtém todos as Aulas")]
+        [Fact(DisplayName = "Obtém todas as Aulas")]
         public async Task ObterTodosAulas()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -115,7 +115,19 @@ namespace OA_Core.Tests.Service
             await mockAulaRepository.Received().EditAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
         }
 
-        [Fact(DisplayName = "Atualiza um Aula com Id inválido")]
+        [Fact(DisplayName = "Cria uma Aula com CursoId inválido")]
+        public async Task CriarAulaComCursoIdInvalido()
+        {
+            var mockAulaRepository = Substitute.For<IAulaRepository>();
+            var mockCursoRepository = Substitute.For<ICursoRepository>();
+            var cursoService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
+
+            var cursoRequest = _fixture.Create<AulaRequest>();
+
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.PostAulaAsync(cursoRequest));
+        }
+
+        [Fact(DisplayName = "Atualiza uma Aula com Id inválido")]
         public async Task AtualizarAulaComIdInvalido()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -128,7 +140,7 @@ namespace OA_Core.Tests.Service
         }
         
 
-        [Fact(DisplayName = "Obtém um Aula pelo Id inválido")]
+        [Fact(DisplayName = "Obtém uma Aula pelo Id inválido")]
         public async Task ObterAulaPorIdInvalido()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -138,7 +150,7 @@ namespace OA_Core.Tests.Service
             await Assert.ThrowsAsync<InformacaoException>(() => aulaService.GetAulaByIdAsync(Guid.NewGuid()));
         }
 
-        [Fact(DisplayName = "Deleta um Aula com Id inválido")]
+        [Fact(DisplayName = "Deleta uma Aula com Id inválido")]
         public async Task DeletarAulaComIdInvalido()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -148,7 +160,7 @@ namespace OA_Core.Tests.Service
             await Assert.ThrowsAsync<InformacaoException>(() => aulaService.DeleteAulaAsync(Guid.NewGuid()));
         }
 
-        [Fact(DisplayName = "Cria um Aula com Campos inválidos")]
+        [Fact(DisplayName = "Cria uma Aula com Campos inválidos")]
         public async Task CriarAulaComCamposInvalidos()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -166,7 +178,7 @@ namespace OA_Core.Tests.Service
             _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
         }
 
-        [Fact(DisplayName = "Atualiza um Aula com Campos inválidos")]
+        [Fact(DisplayName = "Atualiza uma Aula com Campos inválidos")]
         public async Task AtualizarAulaComCamposInvalidos()
         {
             var mockAulaRepository = Substitute.For<IAulaRepository>();
