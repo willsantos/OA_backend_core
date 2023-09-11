@@ -17,9 +17,17 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("88888888888")]
         [InlineData("99999999999")]
         [InlineData("00000000000")]
-        public void DeveRejeitarCpfComNumeroRepetido(string cpf)
+        public void NovoCpf_ComNumeroRepetido_DeveSerInvalido(string registro)
         {
-            bool resultado = Cpf.Verificar(cpf);
+
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            bool resultado = cpf.Verificar();
+
+            //Assert
+
             Assert.False(resultado);
         }
 
@@ -31,9 +39,16 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("673530515900")]
         [InlineData("6281095207")]
         [InlineData("519553572859")]
-        public void DeveRejeitarCpfComQuantidadeNumerosIncorreta(string cpf)
+        public void NovoCpf_ComQuantidaDeNumerosIncorreta_DeveSerInvalido(string registro)
         {
-            bool resultado = Cpf.Verificar(cpf);
+
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            bool resultado = cpf.Verificar();
+
+            //Assert
             Assert.False(resultado);
         }
 
@@ -48,10 +63,18 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("460(9123258")]
         [InlineData("5941)377497")]
         [InlineData("4143-589600")]
-        public void DeveRejeitarCpfComCaracteresInvalidos(string cpf)
+        public void NovoCPf_ComCaracteresInvalidos_DeveSerInvalido(string registro)
         {
-            bool resultado = Cpf.Verificar(cpf);
+
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            bool resultado = cpf.Verificar();
+
+            //Assert
             Assert.False(resultado);
+
         }
 
         [Theory(DisplayName ="Com verificador inválido",Skip ="TDD")]
@@ -65,10 +88,18 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123258")] 
         [InlineData("59414377497")] 
         [InlineData("41438589600")]
-        public void DeveRejeitarCpfInvalidosNoCalculoVerificador(string cpf)
+        public void NovoCpf_CalculoVerificadorIncorreto_DeveSerInvalido(string registro)
         {
-            bool resultado = Cpf.Verificar(cpf);
+
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            bool resultado = cpf.Verificar();
+
+            //Assert
             Assert.False(resultado);
+
         }
 
         [Theory(DisplayName = "Com verificador valido", Skip = "TDD")]
@@ -82,11 +113,20 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218")]
         [InlineData("59414377492")]
         [InlineData("41438589670")]
-        public void DeveAceitarTodosCpfValidos(string cpf)
+        public void NovoCpf_CalculoVerificadorCorreto_DeveSerValido(string registro)
         {
-            bool resultado = Cpf.Verificar(cpf);
+            
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            bool resultado = cpf.Verificar();
+
+            //Assert
             Assert.True(resultado);
+
         }
+
         [Theory(DisplayName = "Retorna CPf com Formatação", Skip = "TDD")]
         [InlineData("47160316673", "471.603.166-73")]
         [InlineData("69864845500", "698.648.455-00")]
@@ -98,10 +138,18 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218", "460.891.232-18")]
         [InlineData("59414377492", "594.143.774-92")]
         [InlineData("41438589670", "414.385.896-70")]
-        public void DeveRetornarCpfComFormatacao(string cpf,string formatado)
+        public void ExibirFormatado_DeveRetornarCpfComFormatacao(string registro,string formatado)
         {
-            var resultado = Cpf.ExibirFormatado(cpf);
+            
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            var resultado = cpf.ExibirFormatado();
+
+            //Assert
             Assert.Equal(formatado, resultado);
+
         }
 
         [Theory(DisplayName = "Retorna CPf Sem Formatação", Skip = "TDD")]
@@ -115,10 +163,18 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218")]
         [InlineData("59414377492")]
         [InlineData("41438589670")]
-        public void DeveRetornarCpfSemFormatacao(string cpf)
+        public void ExibirCpf_DeveRetornarCpfSemFormatacao(string registro)
         {
-            var resultado = Cpf.Exibir(cpf);
-            Assert.Equal(cpf, resultado);
+            
+            //Arrange
+            var cpf = new Cpf(registro);
+
+            //Act
+            var resultado = cpf.Exibir();
+
+            //Assert
+            Assert.Equal(registro, resultado);
+
         }
 
 
