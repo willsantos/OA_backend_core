@@ -17,7 +17,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("88888888888")]
         [InlineData("99999999999")]
         [InlineData("00000000000")]
-        public void NovoCpf_ComNumeroRepetido_DeveSerInvalido(string registro)
+        public void NovoCpf_ComNumeroRepetido_DevemSerInvalidos(string registro)
         {
 
             //Arrange
@@ -39,7 +39,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("673530515900")]
         [InlineData("6281095207")]
         [InlineData("519553572859")]
-        public void NovoCpf_ComQuantidaDeNumerosIncorreta_DeveSerInvalido(string registro)
+        public void NovoCpf_ComQuantidaDeNumerosIncorreta_DevemSerInvalidos(string registro)
         {
 
             //Arrange
@@ -63,7 +63,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("460(9123258")]
         [InlineData("5941)377497")]
         [InlineData("4143-589600")]
-        public void NovoCPf_ComCaracteresInvalidos_DeveSerInvalido(string registro)
+        public void NovoCPf_ComCaracteresInvalidos_DevemSerInvalidos(string registro)
         {
 
             //Arrange
@@ -88,7 +88,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123258")] 
         [InlineData("59414377497")] 
         [InlineData("41438589600")]
-        public void NovoCpf_CalculoVerificadorIncorreto_DeveSerInvalido(string registro)
+        public void NovoCpf_CalculoVerificadorIncorreto_DevemSerInvalidos(string registro)
         {
 
             //Arrange
@@ -113,7 +113,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218")]
         [InlineData("59414377492")]
         [InlineData("41438589670")]
-        public void NovoCpf_CalculoVerificadorCorreto_DeveSerValido(string registro)
+        public void NovoCpf_CalculoVerificadorCorreto_DevemSerValidos(string registro)
         {
             
             //Arrange
@@ -138,7 +138,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218", "460.891.232-18")]
         [InlineData("59414377492", "594.143.774-92")]
         [InlineData("41438589670", "414.385.896-70")]
-        public void ExibirFormatado_DeveRetornarCpfComFormatacao(string registro,string formatado)
+        public void Cpf_ExibirFormatado_DeveRetornarCpfComFormatacao(string registro,string formatado)
         {
             
             //Arrange
@@ -163,7 +163,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218")]
         [InlineData("59414377492")]
         [InlineData("41438589670")]
-        public void ExibirCpf_DeveRetornarCpfSemFormatacao(string registro)
+        public void Cpf_Exibir_DeveRetornarCpfSemFormatacao(string registro)
         {
             
             //Arrange
