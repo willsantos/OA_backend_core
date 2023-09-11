@@ -3,9 +3,10 @@
 
 namespace OA_Core.Tests.ValueObject
 {
+    [Trait("ValueObject","CPF")]
     public class CpfVOTest
     {
-        [Theory(DisplayName = "Verifica cpf com numeros repetidos", Skip = "TDD")]
+        [Theory(DisplayName = "Com numeros repetidos", Skip = "TDD")]
         [InlineData("11111111111")]
         [InlineData("22222222222")]
         [InlineData("33333333333")]
@@ -22,7 +23,7 @@ namespace OA_Core.Tests.ValueObject
             Assert.False(resultado);
         }
 
-        [Theory(DisplayName = "Verifica cpf com numeros repetidos", Skip = "TDD")]
+        [Theory(DisplayName = "Com quantidade incorreta", Skip = "TDD")]
         [InlineData("1111111111111")]
         [InlineData("222222222222")]
         [InlineData("6986484550")]
@@ -36,7 +37,7 @@ namespace OA_Core.Tests.ValueObject
             Assert.False(resultado);
         }
 
-        [Theory(DisplayName = "Verifica CPF com caracteres inválidos", Skip = "TDD")]
+        [Theory(DisplayName = "Com caracteres inválidos", Skip = "TDD")]
         [InlineData("471B0316623")]
         [InlineData("660879960C7")]
         [InlineData("62841A95257")]
@@ -53,7 +54,7 @@ namespace OA_Core.Tests.ValueObject
             Assert.False(resultado);
         }
 
-        [Theory(DisplayName ="Verifica CPF com verificador inválidos",Skip ="TDD")]
+        [Theory(DisplayName ="Com verificador inválido",Skip ="TDD")]
         [InlineData("47160316623")] 
         [InlineData("66087996047")] 
         [InlineData("62841095257")] 
@@ -70,7 +71,7 @@ namespace OA_Core.Tests.ValueObject
             Assert.False(resultado);
         }
 
-        [Theory(DisplayName = "Verifica CPF com verificador valido", Skip = "TDD")]
+        [Theory(DisplayName = "Com verificador valido", Skip = "TDD")]
         [InlineData("47160316673")]
         [InlineData("69864845500")]
         [InlineData("62841095207")]
