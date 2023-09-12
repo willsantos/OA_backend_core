@@ -6,10 +6,9 @@ using OA_Core.Domain.Entities;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Service;
-using OA_Core.Tests.Configs;
-using System.Linq;
+using OA_Core.Tests.Config;
 
-namespace OA_Core.Tests.Services
+namespace OA_Core.Tests.Service
 {
     [Trait("Service", "Aluno Service")]
     public class AlunoServiceTest
@@ -21,7 +20,7 @@ namespace OA_Core.Tests.Services
         public AlunoServiceTest()
         {
             _mapper = MapperConfig.Get();
-            _fixture = FixtureConfig.Get();
+            _fixture = FixtureConfig.GetFixture();
             _notifier = Substitute.For<INotificador>();
         }
 
@@ -91,7 +90,7 @@ namespace OA_Core.Tests.Services
         public async Task DeletarAluno()
         {
             var aluno = _fixture.Create<Aluno>();
-            
+
             var mockRepository = Substitute.For<IAlunoRepository>();
 
             mockRepository.FindAsync(aluno.Id).Returns(aluno);
