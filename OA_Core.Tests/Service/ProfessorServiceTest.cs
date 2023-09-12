@@ -3,6 +3,7 @@ using AutoMapper;
 using NSubstitute;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Service;
@@ -99,14 +100,64 @@ namespace OA_Core.Tests.Service
 		{
 			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
-			var cursoService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
 
 			var professor = _fixture.Create<Professor>();
 			mockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
 
-			await cursoService.DeleteProfessorAsync(professor.Id);
+			await professorService.DeleteProfessorAsync(professor.Id);
 
 			await mockProfessorRepository.Received().RemoveAsync(professor);
+		}
+
+		[Fact(DisplayName = "Cria um Professor com UsuarioId inválido")]
+		public async Task CriarProfessorComUsuarioIdInvalido()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professorRequest = _fixture.Create<ProfessorRequest>();
+
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.PostProfessorAsync(professorRequest));
+		}
+
+		[Fact(DisplayName = "Tenta obter Curso por Id inválido")]
+		public async Task TentaObterCursoPorIdInvalido()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.GetProfessorByIdAsync(Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Tenta Deletar Professor com Id inválido")]
+		public async Task TentaDeletarProfessorComIdInvalido()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.DeleteProfessorAsync(Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Tenta Criar Professor com Campos inválidos")]
+		public async Task TentaCriarProfessorComCamposInvalidos()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var usuario = _fixture.Create<Usuario>();
+			var professorRequest = _fixture.Create<ProfessorRequest>();
+			professorRequest.Formacao = string.Empty;
+
+			mockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
+
+			await professorService.PostProfessorAsync(professorRequest);
+
+			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Formacao" && e.ErrorMessage == "Formacao precisa ser preenchida")));
 		}
 	}
 }
