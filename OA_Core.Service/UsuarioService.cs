@@ -65,7 +65,7 @@ namespace OA_Core.Service
 
         public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
         {
-            //fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
+            //@TODO: fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
             var entity = _mapper.Map<Usuario>(usuarioRequest);
 
             if (!entity.Valid)

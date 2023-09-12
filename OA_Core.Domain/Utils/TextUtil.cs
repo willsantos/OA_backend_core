@@ -16,6 +16,8 @@ namespace OA_Core.Domain.Utils
                     return 404;
                 case StatusException.NaoProcessado:
                     return 422;
+				case StatusException.Conflito:
+					return 409;
                 default:
                     return 500;
             }
