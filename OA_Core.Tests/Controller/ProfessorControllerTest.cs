@@ -103,6 +103,18 @@ namespace OA_Core.Tests.Controller
 
 			await _service.Received().PutProfessorAsync(id, request);
 		}
+
+		[Fact(DisplayName = "Exclui Professor")]
+		public async Task DeleteProfessorAsync()
+		{
+			var cursoController = new ProfessorController(_service);
+
+			Guid id = Guid.NewGuid();
+
+			await cursoController.DeleteProfessorAsync(id);
+
+			await _service.Received().DeleteProfessorAsync(id);
+		}
 	}
 	
 }
