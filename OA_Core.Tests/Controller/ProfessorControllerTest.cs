@@ -90,6 +90,19 @@ namespace OA_Core.Tests.Controller
 
 			Assert.Equal(entity, resultValue);
 		}
+
+		[Fact(DisplayName = "Atualiza Professor")]
+		public async Task PutProfessorAsync()
+		{
+			var cursoController = new ProfessorController(_service);
+
+			Guid id = Guid.NewGuid();
+			var request = _fixture.Create<ProfessorRequestPut>();
+
+			await cursoController.PutProfessorAsync(id, request);
+
+			await _service.Received().PutProfessorAsync(id, request);
+		}
 	}
 	
 }
