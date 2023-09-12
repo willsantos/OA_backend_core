@@ -159,5 +159,23 @@ namespace OA_Core.Tests.Service
 
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Formacao" && e.ErrorMessage == "Formacao precisa ser preenchida")));
 		}
+
+		[Fact(DisplayName = "Tenta atualizar Professor com Campos inválidos")]
+		public async Task TentaAtualizarProfessorComCamposInvalidos()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professorRequestPut = _fixture.Create<ProfessorRequestPut>();
+			professorRequestPut.Biografia = string.Empty;
+			var professor = _fixture.Create<Professor>();
+
+			mockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+
+			await professorService.PutProfessorAsync(professor.Id, professorRequestPut);
+
+			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Biografia" && e.ErrorMessage == "Biografia precisa ser preenchida")));
+		}
 	}
 }
