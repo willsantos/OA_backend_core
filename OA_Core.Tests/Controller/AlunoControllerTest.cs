@@ -94,8 +94,12 @@ namespace OA_Core.Tests.Controller
 
 			var request = _fixture.Create<AlunoRequestPut>();
 			Guid id = Guid.NewGuid();
-			await alunoController.PutAlunoAsync(id, request);
+
+			var response = await alunoController.PutAlunoAsync(id, request);
 			await _service.Received().PutAlunoAsync(id, request);
+
+			var objectResult = Assert.IsType<NoContentResult>(response);
+			Assert.Equal(StatusCodes.Status204NoContent, objectResult.StatusCode);
 		}
 
 		[Fact(DisplayName = "Deleta aluno")]
@@ -103,8 +107,12 @@ namespace OA_Core.Tests.Controller
 		{
 			var alunoController = new AlunoController(_service);
 			Guid id = Guid.NewGuid();
-			await alunoController.DeleteAlunoAsync(id);
+
+			var response = await alunoController.DeleteAlunoAsync(id);
 			await _service.Received().DeleteAlunoAsync(id);
+
+			var objectResult = Assert.IsType<NoContentResult>(response);
+			Assert.Equal(StatusCodes.Status204NoContent, objectResult.StatusCode);
 		}
 	}
 }
