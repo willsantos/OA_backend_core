@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Enums;
+using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Repository.Context;
 
@@ -31,7 +33,22 @@ namespace OA_Core.Repository.Repositories
                 new MySqlParameter("@data_alteracao", usuario.DataAlteracao),
                 new MySqlParameter("@data_delecao", usuario.DataDelecao),
             };
-            await _context.Database.ExecuteSqlRawAsync("INSERT INTO Usuario VALUES(@id, @nome, @email, @senha, @data_nascimento, @telefone, @endereco, @data_criacao, @data_alteracao, @data_delecao)", paramItems);
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+            "INSERT INTO Usuario VALUES(@id, @nome, @email, @senha, @data_nascimento, @telefone, @endereco, @data_criacao, @data_alteracao, @data_delecao)", paramItems);
+            }
+            catch(MySqlException ex)
+            {
+          
+                if (ex.ErrorCode == MySqlErrorCode.DuplicateKeyEntry)
+                {
+                    throw new InformacaoException(StatusException.Conflito, $"Usuario {usuario.Email} já cadastrado");
+                }
+            }
+            
+                                
         }
 
         public async Task EditAsync(Usuario usuario)
