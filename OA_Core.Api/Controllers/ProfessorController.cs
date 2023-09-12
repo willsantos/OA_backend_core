@@ -24,12 +24,11 @@ namespace OA_Core.Api.Controllers
 
         [HttpPost("cadastro", Name = "PostProfessorAsync")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<Guid>> PostProfessorAsync([FromBody] ProfessorRequest request)
+        public async Task<ActionResult> PostProfessorAsync([FromBody] ProfessorRequest request)
         {
             var id = await _service.PostProfessorAsync(request);
-
-            return CreatedAtRoute("GetProfessorByIdAsync", new { id }, id);
-        }
+			return Created(nameof(PostProfessorAsync), id);
+		}
 
         [HttpGet]
         [ProducesResponseType(200)]
