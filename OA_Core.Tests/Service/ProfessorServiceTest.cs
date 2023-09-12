@@ -30,7 +30,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Fact(DisplayName = "Cria um Curso Válido")]
-		public async Task CriarCurso()
+		public async Task CriarProfessor()
 		{
 			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
@@ -45,6 +45,21 @@ namespace OA_Core.Tests.Service
 			var result = await professorService.PostProfessorAsync(professorRequest);
 			Assert.NotNull(result);
 			Assert.IsType<Guid>(result);
+		}
+
+		[Fact(DisplayName = "Obtém todos os Professores")]
+		public async Task ObterTodosProfessores()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var cursoService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professores = _fixture.CreateMany<Professor>(5);
+			mockProfessorRepository.ListPaginationAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(professores);
+
+			var result = await cursoService.GetAllProfessoresAsync(1, 5);
+
+			Assert.Equal(5, result.Count());
 		}
 	}
 }
