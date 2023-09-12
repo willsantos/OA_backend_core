@@ -1,4 +1,5 @@
-﻿using OA_Core.Domain.ValueObjects;
+﻿using FluentAssertions;
+using OA_Core.Domain.ValueObjects;
 
 
 namespace OA_Core.Tests.ValueObject
@@ -27,8 +28,8 @@ namespace OA_Core.Tests.ValueObject
             bool resultado = cpf.Verificar();
 
             //Assert
-
-            Assert.False(resultado);
+            resultado.Should().BeFalse("CPF com caracteres repetidos deve ser inválido");
+            
         }
 
         [Theory(DisplayName = "Com quantidade incorreta", Skip = "TDD")]
@@ -49,7 +50,7 @@ namespace OA_Core.Tests.ValueObject
             bool resultado = cpf.Verificar();
 
             //Assert
-            Assert.False(resultado);
+            resultado.Should().BeFalse("CPF com quantidade de digito diferente de 11 devem ser inválido");
         }
 
         [Theory(DisplayName = "Com caracteres inválidos", Skip = "TDD")]
@@ -74,10 +75,11 @@ namespace OA_Core.Tests.ValueObject
 
             //Assert
             Assert.False(resultado);
+            resultado.Should().BeFalse("");
 
         }
 
-        [Theory(DisplayName ="Com verificador inválido",Skip ="TDD")]
+        [Theory(DisplayName ="Com verificador inválido", Skip = "TDD")]
         [InlineData("47160316623")] 
         [InlineData("66087996047")] 
         [InlineData("62841095257")] 
@@ -98,7 +100,7 @@ namespace OA_Core.Tests.ValueObject
             bool resultado = cpf.Verificar();
 
             //Assert
-            Assert.False(resultado);
+            resultado.Should().BeFalse("CPF com calculo errado deve ser inválido");
 
         }
 
@@ -124,6 +126,7 @@ namespace OA_Core.Tests.ValueObject
 
             //Assert
             Assert.True(resultado);
+            resultado.Should().BeTrue("CPF com calculo correto deve ser válido");
 
         }
 
@@ -147,8 +150,8 @@ namespace OA_Core.Tests.ValueObject
             //Act
             var resultado = cpf.ExibirFormatado();
 
-            //Assert
-            Assert.Equal(formatado, resultado);
+            //Assert   
+            resultado.Should().BeEquivalentTo(formatado,"Deve retornar o mesmo CPF formatado");
 
         }
 
@@ -173,7 +176,7 @@ namespace OA_Core.Tests.ValueObject
             var resultado = cpf.Exibir();
 
             //Assert
-            Assert.Equal(registro, resultado);
+            resultado.Should().BeEquivalentTo(registro,"De retornar o mesmo CPF sem formatação");
 
         }
 
