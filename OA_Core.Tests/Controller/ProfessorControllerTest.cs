@@ -1,8 +1,12 @@
 ﻿
 using AutoFixture;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Validations;
 using NSubstitute;
 using OA_Core.Api.Controllers;
 using OA_Core.Domain.Contracts.Request;
@@ -27,7 +31,7 @@ namespace OA_Core.Tests.Controller
 			_service = Substitute.For<IProfessorService>();
 		}
 
-		[Fact(DisplayName = "Adiciona um novo professor")]
+		[Fact(DisplayName = "Adiciona um novo professor com sucesso")]
 		public async Task CriaProfessor()
 		{
 			var professorController = new ProfessorController(_service);
@@ -51,7 +55,7 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(StatusCodes.Status201Created, actionResult.StatusCode);
 			Assert.Equal(entity.Id, actionResult.Value);
 		}
-		[Fact(DisplayName = "Busca todos os professores")]
+		[Fact(DisplayName = "Busca todos os professores com sucesso")]
 		public async Task GetAllProfessorAsync()
 		{
 			var professorController = new ProfessorController(_service);
@@ -72,7 +76,7 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(entities, resultValue.Resultado);
 		}
 
-		[Fact(DisplayName = "Busca professor por ID")]
+		[Fact(DisplayName = "Busca professor por ID com sucesso")]
 		public async Task GetProfessorByIdAsync()
 		{
 			var professorController = new ProfessorController(_service);
@@ -91,7 +95,7 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(entity, resultValue);
 		}
 
-		[Fact(DisplayName = "Atualiza Professor")]
+		[Fact(DisplayName = "Atualiza Professor com sucesso")]
 		public async Task PutProfessorAsync()
 		{
 			var cursoController = new ProfessorController(_service);
@@ -104,7 +108,7 @@ namespace OA_Core.Tests.Controller
 			await _service.Received().PutProfessorAsync(id, request);
 		}
 
-		[Fact(DisplayName = "Exclui Professor")]
+		[Fact(DisplayName = "Exclui Professor com sucesso")]
 		public async Task DeleteProfessorAsync()
 		{
 			var cursoController = new ProfessorController(_service);
@@ -114,7 +118,7 @@ namespace OA_Core.Tests.Controller
 			await cursoController.DeleteProfessorAsync(id);
 
 			await _service.Received().DeleteProfessorAsync(id);
-		}
+		}		
 	}
 	
 }
