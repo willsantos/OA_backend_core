@@ -47,7 +47,7 @@ namespace OA_Core.Tests.Service
 			Assert.IsType<Guid>(result);
 		}
 
-		[Fact(DisplayName = "Obtém todos os Professores")]
+		[Fact(DisplayName = "Obtém todos os Professores com sucesso")]
 		public async Task ObterTodosProfessores()
 		{
 			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
@@ -60,6 +60,53 @@ namespace OA_Core.Tests.Service
 			var result = await cursoService.GetAllProfessoresAsync(1, 5);
 
 			Assert.Equal(5, result.Count());
+		}
+
+		[Fact(DisplayName = "Obtém um Professor por Id com sucesso")]
+		public async Task ObterProfessorPorId()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var cursoService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professor = _fixture.Create<Professor>();
+			mockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+
+			var result = await cursoService.GetProfessorByIdAsync(professor.Id);
+
+			Assert.Equal(professor.Id, result.Id);
+		}
+
+		[Fact(DisplayName = "Atualiza professor com sucesso")]
+		public async Task AtualizarProfessor()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var cursoService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professorRequestPut = _fixture.Create<ProfessorRequestPut>();
+			var professor = _fixture.Create<Professor>();
+
+			mockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+
+			await cursoService.PutProfessorAsync(professor.Id, professorRequestPut);
+
+			await mockProfessorRepository.Received().EditAsync(Arg.Is<Professor>(c => c.Formacao == professorRequestPut.Formacao));
+		}
+
+		[Fact(DisplayName = "Deleta um Professor Válido")]
+		public async Task DeletarProfessor()
+		{
+			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var cursoService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
+
+			var professor = _fixture.Create<Professor>();
+			mockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+
+			await cursoService.DeleteProfessorAsync(professor.Id);
+
+			await mockProfessorRepository.Received().RemoveAsync(professor);
 		}
 	}
 }
