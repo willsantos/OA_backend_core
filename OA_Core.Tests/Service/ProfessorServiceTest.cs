@@ -30,7 +30,7 @@ namespace OA_Core.Tests.Service
 			_notifier = Substitute.For<INotificador>();
 		}
 
-		[Fact(DisplayName = "Cria um Curso Válido")]
+		[Fact(DisplayName = "Cria um Professor Válido")]
 		public async Task CriarProfessor()
 		{
 			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
@@ -122,8 +122,8 @@ namespace OA_Core.Tests.Service
 			await Assert.ThrowsAsync<InformacaoException>(() => professorService.PostProfessorAsync(professorRequest));
 		}
 
-		[Fact(DisplayName = "Tenta obter Curso por Id inválido")]
-		public async Task TentaObterCursoPorIdInvalido()
+		[Fact(DisplayName = "Tenta obter Professor por Id inválido")]
+		public async Task TentaObterProfessorPorIdInvalido()
 		{
 			var mockProfessorRepository = Substitute.For<IProfessorRepository>();
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
