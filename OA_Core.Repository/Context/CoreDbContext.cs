@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OA_Core.Domain.Entities;
+using OA_Core.Repository.Mappings;
 
 namespace OA_Core.Repository.Context
 {
@@ -9,6 +10,7 @@ namespace OA_Core.Repository.Context
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Curso> Curso { get; set; }
         public DbSet<Aluno> Aluno { get; set; }
+        public DbSet<Aula> Aula { get; set; }
 
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
@@ -18,15 +20,10 @@ namespace OA_Core.Repository.Context
         {
             modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
             modelBuilder.Entity<Professor>().Ignore(p => p.Valid).Ignore(p => p.ValidationResult);
-            modelBuilder.Entity<Curso>().Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
             modelBuilder.Entity<Aluno>().Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
 
-            modelBuilder.Entity<Curso>().Property(c => c.DataAlteracao).HasColumnName("data_alteracao");
-            modelBuilder.Entity<Curso>().Property(c => c.PreRequisito).HasColumnName("pre_requisito");
-            modelBuilder.Entity<Curso>().Property(c => c.ProfessorId).HasColumnName("professor_id");
-            modelBuilder.Entity<Curso>().Property(c => c.DataCriacao).HasColumnName("data_criacao");
-            modelBuilder.Entity<Curso>().Property(c => c.DataDelecao).HasColumnName("data_delecao");
+            modelBuilder.Entity<Curso>(new CursoEntityMap().Configure);
+            modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
         }
-
     }
 }
