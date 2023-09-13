@@ -63,23 +63,22 @@ namespace OA_Core.Service
 
         public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
-           throw new NotImplementedException();
-            //var entity = _mapper.Map<Aluno>(alunoRequest);
+			var entity = _mapper.Map<Aluno>(alunoRequest);
 
-            //if (!entity.Valid)
-            //{
-            //    _notificador.Handle(entity.ValidationResult);
-            //    return;
-            //}
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return;
+			}
 
-            //var find = await _repository.FindAsync(id) ??
-            //    throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
+			var find = await _repository.FindAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
-            //entity.Id = find.Id;
-            //entity.DataCriacao = find.DataCriacao;
-            //entity.DataAlteracao = DateTime.Now;
+			entity.Id = find.Id;
+			entity.DataCriacao = find.DataCriacao;
+			entity.DataAlteracao = DateTime.Now;
 
-            //await _repository.EditAsync(entity);
-        }
+			await _repository.EditAsync(entity);
+		}
     }
 }

@@ -14,14 +14,12 @@ namespace OA_Core.Domain.Entities
             DataCriacao = DateTime.Now;
             Validate(this, new AlunoValidator());
         }
-        public Aluno(string foto, string cpf, DateTime dataCriacao, DateTime dataAlteracao, DateTime dataDelecao)
+        public Aluno(string foto, string cpf)
         {
 			Foto = foto; 
 			Cpf = cpf;
-            DataCriacao = dataCriacao;
-            DataAlteracao = dataAlteracao;
-            DataDelecao = dataDelecao;
-        }
+			Validate(this, new AlunoValidator());
+		}
 
         public Guid UsuarioId { get; set; }
 		public string Foto { get; set; }
