@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OA_Core.Tests.Config
 {
-    internal class MapperConfig
+    public static class MapperConfig
     {
         public static IMapper Get()
         {
@@ -16,7 +16,10 @@ namespace OA_Core.Tests.Config
                 cfg.AddProfile(new Api.Profiles.CursoEntityToContractMap());
                 cfg.AddProfile(new Api.Profiles.ProfessorEntityToContractMap());
                 cfg.AddProfile(new Api.Profiles.UsuarioEntityToContractMap());
+
                 cfg.AddProfile(new Api.Profiles.AulaEntityToContractMap());
+
+                cfg.AddProfile(new Api.Profiles.AlunoEntityToContractMap());
 
             });
 

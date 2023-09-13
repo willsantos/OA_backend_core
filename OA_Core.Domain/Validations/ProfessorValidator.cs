@@ -22,7 +22,7 @@ namespace OA_Core.Domain.Validations
 
             RuleFor(u => u.Biografia)
             .NotEmpty()
-            .WithMessage("Experiencia precisa ser preenchida");
+            .WithMessage("Biografia precisa ser preenchida");
 
             RuleFor(u => u.Foto)
             .NotEmpty()
