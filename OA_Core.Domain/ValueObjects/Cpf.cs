@@ -14,24 +14,17 @@
 			Registro = registro;
         }
 		public string Formatted => ExibirFormatado(Registro);		
-		//Sobrescreve método toString() formatando para cpf
-		public override string ToString() => Formatted;
-		//Exibir() exibe o valor de CPF 
+		public override string ToString() => Formatted;	
 		public string Exibir(string cpf)
         {
 			cpf = new string(cpf.Where(char.IsDigit).ToArray());
 			return $"{cpf.Substring(0, 3)}{cpf.Substring(3, 3)}{cpf.Substring(6, 3)}{cpf.Substring(9)}";
-		}
-
-		//ExibirFormatado() exibe o valor de CPF formatado com pontuação e hífen.
+		}		
 		public string ExibirFormatado(string cpf)
-        {
-			//remove caracteres nao numericos
+        {			
 			cpf = new string(cpf.Where(char.IsDigit).ToArray());
 			return $"{cpf.Substring(0, 3)}.{cpf.Substring(3, 3)}.{cpf.Substring(6, 3)}-{cpf.Substring(9)}";
-		}
-
-		//Verificar() (verifica se o CPF é valido) 
+		}		
 		public bool Verificar(string cpf)
         {
 			if (string.IsNullOrWhiteSpace(cpf))
@@ -46,13 +39,11 @@
 				return false;
 			}
 
-			// Se todos os digitos forem iguais, retorna falso
 			if (cpf.Distinct().Count() == 1)
 			{
 				return false;
 			}
-
-			// Cálculo do dígito verificador
+					
 			int[] numeros = cpf.Select(c => int.Parse(c.ToString())).ToArray();
 			int soma1 = 0, soma2 = 0;
 
