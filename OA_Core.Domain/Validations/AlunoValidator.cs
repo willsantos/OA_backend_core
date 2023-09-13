@@ -15,6 +15,10 @@ namespace OA_Core.Domain.Validations
             RuleFor(u => u.UsuarioId)
                 .NotNull()
                 .WithMessage("Id de usuário não pode ser nulo");
-        }
+
+			RuleFor(a => a.Foto)
+				.NotNull()
+				.WithMessage("É necessário anexar a foto");
+		}
     }
 }

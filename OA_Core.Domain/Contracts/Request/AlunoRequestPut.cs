@@ -2,6 +2,6 @@
 {
     public class AlunoRequestPut
     {
-        
-    }
+		public string Foto { get; set; }
+	}
 }
