@@ -66,16 +66,15 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<IEnumerable<Aluno>> ListPaginationAsync(int page, int rows)
         {
-            var query = string.Format("SELECT u.nome, a.id, a.usuario_id UsuarioId, a.foto Foto, a.cpf Cpf, a.data_criacao DataCriacao, a.data_alteracao DataAlteracao, a.data_delecao DataDelecao" +
+            var query = string.Format("SELECT u.nome, a.id, a.usuario_id, a.foto, a.cpf, a.data_criacao, a.data_alteracao, a.data_delecao" +
 				" FROM Usuario u INNER JOIN Aluno a ON u.id = a.usuario_id AND a.data_delecao is null ORDER BY u.nome LIMIT @limit OFFSET @offset;", page * rows, rows);
             object[] paramItems = new object[]
            {
                 new MySqlParameter("@offset", page * rows),
                 new MySqlParameter("@limit", rows)
            };
-			try { return await _context.Aluno.FromSqlRaw(query, paramItems).ToListAsync(); }
-			catch (MySqlException ex) { throw; }
-            
+
+			return await _context.Aluno.FromSqlRaw(query, paramItems).ToListAsync();
         }
 
         public async Task RemoveAsync(Aluno aluno)
