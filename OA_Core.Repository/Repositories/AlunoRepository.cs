@@ -49,7 +49,7 @@ namespace OA_Core.Repository.Repositories
 
         public async Task<Aluno> FindAsync(Guid id)
         {
-            var query = "SELECT id, usuario_id UsuarioId, foto Foto, cpf Cpf, data_criacao DataCriacao, data_alteracao DataAlteracao, data_delecao DataDelecao" +
+            var query = "SELECT id, usuario_id, foto, cpf, data_criacao, data_alteracao, data_delecao" +
                 " FROM Aluno WHERE id = @id AND data_delecao IS NULL";
             object[] paramItems = new object[]
           {

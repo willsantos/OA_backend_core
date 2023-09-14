@@ -75,6 +75,7 @@ namespace OA_Core.Service
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
 			entity.Id = find.Id;
+			entity.UsuarioId = find.UsuarioId;
 			entity.DataCriacao = find.DataCriacao;
 			entity.DataAlteracao = DateTime.Now;
 
