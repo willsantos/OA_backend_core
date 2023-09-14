@@ -167,3 +167,7 @@ ALTER TABLE Usuario MODIFY id CHAR(36);
 ALTER TABLE Aluno ADD CONSTRAINT Aluno_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES Usuario(id);
 ALTER TABLE Professor ADD CONSTRAINT Professor_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES Usuario(id);
 ALTER TABLE Curso ADD CONSTRAINT Curso_ibfk_1 FOREIGN KEY (professor_id) REFERENCES Professor(id);
+
+ALTER TABLE Aluno ADD COLUMN foto VARCHAR(255) NULL AFTER usuario_id;
+ALTER TABLE Aluno ADD COLUMN cpf VARCHAR(11) NULL AFTER foto;
+
