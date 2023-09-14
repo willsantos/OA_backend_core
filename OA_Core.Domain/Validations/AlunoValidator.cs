@@ -13,12 +13,16 @@ namespace OA_Core.Domain.Validations
         public AlunoValidator()
         {
             RuleFor(u => u.UsuarioId)
-                .NotNull()
-                .WithMessage("Id de usuário não pode ser nulo");
+                .NotEmpty()
+                .WithMessage("Id de usuário não pode ser vazio");
 
 			RuleFor(a => a.Foto)
-				.NotNull()
+				.NotEmpty()
 				.WithMessage("É necessário anexar a foto");
+
+			RuleFor(a => a.Cpf)
+				.NotEmpty()
+				.WithMessage("Cpf é obrigatório");
 		}
     }
 }
