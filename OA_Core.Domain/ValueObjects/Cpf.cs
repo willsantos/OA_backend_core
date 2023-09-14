@@ -6,33 +6,34 @@
 
         public Cpf(string registro)
         {
-			if (!Verificar(registro))
-			{
-				throw new ArgumentException("CPF inválido.", nameof(registro));
-			}
+			//if (!Verificar())
+			//{
+			//	throw new ArgumentException("CPF inválido.", nameof(registro));
+			//}
 
 			Registro = registro;
         }
-		public string Formatted => ExibirFormatado(Registro);		
-		public override string ToString() => Formatted;	
-		public string Exibir(string cpf)
+		public string FormatoCpf => ExibirFormatado();
+		public string FormatacaoNumeros => Exibir();
+		public override string ToString() => FormatoCpf;	
+		public string Exibir()
         {
-			cpf = new string(cpf.Where(char.IsDigit).ToArray());
+			var cpf = new string(Registro.Where(char.IsDigit).ToArray());
 			return $"{cpf.Substring(0, 3)}{cpf.Substring(3, 3)}{cpf.Substring(6, 3)}{cpf.Substring(9)}";
 		}		
-		public string ExibirFormatado(string cpf)
+		public string ExibirFormatado()
         {			
-			cpf = new string(cpf.Where(char.IsDigit).ToArray());
+			var cpf = new string(Registro.Where(char.IsDigit).ToArray());
 			return $"{cpf.Substring(0, 3)}.{cpf.Substring(3, 3)}.{cpf.Substring(6, 3)}-{cpf.Substring(9)}";
 		}		
-		public bool Verificar(string cpf)
+		public bool Verificar()
         {
-			if (string.IsNullOrWhiteSpace(cpf))
+			if (string.IsNullOrWhiteSpace(Registro))
 			{
 				return false;
 			}
-			
-			cpf = Exibir(cpf);
+
+			var cpf = Exibir();
 		
 			if (cpf.Length != 11)
 			{
@@ -43,23 +44,38 @@
 			{
 				return false;
 			}
-					
-			int[] numeros = cpf.Select(c => int.Parse(c.ToString())).ToArray();
-			int soma1 = 0, soma2 = 0;
+
+			int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+			int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+			string tempCpf;
+			string digito;
+			int soma;
+			int resto;
+			cpf = cpf.Trim();			
+			if (cpf.Length != 11)
+				return false;
+			tempCpf = cpf.Substring(0, 9);
+			soma = 0;
 
 			for (int i = 0; i < 9; i++)
-			{
-				soma1 += numeros[i] * (10 - i);
-				soma2 += numeros[i] * (11 - i);
-			}
-
-			int digito1 = (soma1 * 10) % 11;
-			int digito2 = (soma2 * 10) % 11;
-
-			if (digito1 == 10) digito1 = 0;
-			if (digito2 == 10) digito2 = 0;
-
-			return digito1 == numeros[9] && digito2 == numeros[10];
+				soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+			resto = soma % 11;
+			if (resto < 2)
+				resto = 0;
+			else
+				resto = 11 - resto;
+			digito = resto.ToString();
+			tempCpf = tempCpf + digito;
+			soma = 0;
+			for (int i = 0; i < 10; i++)
+				soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+			resto = soma % 11;
+			if (resto < 2)
+				resto = 0;
+			else
+				resto = 11 - resto;
+			digito = digito + resto.ToString();
+			return cpf.EndsWith(digito);
 		}	
 	}
 }

@@ -1,5 +1,9 @@
 ﻿using FluentAssertions;
+using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Exceptions;
+using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Domain.ValueObjects;
+using OA_Core.Service;
 
 
 namespace OA_Core.Tests.ValueObject
@@ -7,7 +11,7 @@ namespace OA_Core.Tests.ValueObject
     [Trait("ValueObject","CPF")]
     public class CpfVOTest
     {
-        [Theory(DisplayName = "Com numeros repetidos", Skip = "TDD")]
+        [Theory(DisplayName = "Com numeros repetidos")]
         [InlineData("11111111111")]
         [InlineData("22222222222")]
         [InlineData("33333333333")]
@@ -18,21 +22,20 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("88888888888")]
         [InlineData("99999999999")]
         [InlineData("00000000000")]
-        public void NovoCpf_ComNumeroRepetido_DevemSerInvalidos(string registro)
+        public async Task NovoCpf_ComNumeroRepetido_DevemSerInvalidos(string registro)
         {
 
             //Arrange
             var cpf = new Cpf(registro);
 
-            //Act
-            bool resultado = cpf.Verificar();
+			//Act
+			bool resultado = cpf.Verificar();
 
-            //Assert
-            resultado.Should().BeFalse("CPF com caracteres repetidos deve ser inválido");
-            
-        }
+			//Assert
+			Assert.Equal(false, resultado);
+		}
 
-        [Theory(DisplayName = "Com quantidade incorreta", Skip = "TDD")]
+        [Theory(DisplayName = "Com quantidade incorreta")]
         [InlineData("1111111111111")]
         [InlineData("222222222222")]
         [InlineData("6986484550")]
@@ -53,7 +56,7 @@ namespace OA_Core.Tests.ValueObject
             resultado.Should().BeFalse("CPF com quantidade de digito diferente de 11 devem ser inválido");
         }
 
-        [Theory(DisplayName = "Com caracteres inválidos", Skip = "TDD")]
+        [Theory(DisplayName = "Com caracteres inválidos")]
         [InlineData("471B0316623")]
         [InlineData("660879960C7")]
         [InlineData("62841A95257")]
@@ -75,11 +78,11 @@ namespace OA_Core.Tests.ValueObject
 
             //Assert
             Assert.False(resultado);
-            resultado.Should().BeFalse("");
+			resultado.Should().BeFalse("CPF com caracteres inválido");
 
-        }
+		}
 
-        [Theory(DisplayName ="Com verificador inválido", Skip = "TDD")]
+        [Theory(DisplayName ="Com verificador inválido")]
         [InlineData("47160316623")] 
         [InlineData("66087996047")] 
         [InlineData("62841095257")] 
@@ -104,7 +107,7 @@ namespace OA_Core.Tests.ValueObject
 
         }
 
-        [Theory(DisplayName = "Com verificador valido", Skip = "TDD")]
+        [Theory(DisplayName = "Com verificador valido")]
         [InlineData("47160316673")]
         [InlineData("69864845500")]
         [InlineData("62841095207")]
@@ -114,8 +117,8 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("50531400140")]
         [InlineData("46089123218")]
         [InlineData("59414377492")]
-        [InlineData("41438589670")]
-        public void NovoCpf_CalculoVerificadorCorreto_DevemSerValidos(string registro)
+        [InlineData("41438589670")]		
+		public void NovoCpf_CalculoVerificadorCorreto_DevemSerValidos(string registro)
         {
             
             //Arrange
@@ -130,7 +133,7 @@ namespace OA_Core.Tests.ValueObject
 
         }
 
-        [Theory(DisplayName = "Retorna CPf com Formatação", Skip = "TDD")]
+        [Theory(DisplayName = "Retorna CPf com Formatação")]
         [InlineData("47160316673", "471.603.166-73")]
         [InlineData("69864845500", "698.648.455-00")]
         [InlineData("62841095207", "628.410.952-07")]
@@ -155,7 +158,7 @@ namespace OA_Core.Tests.ValueObject
 
         }
 
-        [Theory(DisplayName = "Retorna CPf Sem Formatação", Skip = "TDD")]
+        [Theory(DisplayName = "Retorna CPf Sem Formatação")]
         [InlineData("47160316673")]
         [InlineData("69864845500")]
         [InlineData("62841095207")]
@@ -166,7 +169,7 @@ namespace OA_Core.Tests.ValueObject
         [InlineData("46089123218")]
         [InlineData("59414377492")]
         [InlineData("41438589670")]
-        public void Cpf_Exibir_DeveRetornarCpfSemFormatacao(string registro)
+		public void Cpf_Exibir_DeveRetornarCpfSemFormatacao(string registro)
         {
             
             //Arrange
