@@ -32,7 +32,7 @@ namespace OA_Core.Tests.ValueObject
 			bool resultado = cpf.Verificar();
 
 			//Assert
-			Assert.Equal(false, resultado);
+			resultado.Should().BeFalse("CPF com numeros repetidos");
 		}
 
         [Theory(DisplayName = "Com quantidade incorreta")]
