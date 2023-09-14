@@ -12,9 +12,6 @@ namespace OA_Core.Domain.Validations
     {
         public AlunoValidator()
         {
-            //RuleFor(u => u.UsuarioId)
-            //    .NotEmpty()
-            //    .WithMessage("Id de usuário não pode ser vazio");
 
 			RuleFor(a => a.Foto)
 				.NotEmpty()

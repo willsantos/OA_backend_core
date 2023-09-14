@@ -87,5 +87,15 @@ namespace OA_Core.Repository.Repositories
             };
             await _context.Database.ExecuteSqlRawAsync(sql, paramItems);
         }
-    }
+
+		public async Task<Aluno> FindByCpfAsync(string cpf)
+		{
+			var query = "SELECT * FROM Aluno a WHERE a.cpf = @cpf";
+			object[] paramItems = new object[]
+		  {
+				new MySqlParameter("@cpf", cpf)
+		  };
+			return await _context.Aluno.FromSqlRaw(query, paramItems).FirstOrDefaultAsync();
+		}
+	}
 }

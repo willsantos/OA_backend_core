@@ -58,6 +58,9 @@ namespace OA_Core.Service
 			if (await _usuarioRepository.FindAsync(alunoRequest.UsuarioId)is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {alunoRequest.UsuarioId} inválido ou não existente");
 
+			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
+			if (existingAlunoWithCpf != null)
+				throw new InformacaoException(StatusException.Conflito, $"CPF {entity.Cpf} incorreto.");
 
 			if (!entity.Valid)
             {
