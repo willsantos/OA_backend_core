@@ -146,8 +146,54 @@ namespace OA_Core.Tests.Service
 
 			await service.PostAlunoAsync(alunoRequest);
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));
-			//var exception = await Record.ExceptionAsync(async () => await service.PostAlunoAsync(alunoRequest));
-			//Assert.NotNull(exception);
+		}
+
+		[Fact(DisplayName = "Cadastra aluno com usuarioId inválido")]
+		public async Task CadastrarAlunoUsuarioIdInvalido()
+		{
+			var alunoRequest = _fixture.Create<AlunoRequest>();
+			var mockRepository = Substitute.For<IAlunoRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+
+			mockRepository.AddAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
+
+			var exception = await Record.ExceptionAsync(async () => await service.PostAlunoAsync(alunoRequest));
+			Assert.NotNull(exception);
+		}
+
+		[Fact(DisplayName = "Edita alunos")]
+		public async Task EditarAluno()
+		{
+			var aluno = _fixture.Create<Aluno>();
+			var alunoRequest = _fixture.Create<AlunoRequestPut>();
+			var mockRepository = Substitute.For<IAlunoRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+
+			mockRepository.FindAsync(Arg.Any<Guid>()).Returns(aluno);
+
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
+
+			var exception = await Record.ExceptionAsync(async () => await service.PutAlunoAsync(aluno.Id, alunoRequest));
+			Assert.Null(exception);
+		}
+
+		[Fact(DisplayName = "Edita alunos campo inválido")]
+		public async Task EditarAlunoNull()
+		{
+			var aluno = _fixture.Create<Aluno>();
+			var alunoRequest = _fixture.Create<AlunoRequestPut>();
+			alunoRequest.Foto = string.Empty;
+			var mockRepository = Substitute.For<IAlunoRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+
+			mockRepository.FindAsync(Arg.Any<Guid>()).Returns(aluno);
+
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
+			await service.PutAlunoAsync(aluno.Id, alunoRequest);
+
+			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));
 		}
 	}
 }
