@@ -52,6 +52,8 @@ namespace OA_Core.Service
         public async Task<Guid> PostAlunoAsync(AlunoRequest alunoRequest)
         {
             var entity = _mapper.Map<Aluno>(alunoRequest);
+			alunoRequest.Cpf.Verificar();
+			entity.Cpf = alunoRequest.Cpf.Exibir();
 
 			if (await _usuarioRepository.FindAsync(alunoRequest.UsuarioId)is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {alunoRequest.UsuarioId} inválido ou não existente");
@@ -70,6 +72,9 @@ namespace OA_Core.Service
         public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
 			var entity = _mapper.Map<Aluno>(alunoRequest);
+
+			alunoRequest.Cpf.Verificar();
+			entity.Cpf = alunoRequest.Cpf.Exibir();
 
 			if (!entity.Valid)
 			{
