@@ -11,6 +11,7 @@ namespace OA_Core.Api.Profiles
         {
             CreateMap<Aluno, AlunoRequest>().ReverseMap();
             CreateMap<Aluno, AlunoResponse>().ReverseMap();
+            CreateMap<Aluno, AlunoRequestPut>().ReverseMap();
         }
     }
 }
