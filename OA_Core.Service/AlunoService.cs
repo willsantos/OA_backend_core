@@ -12,36 +12,38 @@ namespace OA_Core.Service
 {
     public class AlunoService : IAlunoService
     {
-        private readonly IAlunoRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IAlunoRepository _alunoRepository;
+		private readonly IUsuarioRepository _usuarioRepository;
+		private readonly IMapper _mapper;
         private readonly INotificador _notificador;
 
-        public AlunoService(IAlunoRepository repository, IMapper mapper, INotificador notificador)
+		public AlunoService(IAlunoRepository repository, IUsuarioRepository usuarioRepository, IMapper mapper, INotificador notificador)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _alunoRepository = repository;
+			_usuarioRepository = usuarioRepository;
+			_mapper = mapper;
             _notificador = notificador;
         }
 
         public async Task DeleteAlunoAsync(Guid id)
         {
-            var aluno = await _repository.FindAsync(id) ??
+            var aluno = await _alunoRepository.FindAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             aluno.DataDelecao = DateTime.Now;
-            await _repository.RemoveAsync(aluno);
+            await _alunoRepository.RemoveAsync(aluno);
         }
 
         public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)
         {
-            var listEntity = await _repository.ListPaginationAsync(page, rows);
+            var listEntity = await _alunoRepository.ListPaginationAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AlunoResponse>>(listEntity);
         }
 
         public async Task<AlunoResponse> GetAlunoByIdAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id) ??
+            var usuario = await _alunoRepository.FindAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
             return _mapper.Map<AlunoResponse>(usuario);
@@ -50,36 +52,52 @@ namespace OA_Core.Service
         public async Task<Guid> PostAlunoAsync(AlunoRequest alunoRequest)
         {
             var entity = _mapper.Map<Aluno>(alunoRequest);
+			alunoRequest.Cpf.Verificar();
+			entity.Cpf = alunoRequest.Cpf.Exibir();
 
-            if (!entity.Valid)
+			if (await _usuarioRepository.FindAsync(alunoRequest.UsuarioId)is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {alunoRequest.UsuarioId} inválido ou não existente");
+
+			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
+			if (existingAlunoWithCpf != null)
+				throw new InformacaoException(StatusException.Conflito, $"CPF {entity.Cpf} incorreto.");
+
+			if (!entity.Valid)
             {
                 _notificador.Handle(entity.ValidationResult);
                 return Guid.Empty;
             }
 
-            await _repository.AddAsync(entity);
+            await _alunoRepository.AddAsync(entity);
             return entity.Id;
         }
 
         public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
-           throw new NotImplementedException();
-            //var entity = _mapper.Map<Aluno>(alunoRequest);
+			var entity = _mapper.Map<Aluno>(alunoRequest);
 
-            //if (!entity.Valid)
-            //{
-            //    _notificador.Handle(entity.ValidationResult);
-            //    return;
-            //}
+			alunoRequest.Cpf.Verificar();
+			entity.Cpf = alunoRequest.Cpf.Exibir();
 
-            //var find = await _repository.FindAsync(id) ??
-            //    throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
+			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
+			if (existingAlunoWithCpf != null)
+				throw new InformacaoException(StatusException.Conflito, $"CPF {entity.Cpf} incorreto.");
 
-            //entity.Id = find.Id;
-            //entity.DataCriacao = find.DataCriacao;
-            //entity.DataAlteracao = DateTime.Now;
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return;
+			}
 
-            //await _repository.EditAsync(entity);
-        }
+			var find = await _alunoRepository.FindAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
+
+			entity.Id = find.Id;
+			entity.UsuarioId = find.UsuarioId;
+			entity.DataCriacao = find.DataCriacao;
+			entity.DataAlteracao = DateTime.Now;
+
+			await _alunoRepository.EditAsync(entity);
+		}
     }
 }
