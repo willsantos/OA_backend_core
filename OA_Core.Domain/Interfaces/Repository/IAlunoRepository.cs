@@ -15,5 +15,7 @@ namespace OA_Core.Domain.Interfaces.Repository
         Task AddAsync(Aluno aluno);
         Task RemoveAsync(Aluno aluno);
         Task EditAsync(Aluno aluno);
-    }
+		Task<Aluno> FindByCpfAsync(string cpf);
+
+	}
 }
