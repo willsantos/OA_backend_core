@@ -12,14 +12,21 @@ namespace OA_Core.Tests.Config
 	public class UsuarioFixture : IDisposable
 	{
 
-		public Usuario GerarUsuario()
+		public static Usuario GerarUsuario()
 		{
 			var usuario = GerarUsuarios(1, true).FirstOrDefault();
 
 			return usuario is null ? throw new Exception("Falha ao gerar usuario com Bogus") : usuario;
 		}
 
-		public UsuarioRequest GerarUsuarioRequest()
+		public static Usuario GerarUsuarioInvalido()
+		{
+			var usuario = GerarUsuariosInvalidos(1).FirstOrDefault();
+
+			return usuario is null ? throw new Exception("Falha ao gerar usuario com Bogus") : usuario;
+		}
+
+		public static UsuarioRequest GerarUsuarioRequest()
 		{
 			var usuario = GerarUsuarios(1, true).FirstOrDefault() ?? throw new Exception("Falha ao gerar usuario com Bogus");
 
@@ -38,7 +45,22 @@ namespace OA_Core.Tests.Config
 
 		}
 
-		public IEnumerable<Usuario> GerarUsuarios(int quantidade, bool ativo)
+		public static IEnumerable<Usuario> GerarUsuariosInvalidos(int quantidade)
+		{
+			var usuarios = new Faker<Usuario>("pt_BR")
+				.CustomInstantiator(prop => new Usuario(
+					prop.Name.FirstName(),
+					"",
+					prop.Internet.Password(),
+					prop.Date.Past(80, DateTime.Now.AddYears(-18)),
+					prop.Phone.PhoneNumber(),
+					prop.Address.StreetName()));
+
+
+			return usuarios.Generate(quantidade);
+		}
+
+		public static IEnumerable<Usuario> GerarUsuarios(int quantidade, bool ativo)
 		{
 			var usuarios = new Faker<Usuario>("pt_BR")
 				.CustomInstantiator(prop => new Usuario(
@@ -48,7 +70,6 @@ namespace OA_Core.Tests.Config
 					prop.Date.Past(80, DateTime.Now.AddYears(-18)),
 					prop.Phone.PhoneNumber(),
 					prop.Address.StreetName()));
-
 
 			return usuarios.Generate(quantidade);
 
