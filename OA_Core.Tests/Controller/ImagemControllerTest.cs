@@ -10,6 +10,7 @@ using OA_Core.Api.Controllers;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Enums;
 using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Repository.Repositories;
 using OA_Core.Service;
@@ -45,10 +46,12 @@ namespace OA_Core.Tests.Controller
 			var formFile = Substitute.For<IFormFile>();
 			formFile.Length.Returns(100); // Set a valid file length
 			formFile.FileName.Returns("test_image");
+			var tipoimagem = TipoImagem.fotoOutro;
 
-			_service.SaveImageAsync(formFile).Returns("okResult");
 
-			var controllerResult = await imagemController.UploadImagem(formFile);
+			_service.SaveImageAsync(formFile, tipoimagem).Returns("okResult");
+
+			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
 
 			controllerResult.Should().NotBeNull();
 			controllerResult.Should().BeAssignableTo<OkObjectResult>();
@@ -67,8 +70,10 @@ namespace OA_Core.Tests.Controller
 			var formFile = Substitute.For<IFormFile>();
 			formFile.Length.Returns(0); // Set a valid file length
 			formFile.FileName.Returns("test_image");
+			var tipoimagem = TipoImagem.fotoOutro;
 
-			var controllerResult = await imagemController.UploadImagem(formFile);
+
+			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
 
 			controllerResult.Should().NotBeNull();
 			controllerResult.Should().BeAssignableTo<BadRequestObjectResult>();
@@ -88,9 +93,12 @@ namespace OA_Core.Tests.Controller
 			formFile.Length.Returns(100); // Set a valid file length
 			formFile.FileName.Returns("test_image");
 
-			_service.SaveImageAsync(formFile).Throws(new ArgumentException("Arquivo inválido"));
+			var tipoimagem = TipoImagem.fotoOutro;
 
-			var controllerResult = await imagemController.UploadImagem(formFile);
+
+			_service.SaveImageAsync(formFile, tipoimagem).Throws(new ArgumentException("Arquivo inválido"));
+
+			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
 
 			controllerResult.Should().NotBeNull();
 			controllerResult.Should().BeAssignableTo<ObjectResult>();

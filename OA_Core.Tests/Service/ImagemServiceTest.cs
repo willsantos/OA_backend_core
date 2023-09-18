@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
+using OA_Core.Domain.Enums;
 using OA_Core.Service;
 using System;
 using System.Collections.Generic;
@@ -24,14 +25,17 @@ namespace OA_Core.Tests.Service
 			formFile.Length.Returns(100); // Set a valid file length
 			formFile.FileName.Returns("test_image");
 
+			var tipoimagem = TipoImagem.fotoOutro;
+
+
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act
-			var result = await imagemService.SaveImageAsync(formFile);
+			var result = await imagemService.SaveImageAsync(formFile, tipoimagem);
 
 			// Assert
 			result.Should().NotBeNullOrEmpty();
-			result.Should().StartWith("images\\test_image");
+			result.Should().StartWith("images\\fotooutro\\test_image");
 		}
 
 		[Fact]
@@ -45,10 +49,12 @@ namespace OA_Core.Tests.Service
 			formFile.Length.Returns(0);
 			formFile.FileName.Returns("invalid_image.jpg");
 
+			var tipoimagem = TipoImagem.fotoOutro;
+
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act and Assert
-			Func<Task> action = async () => await imagemService.SaveImageAsync(formFile);
+			Func<Task> action = async () => await imagemService.SaveImageAsync(formFile, tipoimagem);
 			await action.Should().ThrowAsync<ArgumentException>();
 		}
 	}
