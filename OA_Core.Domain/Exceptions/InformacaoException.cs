@@ -5,7 +5,8 @@ namespace OA_Core.Domain.Exceptions
 {
     public class InformacaoException : Exception
     {
-        public InformacaoException(StatusException status, List<string> mensagens, Exception exception = null) : base(status.Description(), exception) 
+		
+		public InformacaoException(StatusException status, List<string> mensagens, Exception exception = null) : base(status.Description(), exception) 
         {
             Codigo = status;
             Mensagens = mensagens;
