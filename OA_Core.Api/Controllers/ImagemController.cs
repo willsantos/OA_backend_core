@@ -26,7 +26,7 @@ namespace OA_Core.Api.Controllers
 			{
 				var imageUrl = await _imagemService.SaveImageAsync(file);
 
-				return Ok(new { imageUrl });
+				return Ok(imageUrl);
 			}
 			catch (Exception ex)
 			{
