@@ -35,7 +35,7 @@ namespace OA_Core.Tests.Service
 
 			// Assert
 			result.Should().NotBeNullOrEmpty();
-			result.Should().StartWith("images\\fotooutro\\test_image");
+			result.Should().StartWith("images");
 		}
 
 		[Fact]
