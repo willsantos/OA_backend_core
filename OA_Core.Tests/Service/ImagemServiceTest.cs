@@ -33,9 +33,12 @@ namespace OA_Core.Tests.Service
 			// Act
 			var result = await imagemService.SaveImageAsync(formFile, tipoimagem);
 
+			var expectedPath = Path.Combine("images", tipoimagem.ToString().ToLower(), "test_image");
+
+
 			// Assert
 			result.Should().NotBeNullOrEmpty();
-			result.Should().StartWith("images");
+			result.Should().StartWith(expectedPath);
 		}
 
 		[Fact]
