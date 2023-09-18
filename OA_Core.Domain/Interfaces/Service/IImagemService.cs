@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using OA_Core.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace OA_Core.Domain.Interfaces.Service
 {
 	public interface IImagemService
 	{
-		Task<string> SaveImageAsync(IFormFile file);
+		Task<string> SaveImageAsync(IFormFile file, TipoImagem tipoImagem);
 
 	}
 }

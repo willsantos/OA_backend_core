@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OA_Core.Domain.Enums;
 using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Api.Controllers
@@ -15,7 +16,7 @@ namespace OA_Core.Api.Controllers
 		}
 
 		[HttpPost("upload")]
-		public async Task<IActionResult> UploadImagem([FromForm] IFormFile file)
+		public async Task<IActionResult> UploadImagem([FromForm] IFormFile file, TipoImagem tipoImagem)
 		{
 			if (file == null || file.Length == 0)
 			{
@@ -24,7 +25,7 @@ namespace OA_Core.Api.Controllers
 
 			try
 			{
-				var imageUrl = await _imagemService.SaveImageAsync(file);
+				var imageUrl = await _imagemService.SaveImageAsync(file, tipoImagem);
 
 				return Ok(imageUrl);
 			}
