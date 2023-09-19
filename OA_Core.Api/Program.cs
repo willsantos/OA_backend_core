@@ -43,8 +43,8 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
 
 builder.Services.AddMvc(options =>
 {
-    options.Filters.Add<NotificatonFilter>();
-    options.Filters.Add<ExceptionFilter>();
+	options.Filters.Add<NotificatonFilter>();
+	options.Filters.Add<ExceptionFilter>();
 });
 
 #endregion
@@ -62,6 +62,8 @@ builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAulaRepository, AulaRepository>();
 builder.Services.AddScoped<IAulaService, AulaService>();
+builder.Services.AddScoped<IImagemService, ImagemService>();
+
 
 #endregion
 
@@ -74,6 +76,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
