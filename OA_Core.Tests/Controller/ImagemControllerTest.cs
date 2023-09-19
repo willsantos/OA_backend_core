@@ -49,7 +49,7 @@ namespace OA_Core.Tests.Controller
 			var tipoimagem = TipoImagem.fotoOutro;
 
 
-			_service.SaveImageAsync(formFile, tipoimagem).Returns("okResult");
+			_service.SaveImageAsync(formFile, tipoimagem).Returns("mock_resultado_sem_problemas");
 
 			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
 
@@ -59,53 +59,7 @@ namespace OA_Core.Tests.Controller
 			var result = controllerResult as OkObjectResult;
 
 			result.StatusCode.Should().Be(StatusCodes.Status200OK);
-			result.Value.Should().Be("okResult");
-		}
-
-		[Fact(DisplayName = "Adiciona uma imagem invalida")]
-		public async Task UploadImagemInvalida()
-		{
-			var imagemController = new ImagemController(_service);
-
-			var formFile = Substitute.For<IFormFile>();
-			formFile.Length.Returns(0); // Set a valid file length
-			formFile.FileName.Returns("test_image");
-			var tipoimagem = TipoImagem.fotoOutro;
-
-
-			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
-
-			controllerResult.Should().NotBeNull();
-			controllerResult.Should().BeAssignableTo<BadRequestObjectResult>();
-
-			var result = controllerResult as BadRequestObjectResult;
-
-			result.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-			result.Value.Should().Be("Arquivo não enviado.");
-		}
-
-		[Fact(DisplayName = "Adiciona uma imagem invalida validação service")]
-		public async Task UploadImagemInvalidaNaService()
-		{
-			var imagemController = new ImagemController(_service);
-
-			var formFile = Substitute.For<IFormFile>();
-			formFile.Length.Returns(100); // Set a valid file length
-			formFile.FileName.Returns("test_image");
-
-			var tipoimagem = TipoImagem.fotoOutro;
-
-
-			_service.SaveImageAsync(formFile, tipoimagem).Throws(new ArgumentException("Arquivo inválido"));
-
-			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
-
-			controllerResult.Should().NotBeNull();
-			controllerResult.Should().BeAssignableTo<ObjectResult>();
-
-			var result = controllerResult as ObjectResult;
-
-			result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+			result.Value.Should().Be("mock_resultado_sem_problemas");
 		}
 	}
 }

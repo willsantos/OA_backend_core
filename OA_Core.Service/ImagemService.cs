@@ -4,6 +4,8 @@ using OA_Core.Domain.Interfaces.Service;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 using OA_Core.Domain.Enums;
+using OA_Core.Domain.Interfaces.Notifications;
+using OA_Core.Domain.Exceptions;
 
 namespace OA_Core.Service
 {
@@ -22,7 +24,12 @@ namespace OA_Core.Service
 		{
 			if (file == null || file.Length == 0)
 			{
-				throw new ArgumentException("Arquivo inválido");
+				throw new InformacaoException(StatusException.FormatoIncorreto, $"Arquivo não encontrado");
+			}
+
+			if (!file.ContentType.StartsWith("image"))
+			{
+				throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de arquivo inválido");
 			}
 
 			string caminhoImagem = TipoImagem.ToString().ToLower(); // Use o nome da enumeração em minúsculas
@@ -33,7 +40,6 @@ namespace OA_Core.Service
 			//Cerficica que a subpasta existe, criando se seja necessário.
 			string subfolderPath = Path.Combine(_imageFolderPath, caminhoImagem);
 			Directory.CreateDirectory(subfolderPath);
-
 
 			// Formata nome do arquivo
 			string filename = Path.GetFileNameWithoutExtension(file.FileName);
