@@ -76,6 +76,25 @@ namespace OA_Core.Repository.Repositories
 			}
 		}
 
+		public async Task<IEnumerable<T>> ObterTodosAsync(int page, int rows)
+		{
+			try
+			{
+				var query = _coreDbContext.Set<T>().AsQueryable();
+
+				var items = await query
+					.Skip((page - 1) * rows)
+					.Take(rows)
+					.ToListAsync();
+
+				return items;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
 		public async Task RemoverAsync(T item)
 		{
 			try

@@ -7,6 +7,7 @@ namespace OA_Core.Domain.Interfaces.Repository
 		Task<T> ObterPorIdAsync(Guid id);
 		Task<T> ObterAsync(Expression<Func<T, bool>> expression);
 		Task<IEnumerable<T>> ObterTodosAsync(Expression<Func<T, bool>> expression);
+		Task<IEnumerable<T>> ObterTodosAsync(int page, int rows);
 		Task AdicionarAsync(T item);
 		Task RemoverAsync(T item);
 		Task EditarAsync(T item);
