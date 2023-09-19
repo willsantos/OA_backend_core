@@ -48,8 +48,8 @@ namespace OA_Core.Service
 
         public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
         {
-            //Encryptar senha
-            //Mandar email confirmacao usuario
+			//TODO: Encryptar senha
+            //TODO: Mandar email confirmacao usuario
             var entity = _mapper.Map<Usuario>(usuarioRequest);
 
             if (!entity.Valid)
@@ -65,7 +65,7 @@ namespace OA_Core.Service
 
         public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
         {
-            //@TODO: fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
+			//TODO: Fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
             var entity = _mapper.Map<Usuario>(usuarioRequest);
 
             if (!entity.Valid)
