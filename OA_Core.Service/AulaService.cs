@@ -53,7 +53,7 @@ namespace OA_Core.Service
         {
             var entity = _mapper.Map<Aula>(aulaRequest);
        
-            if (await _cursoRepository.FindAsync(aulaRequest.CursoId) is null)
+            if (await _cursoRepository.ObterPorIdAsync(aulaRequest.CursoId) is null)
                 throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {aulaRequest.CursoId} inválido ou não existente");
             
             if (!entity.Valid)
