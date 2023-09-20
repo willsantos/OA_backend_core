@@ -1,12 +1,15 @@
-﻿namespace OA_Core.Domain.Interfaces.Service
+﻿using System.Linq.Expressions;
+
+namespace OA_Core.Domain.Interfaces.Service
 {
-	public interface IBaseService<TResponse, TRequest, T> where TResponse : class where TRequest : class where T : class
+	public interface IBaseService<TResponse> where TResponse : class
 	{
 		Task<TResponse> ObterPorIdAsync(Guid id);
-		Task<TResponse> ObterAsync(int page, int rows);
-		Task<IEnumerable<TResponse>> ObterTodosAsync(string parametros);
-		Task <Guid>AdicionarAsync(TRequest item);
-		Task RemoverAsync(Guid id);
-		Task EditarAsync<TRequestPut>(Guid id, TRequest item);
+		Task<TResponse> ObterTodosAsync(int page, int rows);
+		Task<TResponse> ObterAsync(string parametros);
+		Task<IEnumerable<TResponse>> ObterTodosAsync(string expression);
+		Task <Guid>AdicionarAsync<TRequest>(TRequest item);
+		Task RemoverAsync<TRequest>(Guid id);
+		Task EditarAsync<TRequestPut>(Guid id, TRequestPut item);
 	}
 }
