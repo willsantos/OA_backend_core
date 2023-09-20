@@ -24,23 +24,23 @@ namespace OA_Core.Service
         }
         public async Task DeleteUsuarioAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id) ??
+            var usuario = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             usuario.DataDelecao = DateTime.Now;
-            await _repository.RemoveAsync(usuario);
+            await _repository.RemoverAsync(usuario);
         }
 
         public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
         {
-            var listEntity = await _repository.ListPaginationAsync(page, rows);
+            var listEntity = await _repository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
         }
 
         public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
         {
-            var usuario = await _repository.FindAsync(id) ?? 
+            var usuario = await _repository.ObterPorIdAsync(id) ?? 
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             return _mapper.Map<UsuarioResponse>(usuario);
@@ -59,7 +59,7 @@ namespace OA_Core.Service
 
             }
 
-            await _repository.AddAsync(entity);
+            await _repository.AdicionarAsync(entity);
             return entity.Id;
         }
 
@@ -74,14 +74,14 @@ namespace OA_Core.Service
                 return;
             }
 
-            var find = await _repository.FindAsync(id) ??
+            var find = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             entity.Id = find.Id;
             entity.DataCriacao = find.DataCriacao;
             entity.DataAlteracao = DateTime.Now;
 
-            await _repository.EditAsync(entity);
+            await _repository.EditarAsync(entity);
         }
     }
 }

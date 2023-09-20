@@ -55,7 +55,7 @@ namespace OA_Core.Service
 			alunoRequest.Cpf.Verificar();
 			entity.Cpf = alunoRequest.Cpf.Exibir();
 
-			if (await _usuarioRepository.FindAsync(alunoRequest.UsuarioId)is null)
+			if (await _usuarioRepository.ObterPorIdAsync(alunoRequest.UsuarioId)is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {alunoRequest.UsuarioId} inválido ou não existente");
 
 			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);

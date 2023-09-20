@@ -27,23 +27,23 @@ namespace OA_Core.Service
 
         public async Task DeleteProfessorAsync(Guid id)
         {
-            var professor = await _repository.FindAsync(id) ??
+            var professor = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             professor.DataDelecao = DateTime.Now;
-            await _repository.RemoveAsync(professor);
+            await _repository.RemoverAsync(professor);
         }
 
         public async Task<IEnumerable<ProfessorResponse>> GetAllProfessoresAsync(int page, int rows)
         {
-            var listEntity = await _repository.ListPaginationAsync(page, rows);
+            var listEntity = await _repository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<ProfessorResponse>>(listEntity);
         }
 
         public async Task<ProfessorResponse> GetProfessorByIdAsync(Guid id)
         {
-            var professor = await _repository.FindAsync(id) ??
+            var professor = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
 
             return _mapper.Map<ProfessorResponse>(professor);
@@ -53,7 +53,7 @@ namespace OA_Core.Service
         {
             var entity = _mapper.Map<Professor>(professorRequest);
        
-            if (await _usuarioRepository.FindAsync(professorRequest.UsuarioId) is null)
+            if (await _usuarioRepository.ObterPorIdAsync(professorRequest.UsuarioId) is null)
                 throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {professorRequest.UsuarioId} inválido ou não existente");
             
             if (!entity.Valid)
@@ -63,7 +63,7 @@ namespace OA_Core.Service
 
             }          
 
-            await _repository.AddAsync(entity);
+            await _repository.AdicionarAsync(entity);
             return entity.Id;
         }
 
@@ -77,14 +77,16 @@ namespace OA_Core.Service
                 return;
             }
 
-            var find = await _repository.FindAsync(id) ??
+            var find = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
-            entity.Id = find.Id;
-            entity.UsuarioId = find.UsuarioId;
-            entity.DataCriacao = find.DataCriacao;
+
+			find.Formacao = entity.Formacao;
+			find.Experiencia = entity.Experiencia;
+			find.Foto = entity.Foto;
+			find.Biografia = entity.Biografia;
             entity.DataAlteracao = DateTime.Now;
 
-            await _repository.EditAsync(entity);
+            await _repository.EditarAsync(find);
         }
     }
 }
