@@ -74,10 +74,10 @@ namespace OA_Core.Service
 
         public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
+
 			var entity = _mapper.Map<Aluno>(alunoRequest);
 
 			alunoRequest.Cpf.Verificar();
-			entity.Cpf = alunoRequest.Cpf.Exibir();
 
 			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
 			if (existingAlunoWithCpf != null)
@@ -92,12 +92,10 @@ namespace OA_Core.Service
 			var find = await _alunoRepository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
-			entity.Id = find.Id;
-			entity.UsuarioId = find.UsuarioId;
-			entity.DataCriacao = find.DataCriacao;
-			entity.DataAlteracao = DateTime.Now;
-
-			await _alunoRepository.EditarAsync(entity);
+			find.Cpf = alunoRequest.Cpf.Exibir();
+			find.Foto = alunoRequest.Foto;
+			find.DataAlteracao = DateTime.Now;
+			await _alunoRepository.EditarAsync(find);
 		}
     }
 }
