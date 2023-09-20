@@ -2,7 +2,7 @@
 
 namespace OA_Core.Service
 {
-	public class BaseService<T> : IBaseService<T> where T : class
+	public class BaseService<T> : IBaseService<T> where T : class 
 	{
 		public Task<Guid> AdicionarAsync<TRequest>(TRequest item)
 		{
