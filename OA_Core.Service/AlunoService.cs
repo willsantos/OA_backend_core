@@ -27,23 +27,23 @@ namespace OA_Core.Service
 
         public async Task DeleteAlunoAsync(Guid id)
         {
-            var aluno = await _alunoRepository.FindAsync(id) ??
+            var aluno = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             aluno.DataDelecao = DateTime.Now;
-            await _alunoRepository.RemoveAsync(aluno);
+            await _alunoRepository.RemoverAsync(aluno);
         }
 
         public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)
         {
-            var listEntity = await _alunoRepository.ListPaginationAsync(page, rows);
+            var listEntity = await _alunoRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AlunoResponse>>(listEntity);
         }
 
         public async Task<AlunoResponse> GetAlunoByIdAsync(Guid id)
         {
-            var usuario = await _alunoRepository.FindAsync(id) ??
+            var usuario = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
             return _mapper.Map<AlunoResponse>(usuario);
@@ -68,7 +68,7 @@ namespace OA_Core.Service
                 return Guid.Empty;
             }
 
-            await _alunoRepository.AddAsync(entity);
+            await _alunoRepository.AdicionarAsync(entity);
             return entity.Id;
         }
 
@@ -89,7 +89,7 @@ namespace OA_Core.Service
 				return;
 			}
 
-			var find = await _alunoRepository.FindAsync(id) ??
+			var find = await _alunoRepository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
 			entity.Id = find.Id;
@@ -97,7 +97,7 @@ namespace OA_Core.Service
 			entity.DataCriacao = find.DataCriacao;
 			entity.DataAlteracao = DateTime.Now;
 
-			await _alunoRepository.EditAsync(entity);
+			await _alunoRepository.EditarAsync(entity);
 		}
     }
 }
