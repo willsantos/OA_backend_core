@@ -31,7 +31,7 @@ namespace OA_Core.Service
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
             aula.DataDelecao = DateTime.Now;
-            await _aulaRepository.RemoverAsync(aula);
+            await _aulaRepository.EditarAsync(aula);
         }
 
         public async Task<IEnumerable<AulaResponse>> GetAllAulasAsync(int page, int rows)

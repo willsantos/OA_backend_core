@@ -31,7 +31,7 @@ namespace OA_Core.Service
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             aluno.DataDelecao = DateTime.Now;
-            await _alunoRepository.RemoverAsync(aluno);
+            await _alunoRepository.EditarAsync(aluno);
         }
 
         public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)

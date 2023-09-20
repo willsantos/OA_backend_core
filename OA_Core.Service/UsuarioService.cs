@@ -28,7 +28,7 @@ namespace OA_Core.Service
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             usuario.DataDelecao = DateTime.Now;
-            await _repository.RemoverAsync(usuario);
+            await _repository.EditarAsync(usuario);
         }
 
         public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
@@ -77,11 +77,15 @@ namespace OA_Core.Service
             var find = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
-            entity.Id = find.Id;
-            entity.DataCriacao = find.DataCriacao;
+			find.Nome = entity.Nome;
+			find.Email = entity.Email;
+			find.Senha = entity.Senha;
+			find.DataNascimento = entity.DataNascimento;
+			find.Telefone = entity.Telefone;
+			find.Endereco = entity.Endereco;
             entity.DataAlteracao = DateTime.Now;
 
-            await _repository.EditarAsync(entity);
+            await _repository.EditarAsync(find);
         }
     }
 }
