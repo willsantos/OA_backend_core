@@ -2,13 +2,8 @@
 
 namespace OA_Core.Domain.Interfaces.Repository
 {
-    public interface IProfessorRepository
+    public interface IProfessorRepository : IBaseRepository<Professor>
     {
-        Task<Professor> FindAsync(Guid id);
-        Task<IEnumerable<Professor>> ListAsync();
-        Task<IEnumerable<Professor>> ListPaginationAsync(int page, int rows);
-        Task AddAsync(Professor professor);
-        Task RemoveAsync(Professor professor);
-        Task EditAsync(Professor professor);
+
     }
 }

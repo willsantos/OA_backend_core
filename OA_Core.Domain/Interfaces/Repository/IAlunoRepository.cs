@@ -7,14 +7,8 @@ using System.Threading.Tasks;
 
 namespace OA_Core.Domain.Interfaces.Repository
 {
-    public interface IAlunoRepository
+    public interface IAlunoRepository : IBaseRepository<Aluno>
     {
-        Task<Aluno> FindAsync(Guid id);
-        Task<IEnumerable<Aluno>> ListAsync();
-        Task<IEnumerable<Aluno>> ListPaginationAsync(int page, int rows);
-        Task AddAsync(Aluno aluno);
-        Task RemoveAsync(Aluno aluno);
-        Task EditAsync(Aluno aluno);
 		Task<Aluno> FindByCpfAsync(string cpf);
 
 	}
