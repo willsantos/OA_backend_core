@@ -74,7 +74,7 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
+                await _repository.AdicionarAsync(entity);
 
                 await transactionToAdd.CommitAsync();
 
@@ -113,13 +113,13 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
+                await _repository.AdicionarAsync(entity);
 
                 await transactionToAdd.CommitAsync();
 
                 string alteracao = "nomeAlterado";
                 entity.Nome = alteracao;
-                await _repository.EditAsync(entity);
+                await _repository.EditarAsync(entity);
                 var cursoEditado = await _context.Curso.FindAsync(entity.Id);
 
                 Assert.Equal(cursoEditado.Nome, alteracao);
@@ -154,10 +154,10 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
+                await _repository.AdicionarAsync(entity);
                 await transactionToAdd.CommitAsync();
 
-                var cursoDB = await _repository.FindAsync(entity.Id);
+                var cursoDB = await _repository.ObterPorIdAsync(entity.Id);
 
                 Assert.NotNull(cursoDB);
                 Assert.Equal(cursoDB.Nome, entity.Nome);
@@ -174,45 +174,45 @@ namespace OA_Core.Tests.Repository
             }
         }
 
-        [Fact(DisplayName = "Busca uma lista de cursos", Skip = "Git não possue acesso ao banco")]
-        public async Task TesteBuscarListaDeCursos()
-        {
-            using var transactionToAdd = await _context.Database.BeginTransactionAsync();
+        //[Fact(DisplayName = "Busca uma lista de cursos", Skip = "Git não possue acesso ao banco")]
+        //public async Task TesteBuscarListaDeCursos()
+        //{
+        //    using var transactionToAdd = await _context.Database.BeginTransactionAsync();
 
-            // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
-            try
-            {
-                var cursoRequest = new CursoRequest
-                {
-                    Nome = "TestEntity",
-                    Descricao = "TestEntity",
-                    Categoria = "TestEntity",
-                    PreRequisito = "TestEntity",
-                    Preco = 100,
-                    ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
-                };
+        //    // Para funcionamento do teste, é necessário que no banco de dados, haja um professor com guid válido.
+        //    try
+        //    {
+        //        var cursoRequest = new CursoRequest
+        //        {
+        //            Nome = "TestEntity",
+        //            Descricao = "TestEntity",
+        //            Categoria = "TestEntity",
+        //            PreRequisito = "TestEntity",
+        //            Preco = 100,
+        //            ProfessorId = new Guid("cff4e2f5-f132-4a66-969c-dcc76c5ba585"),
+        //        };
 
-                var entity = _mapper.Map<Curso>(cursoRequest);
+        //        var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
-                await transactionToAdd.CommitAsync();
+        //        await _repository.AdicionarAsync(entity);
+        //        await transactionToAdd.CommitAsync();
 
-                var cursosDB = await _repository.ListAsync();
+        //        var cursosDB = await _repository.ListAsync();
 
-                Assert.NotNull(cursosDB);
-                Assert.IsType<List<Curso>>(cursosDB);
+        //        Assert.NotNull(cursosDB);
+        //        Assert.IsType<List<Curso>>(cursosDB);
 
-                var cursoCriado = await _context.Curso.FindAsync(entity.Id);
-                _context.Curso.Remove(cursoCriado);
-                await _context.SaveChangesAsync();
+        //        var cursoCriado = await _context.Curso.FindAsync(entity.Id);
+        //        _context.Curso.Remove(cursoCriado);
+        //        await _context.SaveChangesAsync();
 
-            }
-            catch (Exception)
-            {
-                await transactionToAdd.RollbackAsync();
-                throw;
-            }
-        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        await transactionToAdd.RollbackAsync();
+        //        throw;
+        //    }
+        //}
 
         [Fact(DisplayName = "Busca uma lista de cursos com paginação", Skip = "Git não possue acesso ao banco")]
         public async Task TesteBuscarListaDeCursosComPaginacao()
@@ -234,13 +234,13 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
+                await _repository.AdicionarAsync(entity);
                 await transactionToAdd.CommitAsync();
 
                 int page = 0;
                 int rows = 20;
 
-                var cursosDB = await _repository.ListPaginationAsync(page, rows);
+                var cursosDB = await _repository.ObterTodosAsync(page, rows);
 
                 Assert.NotNull(cursosDB);
                 Assert.IsType<List<Curso>>(cursosDB);
@@ -278,13 +278,13 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Curso>(cursoRequest);
 
-                await _repository.AddAsync(entity);
+                await _repository.AdicionarAsync(entity);
 
                 await transactionToAdd.CommitAsync();
 
                 entity.DataDelecao = DateTime.Now;
 
-                await _repository.RemoveAsync(entity);
+                await _repository.RemoverAsync(entity);
                 var cursoDeletado = await _context.Curso.FindAsync(entity.Id);
 
                 Assert.NotNull(cursoDeletado.DataDelecao);
