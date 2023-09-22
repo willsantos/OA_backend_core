@@ -15,11 +15,16 @@ namespace OA_Core.Repository.Mappings
     {
         public void Configure(EntityTypeBuilder<Aula> builder)
         {
-            builder.Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
-            builder.Property(c => c.CursoId).HasColumnName("curso_id");
-            builder.Property(c => c.DataCriacao).HasColumnName("data_criacao");
-            builder.Property(c => c.DataAlteracao).HasColumnName("data_alteracao");
-            builder.Property(c => c.DataDelecao).HasColumnName("data_delecao");
-        }
-    }
+			//Ignora prop de validação
+            builder.Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
+
+			//Filtro para não buscar entidades deletadas
+			builder.HasQueryFilter(a => a.DataDelecao == null);
+
+			//Mapeamento de relações
+			builder.HasOne(a => a.curso)
+				.WithMany()
+				.HasForeignKey(a => a.CursoId);
+		}
+	}
 }

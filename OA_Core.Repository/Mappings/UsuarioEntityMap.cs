@@ -4,20 +4,20 @@ using OA_Core.Domain.Entities;
 
 namespace OA_Core.Repository.Mappings
 {
-	public class AlunoEntityMap
-    {
-        public void Configure(EntityTypeBuilder<Aluno> builder)
-        {
+	public class UsuarioEntityMap
+	{
+		public void Configure(EntityTypeBuilder<Usuario> builder)
+		{
 			//Ignora prop de validação
-			builder.Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
+			builder.Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
 
 			//Filtro para não buscar entidades deletadas
 			builder.HasQueryFilter(c => c.DataDelecao == null);
 
 			//Mapeamento de relações
-			builder.HasOne(a => a.usuario)
-				.WithMany()
-				.HasForeignKey(a => a.UsuarioId);
+
+			//Regras de negocio
+			builder.HasIndex(c => c.Email).IsUnique();
 		}
 	}
 }

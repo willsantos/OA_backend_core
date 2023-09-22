@@ -18,12 +18,11 @@ namespace OA_Core.Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Usuario>().Ignore(u => u.Valid).Ignore(u => u.ValidationResult);
-            modelBuilder.Entity<Professor>().Ignore(p => p.Valid).Ignore(p => p.ValidationResult);
-
+			modelBuilder.Entity<Usuario>(new UsuarioEntityMap().Configure);
+			modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
             modelBuilder.Entity<Curso>(new CursoEntityMap().Configure);
-            modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
-            modelBuilder.Entity<Aluno>(new AlunoEntityMap().Configure);
+			modelBuilder.Entity<Aluno>(new AlunoEntityMap().Configure);
+			modelBuilder.Entity<Professor>(new ProfessorEntityMap().Configure);
         }
     }
 }

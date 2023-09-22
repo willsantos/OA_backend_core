@@ -4,20 +4,20 @@ using OA_Core.Domain.Entities;
 
 namespace OA_Core.Repository.Mappings
 {
-	public class AlunoEntityMap
-    {
-        public void Configure(EntityTypeBuilder<Aluno> builder)
-        {
+	public class ProfessorEntityMap
+	{
+		public void Configure(EntityTypeBuilder<Professor> builder)
+		{
 			//Ignora prop de validação
-			builder.Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
+			builder.Ignore(p => p.Valid).Ignore(p => p.ValidationResult);
 
 			//Filtro para não buscar entidades deletadas
 			builder.HasQueryFilter(c => c.DataDelecao == null);
 
 			//Mapeamento de relações
-			builder.HasOne(a => a.usuario)
+			builder.HasOne(p => p.Usuario)
 				.WithMany()
-				.HasForeignKey(a => a.UsuarioId);
+				.HasForeignKey(p => p.UsuarioId);
 		}
 	}
 }
