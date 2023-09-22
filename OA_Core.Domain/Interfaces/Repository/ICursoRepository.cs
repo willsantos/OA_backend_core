@@ -4,13 +4,8 @@ using System.Linq.Expressions;
 
 namespace OA_Core.Domain.Interfaces.Repository
 {
-    public interface ICursoRepository
+    public interface ICursoRepository : IBaseRepository<Curso>
     {
-        Task<Curso> FindAsync(Guid id);
-        Task<IEnumerable<Curso>> ListAsync();
-        Task<IEnumerable<Curso>> ListPaginationAsync(int page, int rows);
-        Task AddAsync(Curso curso);
-        Task RemoveAsync(Curso curso);
-        Task EditAsync(Curso curso);
+
     }
 }

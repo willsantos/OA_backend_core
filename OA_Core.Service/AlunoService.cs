@@ -27,23 +27,23 @@ namespace OA_Core.Service
 
         public async Task DeleteAlunoAsync(Guid id)
         {
-            var aluno = await _alunoRepository.FindAsync(id) ??
+            var aluno = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
             aluno.DataDelecao = DateTime.Now;
-            await _alunoRepository.RemoveAsync(aluno);
+            await _alunoRepository.EditarAsync(aluno);
         }
 
         public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)
         {
-            var listEntity = await _alunoRepository.ListPaginationAsync(page, rows);
+            var listEntity = await _alunoRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AlunoResponse>>(listEntity);
         }
 
         public async Task<AlunoResponse> GetAlunoByIdAsync(Guid id)
         {
-            var usuario = await _alunoRepository.FindAsync(id) ??
+            var usuario = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
             return _mapper.Map<AlunoResponse>(usuario);
@@ -55,7 +55,7 @@ namespace OA_Core.Service
 			alunoRequest.Cpf.Verificar();
 			entity.Cpf = alunoRequest.Cpf.Exibir();
 
-			if (await _usuarioRepository.FindAsync(alunoRequest.UsuarioId)is null)
+			if (await _usuarioRepository.ObterPorIdAsync(alunoRequest.UsuarioId)is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId {alunoRequest.UsuarioId} inválido ou não existente");
 
 			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
@@ -68,16 +68,16 @@ namespace OA_Core.Service
                 return Guid.Empty;
             }
 
-            await _alunoRepository.AddAsync(entity);
+            await _alunoRepository.AdicionarAsync(entity);
             return entity.Id;
         }
 
         public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
+
 			var entity = _mapper.Map<Aluno>(alunoRequest);
 
 			alunoRequest.Cpf.Verificar();
-			entity.Cpf = alunoRequest.Cpf.Exibir();
 
 			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
 			if (existingAlunoWithCpf != null)
@@ -89,15 +89,13 @@ namespace OA_Core.Service
 				return;
 			}
 
-			var find = await _alunoRepository.FindAsync(id) ??
+			var find = await _alunoRepository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
 
-			entity.Id = find.Id;
-			entity.UsuarioId = find.UsuarioId;
-			entity.DataCriacao = find.DataCriacao;
-			entity.DataAlteracao = DateTime.Now;
-
-			await _alunoRepository.EditAsync(entity);
+			find.Cpf = alunoRequest.Cpf.Exibir();
+			find.Foto = alunoRequest.Foto;
+			find.DataAlteracao = DateTime.Now;
+			await _alunoRepository.EditarAsync(find);
 		}
     }
 }
