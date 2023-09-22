@@ -37,7 +37,7 @@ namespace OA_Core.Tests.Service
             var page = 1;
             var rows = 10;
 
-            mockRepository.ListPaginationAsync(page, rows).Returns(alunos);
+            mockRepository.ObterTodosAsync(page, rows).Returns(alunos);
 
             var result = await service.GetAllAlunosAsync(page, rows);
 
