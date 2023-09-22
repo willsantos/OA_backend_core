@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
 using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
@@ -62,28 +63,31 @@ namespace OA_Core.Tests.Service
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-            mockRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(alunos);
 
 			//Act
-            var resultado = await service.GetAllAlunosAsync(pagina, linhas);
+			mockRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(alunos);
+			var resultado = await service.GetAllAlunosAsync(pagina, linhas);
+
 			//Assert
 			resultado.Should().HaveCount(linhas);
 		}
 
-        [Fact(DisplayName = "Obter alunos por id")]
+        [Fact(DisplayName = "Obtém alunos por id")]
         public async Task ObterPorId()
         {
-            var aluno = _fixture.Create<Aluno>();
-            var mockRepository = Substitute.For<IAlunoRepository>();
+			//Arrange
+			var aluno = AlunoFixture.GerarAluno();
+			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
+			var alunoResponse = _mapper.Map<AlunoResponse>(aluno);
 
-			mockRepository.ObterPorIdAsync(aluno.Id).Returns(aluno);
-
-            var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-
+			//Act
+			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
             var result = await service.GetAlunoByIdAsync(aluno.Id);
 
-            Assert.Equal(result.Id, aluno.Id);
+			//Assert
+			result.Should().BeEquivalentTo(alunoResponse);
         }
 
         [Fact(DisplayName = "Obter alunos por id nulo")]
@@ -172,20 +176,22 @@ namespace OA_Core.Tests.Service
 			Assert.NotNull(exception);
 		}
 
-		[Fact(DisplayName = "Edita alunos")]
-		public async Task EditarAluno()
+		[Fact(DisplayName = "Atualiza um aluno")]
+		public async Task AlunoService_AtualizaAluno_DeveAtualizar()
 		{
+			//Arrange
 			var aluno = _fixture.Create<Aluno>();
 			var alunoRequest = _fixture.Create<AlunoRequestPut>();
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
-
-			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
-
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
-			var exception = await Record.ExceptionAsync(async () => await service.PutAlunoAsync(aluno.Id, alunoRequest));
-			Assert.Null(exception);
+			//Act
+			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
+			await service.PutAlunoAsync(aluno.Id, alunoRequest);
+
+			//Assert
+			await mockRepository.Received().EditarAsync(Arg.Is<Aluno>(x => x.Foto == alunoRequest.Foto));
 		}
 
 		[Fact(DisplayName = "Edita alunos campo inválido")]

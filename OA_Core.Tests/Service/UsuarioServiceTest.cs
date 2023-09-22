@@ -61,8 +61,9 @@ namespace OA_Core.Tests.Service
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var usuarioService = new UsuarioService(mockUsuarioRepository, _notificador, _mapper);
 			var usuario = UsuarioFixture.GerarUsuarios(linhas, true);
-			mockUsuarioRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
+
 			//Act
+			mockUsuarioRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
 			var resultado = await usuarioService.GetAllUsuariosAsync(pagina, linhas);
 			//Assert
 			resultado.Should().HaveCount(linhas);
@@ -85,7 +86,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Fact(DisplayName = "Atualiza um usuario")]
-		public async Task UsuarioService_AtulizaUsuario_DeveAtualizar()
+		public async Task UsuarioService_AtualizaUsuario_DeveAtualizar()
 		{
 
 			//Arrange
