@@ -29,6 +29,6 @@ namespace OA_Core.Domain.Entities
         public string Experiencia { get; set; }
         public string Foto { get; set; }
         public string Biografia { get; set; }    
-		public virtual Usuario? Usuario { get; set; }
+		public virtual Usuario Usuario { get; set; }
     }
 }
