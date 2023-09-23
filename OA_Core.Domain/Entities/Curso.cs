@@ -34,5 +34,6 @@ namespace OA_Core.Domain.Entities
         public string PreRequisito { get; set; }
         public double Preco { get; set; }
         public Guid ProfessorId { get; set; }
+		public virtual Professor Professor { get; set; }
     }
 }

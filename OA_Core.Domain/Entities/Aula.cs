@@ -37,5 +37,7 @@ namespace OA_Core.Domain.Entities
         public int Duracao { get; set; }
         public int Ordem { get; set; }
         public Guid CursoId { get; set; }
+
+		public virtual Curso curso { get; set; }
     }
 }

@@ -24,5 +24,7 @@ namespace OA_Core.Domain.Entities
         public Guid UsuarioId { get; set; }
 		public string Foto { get; set; }
 		public string Cpf { get; set; }
+
+		public virtual Usuario usuario { get; set; }
     }
 }
