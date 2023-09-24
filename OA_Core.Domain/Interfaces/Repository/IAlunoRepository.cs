@@ -9,7 +9,5 @@ namespace OA_Core.Domain.Interfaces.Repository
 {
     public interface IAlunoRepository : IBaseRepository<Aluno>
     {
-		Task<Aluno> FindByCpfAsync(string cpf);
-
 	}
 }
