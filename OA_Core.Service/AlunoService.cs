@@ -79,7 +79,7 @@ namespace OA_Core.Service
 
 			alunoRequest.Cpf.Verificar();
 
-			var existingAlunoWithCpf = await _alunoRepository.FindByCpfAsync(entity.Cpf);
+			var existingAlunoWithCpf = await _alunoRepository.ObterAsync(x => x.Cpf == entity.Cpf);
 			if (existingAlunoWithCpf != null)
 				throw new InformacaoException(StatusException.Conflito, $"CPF {entity.Cpf} incorreto.");
 
