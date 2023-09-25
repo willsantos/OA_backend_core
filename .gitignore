@@ -479,3 +479,6 @@ $RECYCLE.BIN/
 #Jetbrains
 .idea
 .idea/
+
+#build
+out
