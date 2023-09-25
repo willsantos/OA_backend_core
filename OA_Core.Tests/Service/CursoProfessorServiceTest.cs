@@ -43,20 +43,64 @@ namespace OA_Core.Tests.Service
             var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
             var professor = _fixture.Create<Professor>();
-            var cursoRequest = _fixture.Create<CursoRequest>();
+			var curso = _fixture.Create<Curso>();
+
+			var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
 
             _professorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-            _cursoRepository.AdicionarAsync(Arg.Any<Curso>()).Returns(Task.CompletedTask);
+            _cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+			_cursoProfessorRepository.AdicionarAsync(Arg.Any<CursoProfessor>()).Returns(Task.CompletedTask);
 
-            //var result = await cursoProfessorService.PostCursoAsync(cursoRequest);
-            //Assert.NotNull(result);
-            //Assert.IsType<Guid>(result);
-        }
+			var result = await cursoProfessorService.PostCursoProfessorAsync(cursoProfessorRequest, curso.Id);
+			Assert.NotNull(result);
+			Assert.IsType<Guid>(result);
+		}
 
-        [Fact(DisplayName = "Deleta um CursoProfessor Válido")]
-        public async Task DeletarCurso()
-        {
+		[Fact(DisplayName = "Cria um CursoProfessor com Campos inválidos")]
+		public async Task CriarCursoProfessorComCamposInvalidos()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
+			var professor = _fixture.Create<Professor>();
+			var curso = _fixture.Create<Curso>();
+			var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
+			cursoProfessorRequest.ProfessorId = Guid.Empty;
+
+			_professorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
+			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PostCursoProfessorAsync(cursoProfessorRequest, Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Cria um CursoProfessor com ProfessorId inválido")]
+		public async Task CriarCursoProfessorComProfessorIdInvalido()
+		{
+
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PostCursoProfessorAsync(cursoProfessorRequest, Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Cria um CursoProfessor com ProfessorId inválido")]
+		public async Task CriarCursoProfessorComCursoIdInvalido()
+		{
+
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var professor = _fixture.Create<Professor>();
+			var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
+
+			_professorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
+
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PostCursoProfessorAsync(cursoProfessorRequest, Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Deleta um CursoProfessor Válido")]
+		public async Task DeletarCursoProfessor()
+		{
 			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
 			var curso = _fixture.Create<Curso>();
@@ -64,132 +108,160 @@ namespace OA_Core.Tests.Service
 			var cursoProfessor = _fixture.Create<CursoProfessor>();
 			cursoProfessor.CursoId = curso.Id;
 			cursoProfessor.ProfessorId = professor.Id;
+			cursoProfessor.Responsavel = false;
 
 			_cursoProfessorRepository.ObterAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursoProfessor);
 
-            await cursoProfessorService.DeleteCursoProfessorAsync(curso.Id, professor.Id);
+			await cursoProfessorService.DeleteCursoProfessorAsync(curso.Id, professor.Id);
 
 			await _cursoProfessorRepository.Received().EditarAsync(cursoProfessor);
-        }
+		}
 
-        [Fact(DisplayName = "Obtém todos os Cursos")]
-        public async Task ObterTodosCursos()
+		[Fact(DisplayName = "Deleta um CursoProfessor Responsavel Válido")]
+		public async Task DeletarCursoProfessorResponsavel()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var curso = _fixture.Create<Curso>();
+			var professor = _fixture.Create<Professor>();
+			var cursoProfessor = _fixture.Create<CursoProfessor>();
+			cursoProfessor.CursoId = curso.Id;
+			cursoProfessor.ProfessorId = professor.Id;
+			cursoProfessor.Responsavel = true;
+
+			_cursoProfessorRepository.ObterAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursoProfessor);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.DeleteCursoProfessorAsync(curso.Id, professor.Id));
+		}
+
+		[Fact(DisplayName = "Deleta um CursoProfessor com Id inválido")]
+		public async Task DeletarCursoComIdInvalido()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.DeleteCursoProfessorAsync(Guid.NewGuid(), Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Obtém todos os CursoProfessor")]
+        public async Task ObterTodosCursoProfessor()
+        {         
+            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+            var cursoProfessores = _fixture.CreateMany<CursoProfessor>(5);
+            _cursoProfessorRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(cursoProfessores);
+
+			var result = await cursoProfessorService.GetAllCursoProfessorsAsync(1, 5);
+
+			Assert.Equal(5, result.Count());
+		}
+
+		[Fact(DisplayName = "Obtém todos os CursoProfessor por expressão")]
+		public async Task ObterTodosCursoProfessorPorExpressão()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var curso = _fixture.Create<Curso>();
+			var cursosProfessores = _fixture.CreateMany<CursoProfessor>(5);
+
+			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+			_cursoProfessorRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursosProfessores);
+
+			var result = await cursoProfessorService.GetProfessorDeCursoByIdAsync(Guid.NewGuid());
+
+			Assert.Equal(5, result.Count());
+		}
+
+		[Fact(DisplayName = "Obtém todos os CursoProfessor por expressão com curso invalido")]
+		public async Task ObterTodosCursoProfessorPorExpressãoCursoInvalido()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var cursosProfessores = _fixture.CreateMany<CursoProfessor>(5);
+
+			_cursoProfessorRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursosProfessores);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.GetProfessorDeCursoByIdAsync(Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Obtém todos os CursoProfessor por expressão com cursoprofessor invalido")]
+		public async Task ObterTodosCursoProfessorPorExpressãoCursoProfessorInvalido()
+		{
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			var curso = _fixture.Create<Curso>();
+			var cursosProfessores = _fixture.CreateMany<CursoProfessor>(0);
+
+			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+			_cursoProfessorRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursosProfessores);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.GetProfessorDeCursoByIdAsync(Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Obtém um CursoProfessor pelo Id")]
+        public async Task ObterCursoProfessorPorId()
+        {          
+            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+            var curso = _fixture.Create<CursoProfessor>();
+            _cursoProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+
+			var result = await cursoProfessorService.GetCursoProfessorByIdAsync(curso.Id);
+
+			Assert.Equal(curso.Id, result.Id);
+		}
+
+		[Fact(DisplayName = "Obtém um CursoProfessor pelo Id inválido")]
+		public async Task ObterCursoProfessorPorIdInvalido()
+		{
+
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.GetCursoProfessorByIdAsync(Guid.NewGuid()));
+		}
+
+		[Fact(DisplayName = "Atualiza um CursoProfessor")]
+        public async Task AtualizarCursoProfessor()
         {
             
             var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
-            var cursos = _fixture.CreateMany<Curso>(5);
-            _cursoRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(cursos);
+            var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
+            var cursoProfessor = _fixture.Create<CursoProfessor>();
+			cursoProfessorRequest.ProfessorId = cursoProfessor.Id;
 
-            //var result = await cursoProfessorService.GetAllCursosAsync(1, 5);
+			_cursoProfessorRepository.ObterAsync(Arg.Any<Expression<Func<CursoProfessor, bool>>>()).Returns(cursoProfessor);
 
-            //Assert.Equal(5, result.Count());
-        }
+			await cursoProfessorService.PutCursoProfessorAsync(cursoProfessor.CursoId, cursoProfessorRequest);
 
-        [Fact(DisplayName = "Obtém um Curso pelo Id")]
-        public async Task ObterCursoPorId()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+			await _cursoProfessorRepository.Received().EditarAsync(cursoProfessor);
+		}
 
-            var curso = _fixture.Create<Curso>();
-            _cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-
-            //var result = await cursoProfessorService.GetCursoByIdAsync(curso.Id);
-
-            //Assert.Equal(curso.Id, result.Id);
-        }
-
-        [Fact(DisplayName = "Atualiza um Curso")]
-        public async Task AtualizarCurso()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
-
-            var cursoRequestPut = _fixture.Create<CursoRequestPut>();
-            var curso = _fixture.Create<Curso>();
-
-            _cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-
-            //await cursoProfessorService.PutCursoAsync(curso.Id, cursoRequestPut);
-
-            //await _cursoRepository.Received().EditarAsync(Arg.Is<Curso>(c => c.Nome == cursoRequestPut.Nome));
-        }
-
-        [Fact(DisplayName = "Atualiza um Curso com Id inválido")]
+        [Fact(DisplayName = "Atualiza um CursoProfessor com Id inválido")]
         public async Task AtualizarCursoComIdInvalido()
         {
             
             var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
-            var cursoRequestPut = _fixture.Create<CursoRequestPut>();
+            var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
 
-            //await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PutCursoAsync(Guid.NewGuid(), cursoRequestPut));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PutCursoProfessorAsync(Guid.NewGuid(), cursoProfessorRequest));
         }
 
-        [Fact(DisplayName = "Cria um Curso com ProfessorId inválido")]
-        public async Task CriarCursoComProfessorIdInvalido()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+		[Fact(DisplayName = "Atualiza um CursoProfessor com Campos inválidos")]
+		public async Task AtualizarCursoProfessorComCamposInvalidos()
+		{
 
-            var cursoRequest = _fixture.Create<CursoRequest>();
+			var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
 
-            //await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.PostCursoAsync(cursoRequest));
-        }
+			var cursoProfessorRequest = _fixture.Create<CursoProfessorRequest>();
+			cursoProfessorRequest.ProfessorId = Guid.Empty;
+			var curso = _fixture.Create<Curso>();
 
-        [Fact(DisplayName = "Obtém um Curso pelo Id inválido")]
-        public async Task ObterCursoPorIdInvalido()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
+			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 
-            //await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.GetCursoByIdAsync(Guid.NewGuid()));
-        }
+			await cursoProfessorService.PutCursoProfessorAsync(Guid.NewGuid(), cursoProfessorRequest);
 
-        [Fact(DisplayName = "Deleta um Curso com Id inválido")]
-        public async Task DeletarCursoComIdInvalido()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
-
-            //await Assert.ThrowsAsync<InformacaoException>(() => cursoProfessorService.DeleteCursoAsync(Guid.NewGuid()));
-        }
-
-        [Fact(DisplayName = "Cria um Curso com Campos inválidos")]
-        public async Task CriarCursoComCamposInvalidos()
-        {
-            
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
-
-            var professor = _fixture.Create<Professor>();
-            var cursoRequest = _fixture.Create<CursoRequest>();
-            cursoRequest.Categoria = string.Empty;
-
-            _professorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-
-            //await cursoProfessorService.PostCursoAsync(cursoRequest);
-
-            //_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Categoria" && e.ErrorMessage == "Categoria precisa ser preenchida")));
-        }
-
-        [Fact(DisplayName = "Atualiza um Curso com Campos inválidos")]
-        public async Task AtualizarCursoComCamposInvalidos()
-        {
-            
-            var cursoProfessorService = new CursoProfessorService(_mapper, _cursoProfessorRepository, _professorRepository, _cursoRepository, _notifier);
-
-            var cursoRequestPut = _fixture.Create<CursoRequestPut>();
-            cursoRequestPut.Categoria = string.Empty;
-            var curso = _fixture.Create<Curso>();
-
-            _cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-
-            //await cursoProfessorService.PutCursoAsync(curso.Id, cursoRequestPut);
-
-            //_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Categoria" && e.ErrorMessage == "Categoria precisa ser preenchida")));
-        }
-
+			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "ProfessorId" && e.ErrorMessage == "ProfessorId não pode ser nulo")));
+		}     
     }
 }

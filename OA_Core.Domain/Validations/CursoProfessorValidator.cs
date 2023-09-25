@@ -14,7 +14,7 @@ namespace OA_Core.Domain.Validations
         {
             RuleFor(u => u.ProfessorId)
                 .NotEmpty()
-                .WithMessage("CursoId não pode ser nulo");
+                .WithMessage("ProfessorId não pode ser nulo");
         }
     }
 }

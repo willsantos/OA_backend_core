@@ -60,7 +60,8 @@ namespace OA_Core.Service
 			var curso = await _cursoRepository.ObterPorIdAsync(cursoId) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Curso {cursoId} não encontrado");
 
-			var cursoProfessores = await _cursoProfessorRepository.ObterTodosComIncludeAsync(x => x.CursoId == cursoId) ??
+			var cursoProfessores = await _cursoProfessorRepository.ObterTodosComIncludeAsync(x => x.CursoId == cursoId);
+			if (cursoProfessores.Count() <= 0)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor {cursoId} não encontrado");
 
 			var professores = new List<ProfessorResponseComResponsavel>();
