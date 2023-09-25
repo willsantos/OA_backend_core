@@ -53,7 +53,7 @@ namespace OA_Core.Tests.Service
         }
                 
         [Fact(DisplayName = "Deleta uma Aula Válida")]
-        public async Task DeletarAula()
+        public async Task AulaService_DeletaAula_DeveDeletar()
         {
 			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
@@ -70,132 +70,148 @@ namespace OA_Core.Tests.Service
         }
 
         [Fact(DisplayName = "Obtém todas as Aulas")]
-        public async Task ObterTodosAulas()
+        public async Task AulaService_ObterTodosAulas_DeveObter()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aulas = _fixture.CreateMany<Aula>(5);
-            mockAulaRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(aulas);
 
+			//Act
+            mockAulaRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(aulas);
             var result = await aulaService.GetAllAulasAsync(1, 5);
 
+			//Assert
             result.Should().HaveCount(5);
         }
 
         [Fact(DisplayName = "Obtém uma Aula pelo Id")]
-        public async Task ObterAulaPorId()
+        public async Task AulaService_ObterAulaPorId_DeveObterUm()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aula = _fixture.Create<Aula>();
             var aulaResponse = _mapper.Map<AulaResponse>(aula);
 
+			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-
             var result = await aulaService.GetAulaByIdAsync(aula.Id);
 
+			//Assert
             result.Should().BeEquivalentTo(aulaResponse);
         }
 
         [Fact(DisplayName = "Atualiza uma Aula")]
-        public async Task AtualizarAula()
+        public async Task AulaService_AtualizarAula_DeveAtualizar()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aulaRequestPut = _fixture.Create<AulaRequestPut>();
             var aula = _fixture.Create<Aula>();
 
+			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-
             await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
 
+			//Assert
             await mockAulaRepository.Received().EditarAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
         }
 
         [Fact(DisplayName = "Cria uma Aula com CursoId inválido")]
-        public async Task CriarAulaComCursoIdInvalido()
+        public async Task AulaService_CriarAulaComCursoIdInvalido_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var cursoService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var cursoRequest = _fixture.Create<AulaRequest>();
 
+			//Act
+			//Assert
             await Assert.ThrowsAsync<InformacaoException>(() => cursoService.PostAulaAsync(cursoRequest));
         }
 
         [Fact(DisplayName = "Atualiza uma Aula com Id inválido")]
-        public async Task AtualizarAulaComIdInvalido()
+        public async Task AulaService_AtualizarAulaComIdInvalido_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aulaRequestPut = _fixture.Create<AulaRequestPut>();
 
+			//Act
+			//Assert
             await Assert.ThrowsAsync<InformacaoException>(() => aulaService.PutAulaAsync(Guid.NewGuid(), aulaRequestPut));
         }
         
 
         [Fact(DisplayName = "Obtém uma Aula pelo Id inválido")]
-        public async Task ObterAulaPorIdInvalido()
+        public async Task AulaService_ObterAulaPorIdInvalido_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
 
+			//Act
+			//Assert
             await Assert.ThrowsAsync<InformacaoException>(() => aulaService.GetAulaByIdAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Deleta uma Aula com Id inválido")]
-        public async Task DeletarAulaComIdInvalido()
+        public async Task AulaService_DeletarAulaComIdInvalido_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
 
+			//Act
+			//Assert
             await Assert.ThrowsAsync<InformacaoException>(() => aulaService.DeleteAulaAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Cria uma Aula com Campos inválidos")]
-        public async Task CriarAulaComCamposInvalidos()
+        public async Task AulaService_CriarAulaComCamposInvalidos_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var MockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, MockCursoRepository, _notifier);
-
             var professor = _fixture.Create<Curso>();
             var aulaRequest = _fixture.Create<AulaRequest>();
             aulaRequest.Caminho = string.Empty;
 
+			//Act
             MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-
             await aulaService.PostAulaAsync(aulaRequest);
 
+			//Assert
             _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
         }
 
         [Fact(DisplayName = "Atualiza uma Aula com Campos inválidos")]
-        public async Task AtualizarAulaComCamposInvalidos()
+        public async Task AulaService_AtualizarAulaComCamposInvalidos_DeveSerInvalido()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aulaRequestPut = _fixture.Create<AulaRequestPut>();
             aulaRequestPut.Caminho = string.Empty;
             var aula = _fixture.Create<Aula>();
 
+			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-
             await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
 
+			//Assert
             _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
         }
 
