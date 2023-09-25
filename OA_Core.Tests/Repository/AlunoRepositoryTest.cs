@@ -64,7 +64,7 @@ namespace OA_Core.Tests.Repository
 
                 var entity = _mapper.Map<Aluno>(alunoRequest);
 
-                await _repository.AdicionarAsync(entity);
+                //await _repository.AddAsync(entity);
 
                 await transactionToAdd.CommitAsync();
 

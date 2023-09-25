@@ -1,0 +1,48 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+
+!includeurl ICONURL/devicons/mysql.puml
+!includeurl ICONURL/devicons/angular.puml
+!includeurl ICONURL/devicons/dotnet.puml
+
+
+AddRelTag("async", $lineStyle = DashedLine())
+
+title Diagrama de contêineres para o Sistema Open Academy
+SHOW_PERSON_PORTRAIT()
+LAYOUT_LEFT_RIGHT()
+
+Person(aluno,"Aluno","Usuario que acessa consome conteudo")
+Person(professor,"Professor","Pode consumir conteudo e/ou gerenciar conteudo")
+Person(admin,"Administrador","Gerencia a parte administrativa da escola")
+
+System_Boundary(cms, "Open Academy Core"){
+
+Container(backend,"Backend",".Net","Fornece todas as funcionalidades do sistema",$sprite = "dotnet")
+Container(panelAdmin,"Painel de Controle","Angular","Acessa as rotas administrativas", $sprite = "angular")
+Container(frontend,"frontend","Angular","Acessa as rotas de usuario", $sprite = "angular")
+
+
+ContainerDb(mysql_backend,"Banco de dados","MySQL","Armazena as transações de pagamento",$sprite = "mysql")
+
+
+
+Rel(frontend,backend,"Faz chamadas de API para","HTTPS/JSON")
+Rel(panelAdmin,backend,"Faz chamadas de API para","HTTPS/JSON")
+Rel(backend,mysql_backend,"Lê e escreve em","MySQL Protocol")
+
+}
+System_Ext(email, "Resend", "Sistema de envio de emails")
+
+Rel(email,aluno,"Envia emails","SMTP")
+Rel(email,professor,"Envia emails","SMTP")
+Rel(email,admin,"Envia emails","SMTP")
+Rel(backend, email, "Envia e-mail usando", "SMTP")
+
+Rel(aluno,frontend,"acessa conteudo em","HTTPS")
+Rel(professor,frontend,"acessa conteudo em","HTTPS")
+Rel(professor,panelAdmin,"gerencia conteudo em","HTTPS")
+Rel(admin,panelAdmin,"gerencia todo o sistema","HTTPS")
+
+@enduml

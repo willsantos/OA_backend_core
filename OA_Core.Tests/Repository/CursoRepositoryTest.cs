@@ -197,7 +197,7 @@ namespace OA_Core.Tests.Repository
         //        await _repository.AdicionarAsync(entity);
         //        await transactionToAdd.CommitAsync();
 
-        //        var cursosDB = await _repository.ObterTodosAsync();
+        //        var cursosDB = await _repository.ListAsync();
 
         //        Assert.NotNull(cursosDB);
         //        Assert.IsType<List<Curso>>(cursosDB);
