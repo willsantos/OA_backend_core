@@ -2,14 +2,17 @@
 using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
 using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
+using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Service;
 using OA_Core.Tests.Config;
+using System.Linq.Expressions;
 
 namespace OA_Core.Tests.Service
 {
@@ -47,6 +50,25 @@ namespace OA_Core.Tests.Service
 			resultado.Should().NotBe(Guid.Empty, "Guid não pode ser nula");
 		}
 
+		[Fact(DisplayName = "Cria usuário Inválido")]
+		public async Task UsuarioService_CriaUsuario_DevRetornarErro()
+		{
+
+			// Arrange
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var usuarioService = new UsuarioService(mockUsuarioRepository, _notificador, _mapper);
+			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuario());
+			var usuarioEntity = _mapper.Map<Usuario>(usuarioRequest);
+
+			// Configurar o mock para retornar um usuário existente com o mesmo email
+			mockUsuarioRepository.ObterAsync(Arg.Any<Expression<Func<Usuario, bool>>>())
+				.Returns(usuarioEntity);
+
+			// Act
+			// Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.PostUsuarioAsync(usuarioRequest));
+		}
+
 		[Theory(DisplayName = "Obtém todos os usuários")]
 		[InlineData(1, 20)]
 		[InlineData(1, 1)]
@@ -61,7 +83,6 @@ namespace OA_Core.Tests.Service
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var usuarioService = new UsuarioService(mockUsuarioRepository, _notificador, _mapper);
 			var usuario = UsuarioFixture.GerarUsuarios(linhas, true);
-
 			//Act
 			mockUsuarioRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
 			var resultado = await usuarioService.GetAllUsuariosAsync(pagina, linhas);
