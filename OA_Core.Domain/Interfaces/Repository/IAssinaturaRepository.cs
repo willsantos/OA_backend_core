@@ -7,5 +7,6 @@ namespace OA_Core.Domain.Interfaces.Repository
 	{
 		Task<Guid> CadastrarAssinaturaAsync(Assinatura assinatura);
 		Task<Guid> CancelarAssinaturaAsync(Assinatura assinatura);
+		Task<Assinatura> BuscarAssinaturaPorUsuarioId(Guid UsuarioId);
 	}
 }
