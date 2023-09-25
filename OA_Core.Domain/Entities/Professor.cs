@@ -30,5 +30,8 @@ namespace OA_Core.Domain.Entities
         public string Foto { get; set; }
         public string Biografia { get; set; }    
 		public virtual Usuario Usuario { get; set; }
-    }
+
+		public virtual ICollection<CursoProfessor> CursoProfessores { get; set; } = new List<CursoProfessor>();
+
+	}
 }

@@ -4,7 +4,7 @@ namespace OA_Core.Domain.Entities
 {
     public class Curso : Entidade
     {
-        public Curso(string nome, string descricao, string categoria, string preRequisito, double preco, Guid professorId)
+        public Curso(string nome, string descricao, string categoria, string preRequisito, double preco, int aulas, Guid professorId)
         {
             Id = Guid.NewGuid();
             Nome = nome;
@@ -14,17 +14,21 @@ namespace OA_Core.Domain.Entities
             Preco = preco;
             ProfessorId = professorId;
             DataCriacao = DateTime.Now;
-            Validate(this, new CursoValidator());
+			Aulas = aulas;
+
+			Validate(this, new CursoValidator());
         }
 
-        public Curso(string nome, string descricao, string categoria, string preRequisito, double preco)
+        public Curso(string nome, string descricao, string categoria, string preRequisito, double preco, int aulas)
         {
             Nome = nome;
             Descricao = descricao;
             Categoria = categoria;
             PreRequisito = preRequisito;
             Preco = preco;
-            Validate(this, new CursoValidator());
+			Aulas = aulas;
+
+			Validate(this, new CursoValidator());
         }
 
 
@@ -33,7 +37,11 @@ namespace OA_Core.Domain.Entities
         public string Categoria { get; set; }
         public string PreRequisito { get; set; }
         public double Preco { get; set; }
+		public int Aulas { get; set; }
         public Guid ProfessorId { get; set; }
 		public virtual Professor Professor { get; set; }
-    }
+
+		public virtual ICollection<CursoProfessor> CursoProfessores { get; set; } = new List<CursoProfessor>();
+
+	}
 }
