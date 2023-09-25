@@ -59,7 +59,7 @@ namespace OA_Core.Service
 
 			}
 
-			if (_repository.ObterAsync(x => x.Email == entity.Email) != null)
+			if (await _repository.ObterAsync(x => x.Email == entity.Email) != null)
 			{
 				throw new InformacaoException(StatusException.Conflito, $"Email {entity.Email} já cadastrado");
 			}
