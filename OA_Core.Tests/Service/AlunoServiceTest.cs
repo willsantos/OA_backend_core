@@ -119,7 +119,7 @@ namespace OA_Core.Tests.Service
 			await service.DeleteAlunoAsync(aluno.Id);
 
 			//Assert
-            await mockRepository.Received().RemoverAsync(aluno);
+            await mockRepository.Received().EditarAsync(aluno);
         }
 
 		[Fact(DisplayName = "Tenta cadastrar aluno com cpf inválido")]

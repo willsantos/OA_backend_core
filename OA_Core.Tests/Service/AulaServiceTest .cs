@@ -33,37 +33,40 @@ namespace OA_Core.Tests.Service
             _notifier = Substitute.For<INotificador>();
         }
 
-        [Fact(DisplayName = "Cria uma Aula Válido")]
-        public async Task CriarAula()
+        [Fact(DisplayName = "Cria uma Aula válida")]
+        public async Task AulaService_CriaAula_DeveCriar()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var MockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, MockCursoRepository, _notifier);
-
             var professor = _fixture.Create<Curso>();
             var aulaRequest = _fixture.Create<AulaRequest>();
 
+			//Act
             MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
             mockAulaRepository.AdicionarAsync(Arg.Any<Aula>()).Returns(Task.CompletedTask);
-
             var result = await aulaService.PostAulaAsync(aulaRequest);
 
+			//Assert
             result.Should().NotBe(Guid.Empty);       
         }
                 
-        [Fact(DisplayName = "Deleta uma Aula Válido")]
+        [Fact(DisplayName = "Deleta uma Aula Válida")]
         public async Task DeletarAula()
         {
+			//Arrange
             var mockAulaRepository = Substitute.For<IAulaRepository>();
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
-
             var aula = _fixture.Create<Aula>();
-            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
 
+			//Act
+            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
             await aulaService.DeleteAulaAsync(aula.Id);
 
-            await mockAulaRepository.Received().RemoverAsync(aula);
+			//Assert
+            await mockAulaRepository.Received().EditarAsync(aula);
         }
 
         [Fact(DisplayName = "Obtém todas as Aulas")]
