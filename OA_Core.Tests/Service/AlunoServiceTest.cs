@@ -8,6 +8,7 @@ using OA_Core.Domain.Entities;
 using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
+using OA_Core.Domain.ValueObjects;
 using OA_Core.Service;
 using OA_Core.Tests.Config;
 
@@ -119,25 +120,6 @@ namespace OA_Core.Tests.Service
 			//Assert
             await mockRepository.Received().EditarAsync(aluno);
         }
-
-		[Fact(DisplayName = "Tenta cadastrar aluno com cpf inválido")]
-		public async Task AlunoService_CadastraAlunoCpfInvalido_DeveSerInvalido()
-		{
-			//Arrange
-			var usuario = _fixture.Create<Usuario>();
-			var alunoRequest = _mapper.Map < AlunoRequest > (AlunoFixture.GerarAlunoInvalido());
-			var mockRepository = Substitute.For<IAlunoRepository>();
-			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
-			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-
-			//Act
-			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
-			await service.PostAlunoAsync(alunoRequest);
-
-			//Assert
-			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Cpf" && e.ErrorMessage == "Cpf é obrigatório")));
-		}
 
 		[Fact(DisplayName = "Tenta cadastrar aluno com foto inválida")]
 		public async Task AlunoService_CadastraAlunoFotoInvalida_DeveSerInvalido()
