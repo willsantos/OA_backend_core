@@ -8,8 +8,6 @@ using OA_Core.Domain.Entities;
 using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
-using OA_Core.Domain.Notifications;
-using OA_Core.Domain.ValueObjects;
 using OA_Core.Service;
 using OA_Core.Tests.Config;
 
