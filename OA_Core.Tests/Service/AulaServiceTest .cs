@@ -63,7 +63,7 @@ namespace OA_Core.Tests.Service
 
             await aulaService.DeleteAulaAsync(aula.Id);
 
-            await mockAulaRepository.Received().RemoverAsync(aula);
+            await mockAulaRepository.Received().EditarAsync(aula);
         }
 
         [Fact(DisplayName = "Obtém todas as Aulas")]

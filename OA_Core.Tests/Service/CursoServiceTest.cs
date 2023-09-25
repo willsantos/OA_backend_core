@@ -60,7 +60,7 @@ namespace OA_Core.Tests.Service
 
             await cursoService.DeleteCursoAsync(curso.Id);
 
-			await mockCursoRepository.Received().RemoverAsync(curso);
+			await mockCursoRepository.Received().EditarAsync(curso);
         }
 
         [Fact(DisplayName = "Obtém todos os Cursos")]

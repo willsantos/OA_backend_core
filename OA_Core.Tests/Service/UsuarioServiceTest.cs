@@ -124,7 +124,7 @@ namespace OA_Core.Tests.Service
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			await usuarioService.DeleteUsuarioAsync(usuario.Id);
 			//Assert
-			await mockUsuarioRepository.Received().RemoverAsync(usuario);
+			await mockUsuarioRepository.Received().EditarAsync(usuario);
 
 		}
 

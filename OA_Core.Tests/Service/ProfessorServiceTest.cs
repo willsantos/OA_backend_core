@@ -107,7 +107,7 @@ namespace OA_Core.Tests.Service
 
 			await professorService.DeleteProfessorAsync(professor.Id);
 
-			await mockProfessorRepository.Received().RemoverAsync(professor);
+			await mockProfessorRepository.Received().EditarAsync(professor);
 		}
 
 		[Fact(DisplayName = "Cria um Professor com UsuarioId inválido")]
