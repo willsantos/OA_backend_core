@@ -73,9 +73,9 @@ namespace OA_Core.Api.Controllers
 
 		[HttpGet("{cursoId}/professores", Name = "GetProfessoresByCursoIdAsync")]
 		[ProducesResponseType(200)]
-		public async Task<ActionResult<IEnumerable<ProfessorResponse>>> GetProfessoresByCursoIdAsync([FromRoute] Guid cursoId)
+		public async Task<ActionResult<IEnumerable<ProfessorResponseComResponsavel>>> GetProfessoresByCursoIdAsync([FromRoute] Guid cursoId)
 		{
-			var professores = await _cursoProfessorservice.GetCursoProfessorByIdAsync(cursoId);
+			var professores = await _cursoProfessorservice.GetProfessorDeCursoByIdAsync(cursoId);
 			return Ok(professores);
 		}
 
@@ -89,10 +89,6 @@ namespace OA_Core.Api.Controllers
 
 		[HttpDelete("{cursoProfessorId}/professores/{professorId}", Name = "DeleteProfessorFromCursoAsync")]
 		[ProducesResponseType(204)]
-		[ProducesResponseType(400)]
-		[ProducesResponseType(403)]
-		[ProducesResponseType(404)]
-		[ProducesResponseType(500)]
 		public async Task<ActionResult> DeleteProfessorFromCursoAsync([FromRoute] Guid cursoProfessorId)
 		{
 

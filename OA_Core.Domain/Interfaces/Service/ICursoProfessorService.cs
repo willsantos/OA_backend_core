@@ -11,5 +11,6 @@ namespace OA_Core.Domain.Interfaces.Service
 		Task DeleteCursoProfessorAsync(Guid id);
 		Task<CursoProfessor> GetCursoProfessorByIdAsync(Guid id);
 		Task<IEnumerable<CursoProfessor>> GetAllCursoProfessorsAsync(int page, int rows);
+		Task<List<ProfessorResponseComResponsavel>> GetProfessorDeCursoByIdAsync(Guid cursoId);
 	}
 }

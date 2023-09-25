@@ -11,8 +11,8 @@ namespace OA_Core.Api.Profiles
         {
             CreateMap<Professor, ProfessorRequest>().ReverseMap();
             CreateMap<Professor, ProfessorResponse>().ReverseMap();
-            CreateMap<Professor, ProfessorRequestPut>().ReverseMap();
-
+			CreateMap<Professor, ProfessorResponseComResponsavel>().ReverseMap();
+			CreateMap<Professor, ProfessorRequestPut>().ReverseMap();
         }
     }
 }

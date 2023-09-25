@@ -5,12 +5,12 @@ using OA_Core.Domain.Entities;
 
 namespace OA_Core.Api.Profiles
 {
-    public class UsuarioEntityToContractMap : Profile
+    public class CursoProfessorEntityToContractMap : Profile
     {
-        public UsuarioEntityToContractMap()
+        public CursoProfessorEntityToContractMap()
         {
-            CreateMap<Usuario, UsuarioRequest>().ReverseMap();
-            CreateMap<Usuario, UsuarioResponse>().ReverseMap();
-        }
-    }
+			CreateMap<CursoProfessor, CursoProfessorRequest>().ReverseMap();
+			//CreateMap<CursoProfessor, CursoProfessorResponse>().ReverseMap();
+		}
+	}
 }

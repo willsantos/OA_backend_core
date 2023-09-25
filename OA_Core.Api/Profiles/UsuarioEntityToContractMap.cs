@@ -8,9 +8,9 @@ namespace OA_Core.Api.Profiles
     public class UsuarioEntityToContractMap : Profile
     {
         public UsuarioEntityToContractMap()
-        {
-            CreateMap<CursoProfessor, CursoProfessorRequest>().ReverseMap();
-            //CreateMap<CursoProfessor, CursoProfessorResponse>().ReverseMap();
-        }
+        {            
+			CreateMap<Usuario, UsuarioRequest>().ReverseMap();
+			CreateMap<Usuario, UsuarioResponse>().ReverseMap();
+		}
     }
 }
