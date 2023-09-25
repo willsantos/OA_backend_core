@@ -14,14 +14,16 @@ namespace OA_Core.Repository.Mappings
     {
         public void Configure(EntityTypeBuilder<Curso> builder)
         {
+			//Ignora prop de validação
+			builder.Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
 
-            builder.Ignore(c => c.Valid).Ignore(c => c.ValidationResult);
-            builder.Property(c => c.DataAlteracao).HasColumnName("data_alteracao");
-            builder.Property(c => c.PreRequisito).HasColumnName("pre_requisito");
-            builder.Property(c => c.ProfessorId).HasColumnName("professor_id");
-            builder.Property(c => c.DataCriacao).HasColumnName("data_criacao");
-            builder.Property(c => c.DataDelecao).HasColumnName("data_delecao");
+			//Filtro para não buscar entidades deletadas
+			builder.HasQueryFilter(c => c.DataDelecao == null);
 
-        }
-    }
+			//Mapeamento de relações
+			builder.HasOne(c => c.Professor)
+				.WithMany()
+				.HasForeignKey(c => c.ProfessorId);		
+		}
+	}
 }
