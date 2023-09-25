@@ -1,5 +1,4 @@
-﻿using OA_Core.Domain.Entities;
-using OA_Core.Domain.Utils;
+﻿using OA_Core.Domain.Utils;
 
 namespace OA_Core.Domain.Contracts.Request
 {
