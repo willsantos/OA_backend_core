@@ -28,10 +28,10 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteCursoProfessorAsync(Guid id)
+        public async Task DeleteCursoProfessorAsync(Guid cursoId, Guid professorId)
         {
-            var cursoProfessor = await _cursoProfessorRepository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor {id} não encontrado");
+            var cursoProfessor = await _cursoProfessorRepository.ObterAsync(x => x.CursoId == cursoId && x.ProfessorId == professorId) ??
+                throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor não encontrado");
 
 			if (cursoProfessor.Responsavel)
 				throw new InformacaoException(StatusException.Erro, $"Professor Responsável não pode ser removido");
@@ -75,14 +75,16 @@ namespace OA_Core.Service
 			return professores;
 		}
 
-		public async Task<Guid> PostCursoProfessorAsync(CursoProfessorRequest cursoProfessorRequest)
+		public async Task<Guid> PostCursoProfessorAsync(CursoProfessorRequest cursoProfessorRequest, Guid cursoId)
         {
             var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);
-       
-            if (await _professorRepository.ObterPorIdAsync(cursoProfessorRequest.ProfessorId) is null)
+			entity.CursoId = cursoId;
+
+
+			if (await _professorRepository.ObterPorIdAsync(cursoProfessorRequest.ProfessorId) is null)
                 throw new InformacaoException(StatusException.NaoEncontrado, $"ProfessorId: {cursoProfessorRequest.ProfessorId} inválido ou não existente");
-			if (await _cursoRepository.ObterPorIdAsync(cursoProfessorRequest.CursoId) is null)
-				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {cursoProfessorRequest.CursoId} inválido ou não existente");
+			if (await _cursoRepository.ObterPorIdAsync(cursoId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {cursoId} inválido ou não existente");
 
 			if (!entity.Valid)
 				throw new InformacaoException(StatusException.FormatoIncorreto, $"{entity.ValidationResult}");
@@ -91,9 +93,10 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutCursoProfessorAsync(Guid id, CursoProfessorRequest cursoProfessorRequest)
+        public async Task PutCursoProfessorAsync(Guid cursoId, CursoProfessorRequest cursoProfessorRequest)
         {
             var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);   
+			entity.CursoId = cursoId;
 
             if (!entity.Valid)
             {
@@ -101,8 +104,8 @@ namespace OA_Core.Service
                 return;
             }
 
-            var find = await _cursoProfessorRepository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor {id} não encontrado");
+			var find = await _cursoProfessorRepository.ObterAsync(x => x.CursoId == cursoId && x.ProfessorId == entity.ProfessorId) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor não encontrado");
 
 			find.CursoId = entity.CursoId;
 			find.ProfessorId = entity.ProfessorId;

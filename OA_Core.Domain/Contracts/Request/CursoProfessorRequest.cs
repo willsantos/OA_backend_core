@@ -3,7 +3,6 @@
     public class CursoProfessorRequest
     {
         public Guid ProfessorId { get; set; }
-		public Guid CursoId { get; set; }
 		public bool Responsavel { get; set; }
     }
 }

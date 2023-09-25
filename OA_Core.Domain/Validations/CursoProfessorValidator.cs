@@ -12,10 +12,6 @@ namespace OA_Core.Domain.Validations
     {
         public CursoProfessorValidator()
         {
-            RuleFor(u => u.CursoId)
-               .NotEmpty()
-               .WithMessage("CursoId não pode ser nulo");
-
             RuleFor(u => u.ProfessorId)
                 .NotEmpty()
                 .WithMessage("CursoId não pode ser nulo");

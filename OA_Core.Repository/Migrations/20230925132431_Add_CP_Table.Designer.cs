@@ -11,8 +11,8 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20230925121733_Atualiza_CursoProfessor")]
-    partial class Atualiza_CursoProfessor
+    [Migration("20230925132431_Add_CP_Table")]
+    partial class Add_CP_Table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,7 +179,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("cursosProfessores");
+                    b.ToTable("CursoProfessor");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Professor", b =>

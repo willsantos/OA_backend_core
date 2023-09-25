@@ -11,11 +11,10 @@ namespace OA_Core.Domain.Entities
 	public class CursoProfessor : Entidade
 	{
 
-		public CursoProfessor(Guid cursoId, Guid professorId, bool responsavel)
+		public CursoProfessor(Guid professorId, bool responsavel)
 		{
 			Id = Guid.NewGuid();
 			ProfessorId = professorId;
-			CursoId = cursoId;
 			Responsavel = responsavel;
 			DataCriacao = DateTime.Now;
 			Validate(this, new CursoProfessorValidator());

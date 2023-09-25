@@ -176,7 +176,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("cursosProfessores");
+                    b.ToTable("CursoProfessor");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Professor", b =>

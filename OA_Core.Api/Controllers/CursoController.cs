@@ -81,18 +81,18 @@ namespace OA_Core.Api.Controllers
 
 		[HttpPost("{cursoId}/professores", Name = "PostProfessorToCursoAsync")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessorRequest request)
+		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessorRequest request, Guid cursoId)
 		{
-			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request);
+			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request, cursoId);
 			return Created(nameof(PostProfessorToCursoAsync), cursoProfessorId);
 		}
 
-		[HttpDelete("{cursoProfessorId}/professores/{professorId}", Name = "DeleteProfessorFromCursoAsync")]
+		[HttpDelete("{cursoId}/professores/{professorId}", Name = "DeleteProfessorFromCursoAsync")]
 		[ProducesResponseType(204)]
-		public async Task<ActionResult> DeleteProfessorFromCursoAsync([FromRoute] Guid cursoProfessorId)
+		public async Task<ActionResult> DeleteProfessorFromCursoAsync([FromRoute] Guid cursoId, Guid professorId)
 		{
 
-			await _cursoProfessorservice.DeleteCursoProfessorAsync(cursoProfessorId);
+			await _cursoProfessorservice.DeleteCursoProfessorAsync(cursoId, professorId);
 			return NoContent();
 		}
 	}

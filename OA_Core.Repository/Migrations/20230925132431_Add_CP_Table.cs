@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OA_Core.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class Atualiza_CursoProfessor : Migration
+    public partial class Add_CP_Table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace OA_Core.Repository.Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "cursosProfessores",
+                name: "CursoProfessor",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -32,15 +32,15 @@ namespace OA_Core.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cursosProfessores", x => x.Id);
+                    table.PrimaryKey("PK_CursoProfessor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_cursosProfessores_Curso_CursoId",
+                        name: "FK_CursoProfessor_Curso_CursoId",
                         column: x => x.CursoId,
                         principalTable: "Curso",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_cursosProfessores_Professor_ProfessorId",
+                        name: "FK_CursoProfessor_Professor_ProfessorId",
                         column: x => x.ProfessorId,
                         principalTable: "Professor",
                         principalColumn: "Id",
@@ -49,13 +49,13 @@ namespace OA_Core.Repository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_cursosProfessores_CursoId",
-                table: "cursosProfessores",
+                name: "IX_CursoProfessor_CursoId",
+                table: "CursoProfessor",
                 column: "CursoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_cursosProfessores_ProfessorId",
-                table: "cursosProfessores",
+                name: "IX_CursoProfessor_ProfessorId",
+                table: "CursoProfessor",
                 column: "ProfessorId");
         }
 
@@ -63,7 +63,7 @@ namespace OA_Core.Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "cursosProfessores");
+                name: "CursoProfessor");
 
             migrationBuilder.DropColumn(
                 name: "Aulas",
