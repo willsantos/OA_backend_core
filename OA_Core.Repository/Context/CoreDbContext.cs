@@ -11,6 +11,7 @@ namespace OA_Core.Repository.Context
         public DbSet<Curso> Curso { get; set; }
         public DbSet<Aluno> Aluno { get; set; }
         public DbSet<Aula> Aula { get; set; }
+		public DbSet<Assinatura> Assinatura { get; set; }
 
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
@@ -18,12 +19,12 @@ namespace OA_Core.Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
 			modelBuilder.Entity<Usuario>(new UsuarioEntityMap().Configure);
 			modelBuilder.Entity<Professor>(new ProfessorEntityMap().Configure);
 			modelBuilder.Entity<Curso>(new CursoEntityMap().Configure);
 			modelBuilder.Entity<Aluno>(new AlunoEntityMap().Configure);
 			modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
+			modelBuilder.Entity<Assinatura>(new AssinaturaEntityMap().Configure);
         }
     }
 }
