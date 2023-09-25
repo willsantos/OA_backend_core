@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OA_Core.Domain.Contracts.;
+using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
 using OA_Core.Domain.Enums;
@@ -52,27 +53,28 @@ namespace OA_Core.Service
             return _mapper.Map<CursoProfessor>(cursoProfessor);
         }
 
-        public async Task<Guid> PostCursoProfessorAsync(CursoProfessor cursoProfessor)
+        public async Task<Guid> PostCursoProfessorAsync(CursoProfessorRequest cursoProfessorRequest)
         {
-            var entity = _mapper.Map<CursoProfessor>(cursoProfessor);
+            var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);
        
-            if (await _professorRepository.ObterPorIdAsync(cursoProfessor.ProfessorId) is null)
-                throw new InformacaoException(StatusException.NaoEncontrado, $"ProfessorId: {cursoProfessor.ProfessorId} inválido ou não existente");
-            
-            if (!entity.Valid)
+            if (await _professorRepository.ObterPorIdAsync(cursoProfessorRequest.ProfessorId) is null)
+                throw new InformacaoException(StatusException.NaoEncontrado, $"ProfessorId: {cursoProfessorRequest.ProfessorId} inválido ou não existente");
+			if (await _cursoRepository.ObterPorIdAsync(cursoProfessorRequest.CursoId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {cursoProfessorRequest.CursoId} inválido ou não existente");
+
+			if (!entity.Valid)
             {
                 _notificador.Handle(entity.ValidationResult);
                 return Guid.Empty;
-
             }          
 
             await _cursoProfessorRepository.AdicionarAsync(entity);
             return entity.Id;
         }
 
-        public async Task PutCursoProfessorAsync(Guid id, CursoProfessor cursoProfessor)
+        public async Task PutCursoProfessorAsync(Guid id, CursoProfessorRequest cursoProfessorRequest)
         {
-            var entity = _mapper.Map<CursoProfessor>(cursoProfessor);   
+            var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);   
 
             if (!entity.Valid)
             {

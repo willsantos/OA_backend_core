@@ -81,7 +81,7 @@ namespace OA_Core.Api.Controllers
 
 		[HttpPost("{cursoId}/professores", Name = "PostProfessorToCursoAsync")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessor request)
+		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessorRequest request)
 		{
 			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request);
 			return CreatedAtRoute("GetCursoByIdAsync", new { id = cursoProfessorId }, null);
