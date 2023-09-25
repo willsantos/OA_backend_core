@@ -75,7 +75,7 @@ namespace OA_Core.Tests.Service
 		}
 
         [Fact(DisplayName = "Obtém alunos por id")]
-        public async Task ObterPorId()
+        public async Task AlunoService_ObtemAluno_DeveRetornarUmAluno()
         {
 			//Arrange
 			var aluno = AlunoFixture.GerarAluno();
@@ -92,8 +92,8 @@ namespace OA_Core.Tests.Service
 			result.Should().BeEquivalentTo(alunoResponse);
         }
 
-        [Fact(DisplayName = "Obter alunos por id nulo")]
-        public async Task ObterPorIdNull()
+        [Fact(DisplayName = "Tenta obter alunos por id inválido")]
+        public async Task AlunoService_ObtemAlunoNull_DeveSerInvalido()
         {
 			//Arrange
             var mockRepository = Substitute.For<IAlunoRepository>();
@@ -106,7 +106,7 @@ namespace OA_Core.Tests.Service
         }
 
         [Fact(DisplayName = "Deleta aluno")]
-        public async Task DeletarAluno()
+        public async Task AlunoService_DeletaAluno_DeveDeletar()
         {
 			//Arrange
             var aluno = _fixture.Create<Aluno>();
@@ -122,8 +122,8 @@ namespace OA_Core.Tests.Service
             await mockRepository.Received().RemoverAsync(aluno);
         }
 
-		[Fact(DisplayName = "Cadastra aluno com cpf vazio")]
-		public async Task CadastrarAlunoCpfVazio()
+		[Fact(DisplayName = "Tenta cadastrar aluno com cpf inválido")]
+		public async Task AlunoService_CadastraAlunoCpfInvalido_DeveSerInvalido()
 		{
 			//Arrange
 			var usuario = _fixture.Create<Usuario>();
@@ -141,8 +141,8 @@ namespace OA_Core.Tests.Service
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Cpf" && e.ErrorMessage == "Cpf é obrigatório")));
 		}
 
-		[Fact(DisplayName = "Cadastra aluno com foto vazia")]
-		public async Task CadastrarAlunoFotoVazia()
+		[Fact(DisplayName = "Tenta cadastrar aluno com foto inválida")]
+		public async Task AlunoService_CadastraAlunoFotoInvalida_DeveSerInvalido()
 		{
 			//Arrange
 			var usuario = _fixture.Create<Usuario>();
@@ -155,14 +155,14 @@ namespace OA_Core.Tests.Service
 			//Act
 			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+			await service.PostAlunoAsync(alunoRequest);
 
 			//Assert
-			await service.PostAlunoAsync(alunoRequest);
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));
 		}
 
 		[Fact(DisplayName = "Cadastra aluno com usuarioId inválido")]
-		public async Task CadastrarAlunoUsuarioIdInvalido()
+		public async Task AlunoService_CadastraAlunoUsuarioIdInvalido_DeveSerInvalido()
 		{
 			//Arrange
 			var alunoRequest = _fixture.Create<AlunoRequest>();
@@ -194,20 +194,22 @@ namespace OA_Core.Tests.Service
 			await mockRepository.Received().EditarAsync(Arg.Is<Aluno>(x => x.Foto == alunoRequest.Foto));
 		}
 
-		[Fact(DisplayName = "Edita alunos campo inválido")]
-		public async Task EditarAlunoNull()
+		[Fact(DisplayName = "Atualiza aluno com foto inválida")]
+		public async Task AlunoService_AtualizaAlunoFotoInvalida_DeveAtualizar()
 		{
+			//Arrange
 			var aluno = _fixture.Create<Aluno>();
 			var alunoRequest = _fixture.Create<AlunoRequestPut>();
 			alunoRequest.Foto = string.Empty;
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
-
-			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
-
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
+
+			//Act
+			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
 			await service.PutAlunoAsync(aluno.Id, alunoRequest);
 
+			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));
 		}
 	}
