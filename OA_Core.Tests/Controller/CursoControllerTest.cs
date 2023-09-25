@@ -105,7 +105,8 @@ namespace OA_Core.Tests.Controller
             Assert.Equal(entity, resultValue);
         }
 
-        [Fact(DisplayName = "Atualiza curso")]
+
+		[Fact(DisplayName = "Atualiza curso")]
         public async Task PutCursoAsync()
         {
             var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
@@ -129,5 +130,61 @@ namespace OA_Core.Tests.Controller
 
             await _cursoSevice.Received().DeleteCursoAsync(id);
         }
-    }
+
+		[Fact(DisplayName = "Adiciona um cursoProfessor")]
+		public async Task CriaCursoProfessor()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			var cursoRequest = new CursoProfessorRequest
+			{
+				ProfessorId = new Guid(),
+				Responsavel = true
+			};
+			var entity = _mapper.Map<CursoProfessor>(cursoRequest);
+			entity.CursoId = new Guid();
+
+			_cursoProfessorService.PostCursoProfessorAsync(cursoRequest, entity.CursoId).Returns(entity.Id);
+
+			var controllerResult = await cursoController.PostProfessorToCursoAsync(cursoRequest, entity.CursoId);
+			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
+
+
+			Assert.Equal(StatusCodes.Status201Created, actionResult.StatusCode);
+			Assert.Equal(entity.Id, actionResult.Value);
+		}
+
+		[Fact(DisplayName = "Busca relação cursoProfessor por ID")]
+		public async Task GetCursoProfessorByIdAsync()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			var entity = _fixture.Create<List<ProfessorResponseComResponsavel>>();
+			Guid id = Guid.NewGuid();
+
+			_cursoProfessorService.GetProfessorDeCursoByIdAsync(id).Returns(entity);
+
+			var controllerResult = await cursoController.GetProfessoresByCursoIdAsync(id);
+
+			Assert.IsType<OkObjectResult>(controllerResult.Result);
+
+			var resultValue = (controllerResult.Result as OkObjectResult).Value as List<ProfessorResponseComResponsavel>;
+
+			Assert.Equal(entity, resultValue);
+		}
+
+		[Fact(DisplayName = "Exclui cursoProfessor")]
+		public async Task DeleteCursoProfessorAsync()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			Guid cursoId = Guid.NewGuid();
+			Guid professorId = Guid.NewGuid();
+
+
+			await cursoController.DeleteProfessorFromCursoAsync(cursoId, professorId);
+
+			await _cursoProfessorService.Received().DeleteCursoProfessorAsync(cursoId, professorId);
+		}
+	}
 }
