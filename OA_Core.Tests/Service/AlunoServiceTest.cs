@@ -5,8 +5,10 @@ using NSubstitute;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
+using OA_Core.Domain.Notifications;
 using OA_Core.Domain.ValueObjects;
 using OA_Core.Service;
 using OA_Core.Tests.Config;
@@ -93,54 +95,51 @@ namespace OA_Core.Tests.Service
         [Fact(DisplayName = "Obter alunos por id nulo")]
         public async Task ObterPorIdNull()
         {
-            var aluno = _fixture.Create<Aluno>();
+			//Arrange
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
-			mockRepository.ObterPorIdAsync(aluno.Id).Returns((Aluno)null);
-
-            var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-
-            var exception = await Record.ExceptionAsync(async () => await service.GetAlunoByIdAsync(aluno.Id));
-            Assert.NotNull(exception);
+			//Act
+			//Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => service.GetAlunoByIdAsync(Guid.NewGuid()));
         }
 
-        [Fact(DisplayName = "Deleta alunos")]
+        [Fact(DisplayName = "Deleta aluno")]
         public async Task DeletarAluno()
         {
+			//Arrange
             var aluno = _fixture.Create<Aluno>();
-
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
+			//Act
 			mockRepository.ObterPorIdAsync(aluno.Id).Returns(aluno);
-            await mockRepository.RemoverAsync(aluno);
+			await service.DeleteAlunoAsync(aluno.Id);
 
-            var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-
-            await service.DeleteAlunoAsync(aluno.Id);
-
-            var exception = await Record.ExceptionAsync(async () => await service.DeleteAlunoAsync(aluno.Id));
-            Assert.Null(exception);
+			//Assert
+            await mockRepository.Received().RemoverAsync(aluno);
         }
 
 		[Fact(DisplayName = "Cadastra aluno com cpf vazio")]
 		public async Task CadastrarAlunoCpfVazio()
 		{
+			//Arrange
 			var usuario = _fixture.Create<Usuario>();
 			var alunoRequest = _fixture.Create<AlunoRequest>();
 			var cpfVazio = new Cpf(string.Empty);
 			alunoRequest.Cpf = cpfVazio;
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
+			//Act
 			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
 
-			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
-
-			var exception = await Record.ExceptionAsync(async () => await service.PostAlunoAsync(alunoRequest));
-			Assert.NotNull(exception);
+			//Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => service.PostAlunoAsync(alunoRequest));
 		}
 
 		[Fact(DisplayName = "Cadastra aluno com foto vazia")]
