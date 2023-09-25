@@ -1,6 +1,8 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
+using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.ValueObjects;
 
 namespace OA_Core.Tests.Config
 {
@@ -27,6 +29,18 @@ namespace OA_Core.Tests.Config
 
 			return alunos.Generate(quantidade);
 
+		}
+
+		public static AlunoRequest GerarAlunoInvalido()
+		{
+			var aluno = GerarAlunos(1, true).FirstOrDefault();
+
+			var alunoRequest = new AlunoRequest()
+			{
+				Cpf = new Cpf(String.Empty),
+				Foto = aluno.Foto
+			};
+			return alunoRequest;
 		}
 		public void Dispose()
 		{
