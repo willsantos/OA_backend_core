@@ -6,6 +6,6 @@ namespace OA_Core.Domain.Interfaces.Repository
 {
     public interface ICursoProfessorRepository : IBaseRepository<CursoProfessor>
     {
-
-    }
+		Task<IEnumerable<CursoProfessor>> ObterTodosComIncludeAsync(Expression<Func<CursoProfessor, bool>> expression);
+	}
 }

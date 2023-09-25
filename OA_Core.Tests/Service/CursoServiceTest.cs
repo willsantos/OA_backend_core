@@ -40,8 +40,8 @@ namespace OA_Core.Tests.Service
             var professor = _fixture.Create<Professor>();
             var cursoRequest = _fixture.Create<CursoRequest>();
 
-            MockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
-            mockCursoRepository.AddAsync(Arg.Any<Curso>()).Returns(Task.CompletedTask);
+            MockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
+            mockCursoRepository.AdicionarAsync(Arg.Any<Curso>()).Returns(Task.CompletedTask);
 
             var result = await cursoService.PostCursoAsync(cursoRequest);
             Assert.NotNull(result);
@@ -56,11 +56,11 @@ namespace OA_Core.Tests.Service
             var cursoService = new CursoService(_mapper, mockCursoRepository, mockProfessorRepository, _notifier);
 
             var curso = _fixture.Create<Curso>();
-            mockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(curso);
+            mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 
             await cursoService.DeleteCursoAsync(curso.Id);
 
-            await mockCursoRepository.Received().RemoveAsync(curso);
+			await mockCursoRepository.Received().RemoverAsync(curso);
         }
 
         [Fact(DisplayName = "Obtém todos os Cursos")]
@@ -71,7 +71,7 @@ namespace OA_Core.Tests.Service
             var cursoService = new CursoService(_mapper, mockCursoRepository, mockProfessorRepository, _notifier);
 
             var cursos = _fixture.CreateMany<Curso>(5);
-            mockCursoRepository.ListPaginationAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(cursos);
+            mockCursoRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(cursos);
 
             var result = await cursoService.GetAllCursosAsync(1, 5);
 
@@ -86,7 +86,7 @@ namespace OA_Core.Tests.Service
             var cursoService = new CursoService(_mapper, mockCursoRepository, mockProfessorRepository, _notifier);
 
             var curso = _fixture.Create<Curso>();
-            mockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(curso);
+            mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 
             var result = await cursoService.GetCursoByIdAsync(curso.Id);
 
@@ -103,11 +103,11 @@ namespace OA_Core.Tests.Service
             var cursoRequestPut = _fixture.Create<CursoRequestPut>();
             var curso = _fixture.Create<Curso>();
 
-            mockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(curso);
+            mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 
             await cursoService.PutCursoAsync(curso.Id, cursoRequestPut);
 
-            await mockCursoRepository.Received().EditAsync(Arg.Is<Curso>(c => c.Nome == cursoRequestPut.Nome));
+            await mockCursoRepository.Received().EditarAsync(Arg.Is<Curso>(c => c.Nome == cursoRequestPut.Nome));
         }
 
         [Fact(DisplayName = "Atualiza um Curso com Id inválido")]
@@ -165,7 +165,7 @@ namespace OA_Core.Tests.Service
             var cursoRequest = _fixture.Create<CursoRequest>();
             cursoRequest.Categoria = string.Empty;
 
-            MockProfessorRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+            MockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
 
             await cursoService.PostCursoAsync(cursoRequest);
 
@@ -183,7 +183,7 @@ namespace OA_Core.Tests.Service
             cursoRequestPut.Categoria = string.Empty;
             var curso = _fixture.Create<Curso>();
 
-            mockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(curso);
+            mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 
             await cursoService.PutCursoAsync(curso.Id, cursoRequestPut);
 

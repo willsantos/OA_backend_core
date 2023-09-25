@@ -37,7 +37,7 @@ namespace OA_Core.Tests.Service
             var page = 1;
             var rows = 10;
 
-            mockRepository.ListPaginationAsync(page, rows).Returns(alunos);
+            mockRepository.ObterTodosAsync(page, rows).Returns(alunos);
 
             var result = await service.GetAllAlunosAsync(page, rows);
 
@@ -51,7 +51,7 @@ namespace OA_Core.Tests.Service
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.FindAsync(aluno.Id).Returns(aluno);
+			mockRepository.ObterPorIdAsync(aluno.Id).Returns(aluno);
 
             var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -67,7 +67,7 @@ namespace OA_Core.Tests.Service
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.FindAsync(aluno.Id).Returns((Aluno)null);
+			mockRepository.ObterPorIdAsync(aluno.Id).Returns((Aluno)null);
 
             var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -83,8 +83,8 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			MockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
-			mockRepository.AddAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -100,8 +100,8 @@ namespace OA_Core.Tests.Service
             var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.FindAsync(aluno.Id).Returns(aluno);
-            await mockRepository.RemoveAsync(aluno);
+			mockRepository.ObterPorIdAsync(aluno.Id).Returns(aluno);
+            await mockRepository.RemoverAsync(aluno);
 
             var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -121,8 +121,8 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			MockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
-			mockRepository.AddAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -139,8 +139,8 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			MockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
-			mockRepository.AddAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -155,7 +155,7 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.AddAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
+			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -171,7 +171,7 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.FindAsync(Arg.Any<Guid>()).Returns(aluno);
+			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 
@@ -188,7 +188,7 @@ namespace OA_Core.Tests.Service
 			var mockRepository = Substitute.For<IAlunoRepository>();
 			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 
-			mockRepository.FindAsync(Arg.Any<Guid>()).Returns(aluno);
+			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
 
 			var service = new AlunoService(mockRepository, MockUsuarioRepository, _mapper, _notifier);
 			await service.PutAlunoAsync(aluno.Id, alunoRequest);

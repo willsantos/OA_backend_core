@@ -43,8 +43,8 @@ namespace OA_Core.Tests.Service
             var professor = _fixture.Create<Curso>();
             var aulaRequest = _fixture.Create<AulaRequest>();
 
-            MockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
-            mockAulaRepository.AddAsync(Arg.Any<Aula>()).Returns(Task.CompletedTask);
+            MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
+			mockAulaRepository.AdicionarAsync(Arg.Any<Aula>()).Returns(Task.CompletedTask);
 
             var result = await aulaService.PostAulaAsync(aulaRequest);
 
@@ -59,11 +59,11 @@ namespace OA_Core.Tests.Service
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
 
             var aula = _fixture.Create<Aula>();
-            mockAulaRepository.FindAsync(Arg.Any<Guid>()).Returns(aula);
+            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
 
             await aulaService.DeleteAulaAsync(aula.Id);
 
-            await mockAulaRepository.Received().RemoveAsync(aula);
+            await mockAulaRepository.Received().RemoverAsync(aula);
         }
 
         [Fact(DisplayName = "Obtém todas as Aulas")]
@@ -74,7 +74,7 @@ namespace OA_Core.Tests.Service
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
 
             var aulas = _fixture.CreateMany<Aula>(5);
-            mockAulaRepository.ListPaginationAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(aulas);
+            mockAulaRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(aulas);
 
             var result = await aulaService.GetAllAulasAsync(1, 5);
 
@@ -91,7 +91,7 @@ namespace OA_Core.Tests.Service
             var aula = _fixture.Create<Aula>();
             var aulaResponse = _mapper.Map<AulaResponse>(aula);
 
-            mockAulaRepository.FindAsync(Arg.Any<Guid>()).Returns(aula);
+            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
 
             var result = await aulaService.GetAulaByIdAsync(aula.Id);
 
@@ -108,11 +108,11 @@ namespace OA_Core.Tests.Service
             var aulaRequestPut = _fixture.Create<AulaRequestPut>();
             var aula = _fixture.Create<Aula>();
 
-            mockAulaRepository.FindAsync(Arg.Any<Guid>()).Returns(aula);
+            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
 
             await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
 
-            await mockAulaRepository.Received().EditAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
+            await mockAulaRepository.Received().EditarAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
         }
 
         [Fact(DisplayName = "Cria uma Aula com CursoId inválido")]
@@ -171,7 +171,7 @@ namespace OA_Core.Tests.Service
             var aulaRequest = _fixture.Create<AulaRequest>();
             aulaRequest.Caminho = string.Empty;
 
-            MockCursoRepository.FindAsync(Arg.Any<Guid>()).Returns(professor);
+            MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
 
             await aulaService.PostAulaAsync(aulaRequest);
 
@@ -189,7 +189,7 @@ namespace OA_Core.Tests.Service
             aulaRequestPut.Caminho = string.Empty;
             var aula = _fixture.Create<Aula>();
 
-            mockAulaRepository.FindAsync(Arg.Any<Guid>()).Returns(aula);
+            mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
 
             await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
 

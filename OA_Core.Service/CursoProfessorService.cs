@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using OA_Core.Domain.Contracts.;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
@@ -61,7 +60,7 @@ namespace OA_Core.Service
 			var curso = await _cursoRepository.ObterPorIdAsync(cursoId) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Curso {cursoId} não encontrado");
 
-			var cursoProfessores = await _cursoProfessorRepository.ObterTodosAsync(x => x.CursoId == cursoId) ??
+			var cursoProfessores = await _cursoProfessorRepository.ObterTodosComIncludeAsync(x => x.CursoId == cursoId) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor {cursoId} não encontrado");
 
 			var professores = new List<ProfessorResponseComResponsavel>();

@@ -7,6 +7,7 @@
         public string Categoria { get; set; }
         public string PreRequisito { get; set; }
         public double Preco { get; set; }
+		public int Aulas { get; set; }
         public Guid ProfessorId { get; set; }
     }
 }

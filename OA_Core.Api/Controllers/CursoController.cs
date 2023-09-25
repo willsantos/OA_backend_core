@@ -84,7 +84,7 @@ namespace OA_Core.Api.Controllers
 		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessorRequest request)
 		{
 			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request);
-			return CreatedAtRoute("GetCursoByIdAsync", new { id = cursoProfessorId }, null);
+			return Created(nameof(PostProfessorToCursoAsync), cursoProfessorId);
 		}
 
 		[HttpDelete("{cursoProfessorId}/professores/{professorId}", Name = "DeleteProfessorFromCursoAsync")]
