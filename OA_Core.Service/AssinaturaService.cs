@@ -6,6 +6,7 @@ using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
+using OA_Core.Domain.Utils;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 
@@ -30,8 +31,6 @@ namespace OA_Core.Service
 
 		public async Task<Guid> PostAssinaturaAsync(AssinaturaRequest assinatura)
 		{
-			//O registro de uma assinatura já inclui a data de ativação e de vencimento.
-
 			
 			var entity = _mapper.Map<Assinatura>(assinatura);
 
@@ -45,27 +44,38 @@ namespace OA_Core.Service
 
 			}
 
-			var assinaturaExistente = await _assinaturaRepository.BuscarAssinaturaPorUsuarioId(entity.UsuarioId);
+			var assinaturaExistente = await _assinaturaRepository.ObterAsync(a => a.UsuarioId == entity.UsuarioId);
 
 
 			if (assinaturaExistente is not null)
 			{
 				entity.DataCriacao = assinaturaExistente.DataVencimento.AddDays(1);
 				entity.DataVencimento = entity.DataCriacao.AddYears(1);
-				await _assinaturaRepository.CadastrarAssinaturaAsync(entity);
+				await _assinaturaRepository.AdicionarAsync(entity);
 				return entity.Id;
 			}
 
 			entity.DataAtivacao = DateTime.Now;
 			entity.DataVencimento = entity.DataCriacao.AddYears(1);
-			await _assinaturaRepository.CadastrarAssinaturaAsync(entity);
+			await _assinaturaRepository.AdicionarAsync(entity);
 			return entity.Id;
 
 		}
 
-		public Task<Guid> PutCancelarAssinaturaAsync(AssinaturaCancelamentoRequest assinatura)
+		public async Task<Guid> PutCancelarAssinaturaAsync(AssinaturaCancelamentoRequest assinatura)
 		{
-			throw new NotImplementedException();
+			// setar data de cancelamento e status para cancelado aqui
+			var assinaturaParaCancelar = await _assinaturaRepository.ObterPorIdAsync(assinatura.Id);
+			if(assinaturaParaCancelar is null) 
+			{
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Assinatura {assinatura.Id} inválido ou não existe");
+			}
+			assinaturaParaCancelar.MotivoCancelamento = assinatura.MotivoCancelamento;
+			assinaturaParaCancelar.DataCancelamento = DateTime.Now;
+			assinaturaParaCancelar.Status = AssinaturaStatusEnum.Cancelada;
+			await _assinaturaRepository.EditarAsync(assinaturaParaCancelar);
+
+			return assinatura.Id;
 		}
 	}
 }

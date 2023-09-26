@@ -1,12 +1,9 @@
-﻿using OA_Core.Domain.Contracts.Request;
-using OA_Core.Domain.Entities;
+﻿using OA_Core.Domain.Entities;
 
 namespace OA_Core.Domain.Interfaces.Repository
 {
-	public interface IAssinaturaRepository
+	public interface IAssinaturaRepository : IBaseRepository<Assinatura>
 	{
-		Task<Guid> CadastrarAssinaturaAsync(Assinatura assinatura);
-		Task<Guid> CancelarAssinaturaAsync(Assinatura assinatura);
-		Task<Assinatura> BuscarAssinaturaPorUsuarioId(Guid UsuarioId);
+		
 	}
 }
