@@ -60,7 +60,6 @@ namespace OA_Core.Tests.Controller
             var controllerResult = await aulaController.PostAulaAsync(aulaRequest);
 
 			//Assert
-            //var actionResult = Assert.IsType<CreatedResult>(controllerResult); outra possibilidade
             var actionResult = controllerResult.Should().BeOfType<CreatedResult>().Subject;
 
             actionResult.StatusCode.Should().Be(StatusCodes.Status201Created);
