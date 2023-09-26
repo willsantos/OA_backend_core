@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoMapper;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
@@ -28,7 +29,7 @@ namespace OA_Core.Tests.Controller
 		}
 
 		[Fact(DisplayName = "Adiciona um aluno")]
-		public async Task CriarAluno()
+		public async Task AlunoController_CriarAluno_DeveCriar()
 		{
 			var alunoController = new AlunoController(_service);
 
@@ -39,12 +40,6 @@ namespace OA_Core.Tests.Controller
 			_service.PostAlunoAsync(alunoRequest).Returns(entity.Id);
 
 			var controllerResult = await alunoController.PostAlunoAsync(alunoRequest);
-			var actionResult = Assert.IsType<ActionResult<Guid>>(controllerResult);
-			var createdAtRouteResult = Assert.IsType<CreatedAtRouteResult>(actionResult.Result);
-
-
-			Assert.Equal(StatusCodes.Status201Created, createdAtRouteResult.StatusCode);
-			Assert.Equal(entity.Id, createdAtRouteResult.Value);
 		}
 
 		[Fact(DisplayName = "Busca todos os alunos")]

@@ -1,6 +1,7 @@
 ﻿
 using AutoFixture;
 using AutoMapper;
+using FluentAssertions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,9 @@ namespace OA_Core.Tests.Controller
 		}
 
 		[Fact(DisplayName = "Adiciona um novo professor com sucesso")]
-		public async Task CriaProfessor()
+		public async Task ProfessorController_CriaProfessor_DeveCriar()
 		{
+			//Arrange
 			var professorController = new ProfessorController(_service);
 
 			var professorRequest = new ProfessorRequest
@@ -46,18 +48,20 @@ namespace OA_Core.Tests.Controller
 			};
 			var entity = _mapper.Map<Professor>(professorRequest);
 
+			//Act
 			_service.PostProfessorAsync(professorRequest).Returns(entity.Id);
-
 			var controllerResult = await professorController.PostProfessorAsync(professorRequest);
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
 
-
-			Assert.Equal(StatusCodes.Status201Created, actionResult.StatusCode);
-			Assert.Equal(entity.Id, actionResult.Value);
+			//Assert
+			actionResult.StatusCode.Should().Be(StatusCodes.Status201Created);
+			actionResult.Value.Should().Be(entity.Id);
 		}
+
 		[Fact(DisplayName = "Busca todos os professores com sucesso")]
-		public async Task GetAllProfessorAsync()
+		public async Task ProfessorController_GetAllProfessorAsync_DeveBuscar()
 		{
+			//Arrange
 			var professorController = new ProfessorController(_service);
 
 			var entities = _fixture.Create<List<ProfessorResponse>>();
@@ -65,58 +69,69 @@ namespace OA_Core.Tests.Controller
 			int page = 0;
 			int rows = 10;
 
+			//Act
 			_service.GetAllProfessoresAsync(page, rows).Returns(entities);
-
 			var controllerResult = await professorController.GetAllProfessorAsync(page, rows);
 
-			Assert.IsType<OkObjectResult>(controllerResult.Result);
+			//Assert
+			controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
-			var resultValue = (controllerResult.Result as OkObjectResult).Value as PaginationResponse<ProfessorResponse>;
+			var resultValue = ((OkObjectResult)controllerResult.Result).Value as PaginationResponse<ProfessorResponse>;
 
-			Assert.Equal(entities, resultValue.Resultado);
+			resultValue.Resultado.Should().BeEquivalentTo(entities);
+
 		}
 
 		[Fact(DisplayName = "Busca professor por ID com sucesso")]
-		public async Task GetProfessorByIdAsync()
+		public async Task ProfessorController_GetProfessorByIdAsync_DeveBuscarUm()
 		{
+			//Arrange
 			var professorController = new ProfessorController(_service);
 
 			var entity = _fixture.Create<ProfessorResponse>();
 			Guid id = Guid.NewGuid();
 
+			//Act
 			_service.GetProfessorByIdAsync(id).Returns(entity);
 
 			var controllerResult = await professorController.GetProfessorByIdAsync(id);
 
-			Assert.IsType<OkObjectResult>(controllerResult.Result);
+			//Assert
+			controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
 			var resultValue = (controllerResult.Result as OkObjectResult).Value as ProfessorResponse;
 
-			Assert.Equal(entity, resultValue);
+			resultValue.Should().BeEquivalentTo(entity);
 		}
 
 		[Fact(DisplayName = "Atualiza Professor com sucesso")]
-		public async Task PutProfessorAsync()
+		public async Task ProfessorController_PutProfessorAsync_DeveAtualizar()
 		{
+			//Arrange
 			var cursoController = new ProfessorController(_service);
 
 			Guid id = Guid.NewGuid();
 			var request = _fixture.Create<ProfessorRequestPut>();
 
+			//Act
 			await cursoController.PutProfessorAsync(id, request);
 
+			//Assert
 			await _service.Received().PutProfessorAsync(id, request);
 		}
 
 		[Fact(DisplayName = "Exclui Professor com sucesso")]
-		public async Task DeleteProfessorAsync()
+		public async Task ProfessorController_DeleteProfessorAsync_DeveDeletar()
 		{
+			//Arrange
 			var cursoController = new ProfessorController(_service);
 
 			Guid id = Guid.NewGuid();
 
+			//Act
 			await cursoController.DeleteProfessorAsync(id);
 
+			//Assert
 			await _service.Received().DeleteProfessorAsync(id);
 		}		
 	}
