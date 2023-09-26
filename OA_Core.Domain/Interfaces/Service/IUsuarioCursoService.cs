@@ -6,7 +6,7 @@ namespace OA_Core.Domain.Interfaces.Service
 {
 	public interface IUsuarioCursoService
 	{
-		Task<Guid> PostUsuarioCursoAsync(UsuarioCursoRequest cursoRequest, Guid cursoId);
+		Task<Guid> PostUsuarioCursoAsync(UsuarioCursoRequest cursoRequest);
 		Task<List<CursoParaUsuarioResponse>> GetCursoDeUsuarioByIdAsync(Guid cursoId);
 	}
 }

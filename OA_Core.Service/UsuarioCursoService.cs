@@ -52,17 +52,18 @@ namespace OA_Core.Service
 			return cursoList;
 		}
 
-		public async Task<Guid> PostUsuarioCursoAsync(UsuarioCursoRequest usuarioCursoRequest, Guid usuarioId)
+		public async Task<Guid> PostUsuarioCursoAsync(UsuarioCursoRequest usuarioCursoRequest)
         {
             var entity = _mapper.Map<UsuarioCurso>(usuarioCursoRequest);
-			entity.UsuarioId = usuarioId;
 
-			if (await _usuarioRepository.ObterPorIdAsync(usuarioId) is null)
-                throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId: {usuarioId} inválido ou não existente");
+			if (await _usuarioRepository.ObterPorIdAsync(entity.UsuarioId) is null)
+                throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId: {entity.UsuarioId} inválido ou não existente");
 			if (await _cursoRepository.ObterPorIdAsync(entity.CursoId) is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {entity.CursoId} inválido ou não existente");
 
-			if (await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == usuarioId && x.CursoId == entity.CursoId) is null)
+			//var testaaa = await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == entity.UsuarioId && x.CursoId == entity.CursoId);
+
+			if (await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == entity.UsuarioId && x.CursoId == entity.CursoId) != null)
 				throw new InformacaoException(StatusException.Conflito, $"Esse cadastro já foi realizado no banco");
 
 			if (!entity.Valid)

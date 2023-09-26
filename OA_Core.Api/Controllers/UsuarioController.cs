@@ -79,11 +79,11 @@ namespace OA_Core.Api.Controllers
 			return Ok(cursos);
 		}
 
-		[HttpPost("usuario-curso/{usuaroId}", Name = "PostProfessorToCursoAsync")]
+		[HttpPost("usuario-curso", Name = "PostUsuarioToCursoAsync")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> PostUsuarioCursoAsync([FromBody] UsuarioCursoRequest request, Guid usuarioId)
+		public async Task<ActionResult> PostUsuarioCursoAsync([FromBody] UsuarioCursoRequest request)
 		{
-			var usuarioCursoId = await _usuarioCursoService.PostUsuarioCursoAsync(request, usuarioId);
+			var usuarioCursoId = await _usuarioCursoService.PostUsuarioCursoAsync(request);
 			return Created(nameof(PostUsuarioCursoAsync), usuarioCursoId);
 		}
 	}
