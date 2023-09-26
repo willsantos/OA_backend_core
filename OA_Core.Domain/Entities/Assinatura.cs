@@ -31,7 +31,7 @@ namespace OA_Core.Domain.Entities
 			DataCancelamento = dataCancelamento;
 			MotivoCancelamento = motivoCancelamento;
 		}
-
+		public Guid Id { get; set; }
 		public Guid UsuarioId { get; set; }
 		public virtual Usuario Usuario { get; set; }
 		public AssinaturaTipoEnum Tipo { get; set; }
