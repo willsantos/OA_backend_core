@@ -38,16 +38,22 @@ namespace OA_Core.Tests.Service
         }
 
         [Fact(DisplayName = "Cria um UsuarioCurso Válido")]
-        public async Task CriarCurso()
+        public async Task CriarUsuarioCurso()
         {                       
             var cursoUsuarioService = new UsuarioCursoService(_mapper, _cursoUsuarioRepository, _usuarioRepository, _cursoRepository, _notifier);
 
             var usuario = _fixture.Create<Usuario>();
 			var curso = _fixture.Create<Curso>();
 
-			var cursoUsuarioRequest = _fixture.Create<UsuarioCursoRequest>();
+			var cursoUsuarioRequest = new UsuarioCursoRequest
+			{
+				UsuarioId = Guid.NewGuid(),
+				CursoId = Guid.NewGuid(),
+				Progresso = 0,
+				Status = 0,				
+			};
 
-            _usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
+			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
             _cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
 
@@ -56,20 +62,29 @@ namespace OA_Core.Tests.Service
 			Assert.IsType<Guid>(result);
 		}
 
-		[Fact(DisplayName = "Cria um UsuarioCurso com Campos inválidos")]
-		public async Task CriarUsuarioCursoComCamposInvalidos()
+		[Fact(DisplayName = "Cria um UsuarioCurso Válido")]
+		public async Task CriarUsuarioCursoInvalido()
 		{
 			var cursoUsuarioService = new UsuarioCursoService(_mapper, _cursoUsuarioRepository, _usuarioRepository, _cursoRepository, _notifier);
 
 			var usuario = _fixture.Create<Usuario>();
 			var curso = _fixture.Create<Curso>();
-			var cursoUsuarioRequest = _fixture.Create<UsuarioCursoRequest>();
-			cursoUsuarioRequest.UsuarioId = Guid.Empty;
+			var usuarioCurso = _fixture.Create<UsuarioCurso>();
+
+			var cursoUsuarioRequest = new UsuarioCursoRequest
+			{
+				UsuarioId = Guid.NewGuid(),
+				CursoId = Guid.NewGuid(),
+				Progresso = 0,
+				Status = 0,
+			};
 
 			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+			_cursoUsuarioRepository.ObterAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(usuarioCurso);
+			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.PostUsuarioCursoAsync(cursoUsuarioRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.PostUsuarioCursoAsync(cursoUsuarioRequest));;
 		}
 
 		[Fact(DisplayName = "Cria um UsuarioCurso com UsuarioId inválido")]
@@ -106,12 +121,12 @@ namespace OA_Core.Tests.Service
 			var curso = _fixture.Create<Curso>();
 			var usuario = _fixture.Create<Usuario>();
 
-			var cursosUsuarioes = _fixture.CreateMany<UsuarioCurso>(5);
+			var cursoUsuarios = _fixture.CreateMany<UsuarioCurso>(5);
 
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 
-			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursosUsuarioes);
+			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
 			var result = await cursoUsuarioService.GetCursoDeUsuarioByIdAsync(Guid.NewGuid());
 
@@ -123,9 +138,9 @@ namespace OA_Core.Tests.Service
 		{
 			var cursoUsuarioService = new UsuarioCursoService(_mapper, _cursoUsuarioRepository, _usuarioRepository, _cursoRepository, _notifier);
 
-			var cursosUsuarioes = _fixture.CreateMany<UsuarioCurso>(5);
+			var cursoUsuarios = _fixture.CreateMany<UsuarioCurso>(5);
 
-			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursosUsuarioes);
+			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
 			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.GetCursoDeUsuarioByIdAsync(Guid.NewGuid()));
 		}
@@ -136,10 +151,13 @@ namespace OA_Core.Tests.Service
 			var cursoUsuarioService = new UsuarioCursoService(_mapper, _cursoUsuarioRepository, _usuarioRepository, _cursoRepository, _notifier);
 
 			var curso = _fixture.Create<Curso>();
-			var cursosUsuarioes = _fixture.CreateMany<UsuarioCurso>(0);
+			var usuario = _fixture.Create<Usuario>();
 
+			var cursoUsuarios = _fixture.CreateMany<UsuarioCurso>(0);
+
+			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursosUsuarioes);
+			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
 			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.GetCursoDeUsuarioByIdAsync(Guid.NewGuid()));
 		}	 

@@ -21,21 +21,21 @@ using System.Threading.Tasks;
 
 namespace OA_Core.Tests.Controller
 {
-    [Trait("Controller", "Usuario Controller Test")]
-    public class UsuarioControllerTest
-    {
-        private readonly Fixture _fixture;
-        private readonly IUsuarioService _cursoSevice;
+	[Trait("Controller", "Usuario Controller Test")]
+	public class UsuarioControllerTest
+	{
+		private readonly Fixture _fixture;
+		private readonly IUsuarioService _cursoSevice;
 		private readonly IUsuarioCursoService _usuarioCursoService;
 		private readonly IMapper _mapper;
 
-        public UsuarioControllerTest()
-        {
-            _mapper = MapperConfig.Get();
-            _fixture = FixtureConfig.GetFixture();
-            _cursoSevice = Substitute.For<IUsuarioService>();
+		public UsuarioControllerTest()
+		{
+			_mapper = MapperConfig.Get();
+			_fixture = FixtureConfig.GetFixture();
+			_cursoSevice = Substitute.For<IUsuarioService>();
 			_usuarioCursoService = Substitute.For<IUsuarioCursoService>();
-        }
+		}
 
 
 		[Fact(DisplayName = "Adiciona um UsuarioCurso")]
@@ -45,8 +45,8 @@ namespace OA_Core.Tests.Controller
 
 			var usuarioRequest = new UsuarioCursoRequest
 			{
-				UsuarioId = new Guid(),
-				CursoId = new Guid(),
+				UsuarioId = Guid.NewGuid(),
+				CursoId = Guid.NewGuid(),
 				Progresso = 0,
 				Status = 0,
 			};
