@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Bogus;
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OA_Core.Domain.Contracts.Request;
@@ -14,11 +12,7 @@ using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Service;
 using OA_Core.Tests.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace OA_Core.Tests.Service
 {
@@ -49,11 +43,30 @@ namespace OA_Core.Tests.Service
 			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuario());
 
 			//Act
-			mockUsuarioRepository.AddAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
+			mockUsuarioRepository.AdicionarAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
 			var resultado = await usuarioService.PostUsuarioAsync(usuarioRequest);
 
 			//Assert
 			resultado.Should().NotBe(Guid.Empty, "Guid não pode ser nula");
+		}
+
+		[Fact(DisplayName = "Cria usuário Inválido")]
+		public async Task UsuarioService_CriaUsuario_DevRetornarErro()
+		{
+
+			// Arrange
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var usuarioService = new UsuarioService(mockUsuarioRepository, _notificador, _mapper);
+			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuario());
+			var usuarioEntity = _mapper.Map<Usuario>(usuarioRequest);
+
+			// Configurar o mock para retornar um usuário existente com o mesmo email
+			mockUsuarioRepository.ObterAsync(Arg.Any<Expression<Func<Usuario, bool>>>())
+				.Returns(usuarioEntity);
+
+			// Act
+			// Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.PostUsuarioAsync(usuarioRequest));
 		}
 
 		[Theory(DisplayName = "Obtém todos os usuários")]
@@ -70,8 +83,8 @@ namespace OA_Core.Tests.Service
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var usuarioService = new UsuarioService(mockUsuarioRepository, _notificador, _mapper);
 			var usuario = UsuarioFixture.GerarUsuarios(linhas, true);
-			mockUsuarioRepository.ListPaginationAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
 			//Act
+			mockUsuarioRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
 			var resultado = await usuarioService.GetAllUsuariosAsync(pagina, linhas);
 			//Assert
 			resultado.Should().HaveCount(linhas);
@@ -87,14 +100,14 @@ namespace OA_Core.Tests.Service
 			var usuario = UsuarioFixture.GerarUsuario();
 			var usuarioResponse = _mapper.Map<UsuarioResponse>(usuario);
 			//Act
-			mockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			var resultado = await usuarioService.GetUsuarioByIdAsync(usuario.Id);
 			//Assert
 			resultado.Should().BeEquivalentTo(usuarioResponse);
 		}
 
 		[Fact(DisplayName = "Atualiza um usuario")]
-		public async Task UsuarioService_AtulizaUsuario_DeveAtualizar()
+		public async Task UsuarioService_AtualizaUsuario_DeveAtualizar()
 		{
 
 			//Arrange
@@ -104,11 +117,11 @@ namespace OA_Core.Tests.Service
 			var usuarioRequest = UsuarioFixture.GerarUsuarioRequest();
 
 			//Act
-			mockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			await usuarioService.PutUsuarioAsync(usuario.Id, usuarioRequest);
 
 			//Assert
-			await mockUsuarioRepository.Received().EditAsync(Arg.Is<Usuario>(u => u.Nome == usuarioRequest.Nome));
+			await mockUsuarioRepository.Received().EditarAsync(Arg.Is<Usuario>(u => u.Nome == usuarioRequest.Nome));
 		}
 
 		[Fact(DisplayName = "Deleta um Usuario Válido")]
@@ -121,10 +134,10 @@ namespace OA_Core.Tests.Service
 			var usuario = UsuarioFixture.GerarUsuario();
 
 			//Act
-			mockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			await usuarioService.DeleteUsuarioAsync(usuario.Id);
 			//Assert
-			await mockUsuarioRepository.Received().RemoveAsync(usuario);
+			await mockUsuarioRepository.Received().EditarAsync(usuario);
 
 		}
 
@@ -138,7 +151,7 @@ namespace OA_Core.Tests.Service
 			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuarioInvalido());
 
 			//Act
-			mockUsuarioRepository.AddAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
+			mockUsuarioRepository.AdicionarAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
 			await usuarioService.PostUsuarioAsync(usuarioRequest);
 
 			//Assert
@@ -172,7 +185,7 @@ namespace OA_Core.Tests.Service
 			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuarioInvalido());
 
 			//Act
-			mockUsuarioRepository.FindAsync(Arg.Any<Guid>()).Returns(usuario);
+			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			await usuarioService.PutUsuarioAsync(usuario.Id, usuarioRequest);
 
 			//Assert

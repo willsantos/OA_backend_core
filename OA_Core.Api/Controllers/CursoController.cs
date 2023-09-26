@@ -1,70 +1,99 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
+using OA_Core.Domain.Entities;
 using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+	[ApiController]
+	[Route("api/[controller]")]
 
-    [ProducesResponseType(typeof(InformacaoResponse), 400)]
-    [ProducesResponseType(typeof(InformacaoResponse), 401)]
-    [ProducesResponseType(typeof(InformacaoResponse), 403)]
-    [ProducesResponseType(typeof(InformacaoResponse), 404)]
-    [ProducesResponseType(typeof(InformacaoResponse), 500)]
-    public class CursoController : ControllerBase
-    {
-        private readonly ICursoService _service;
+	[ProducesResponseType(typeof(InformacaoResponse), 400)]
+	[ProducesResponseType(typeof(InformacaoResponse), 401)]
+	[ProducesResponseType(typeof(InformacaoResponse), 403)]
+	[ProducesResponseType(typeof(InformacaoResponse), 404)]
+	[ProducesResponseType(typeof(InformacaoResponse), 500)]
+	public class CursoController : ControllerBase
+	{
+		private readonly ICursoService _cursoService;
+		private readonly ICursoProfessorService _cursoProfessorservice;
 
-        public CursoController(ICursoService service)
-        {
-            _service = service;
-        }
 
-        [HttpPost("cadastro", Name = "PostCursoAsync")]
-        [ProducesResponseType(201)]
-        public async Task<ActionResult> PostCursoAsync([FromBody] CursoRequest request)
-        {
-            var id = await _service.PostCursoAsync(request);
-            return Created(nameof(PostCursoAsync), id);
-        }
+		public CursoController(ICursoService cursoService, ICursoProfessorService cursoProfessorService)
+		{
+			_cursoService = cursoService;
+			_cursoProfessorservice = cursoProfessorService;
+		}
 
-        [HttpGet]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<CursoResponse>>> GetAllCursoAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
-        {
-            var listResponse = await _service.GetAllCursosAsync(page, rows);
-            var paginationResponse = new PaginationResponse<CursoResponse>(page, rows, listResponse);
+		[HttpPost("cadastro", Name = "PostCursoAsync")]
+		[ProducesResponseType(201)]
+		public async Task<ActionResult> PostCursoAsync([FromBody] CursoRequest request)
+		{
+			var id = await _cursoService.PostCursoAsync(request);
+			return Created(nameof(PostCursoAsync), id);
+		}
 
-            return Ok(paginationResponse);
-        }
+		[HttpGet]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<PaginationResponse<CursoResponse>>> GetAllCursoAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
+		{
+			var listResponse = await _cursoService.GetAllCursosAsync(page, rows);
+			var paginationResponse = new PaginationResponse<CursoResponse>(page, rows, listResponse);
 
-        [HttpGet("{id}", Name = "GetCursoByIdAsync")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<CursoResponse>> GetCursoByIdAsync([FromRoute] Guid id)
-        {
-            var response = await _service.GetCursoByIdAsync(id);
+			return Ok(paginationResponse);
+		}
 
-            return Ok(response);
-        }
+		[HttpGet("{id}", Name = "GetCursoByIdAsync")]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<CursoResponse>> GetCursoByIdAsync([FromRoute] Guid id)
+		{
+			var response = await _cursoService.GetCursoByIdAsync(id);
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(204)]
-        public async Task<ActionResult> PutCursoAsync([FromRoute] Guid id, [FromBody] CursoRequestPut request)
-        {
-            await _service.PutCursoAsync(id, request);
+			return Ok(response);
+		}
 
-            return NoContent();
-        }
+		[HttpPut("{id}")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> PutCursoAsync([FromRoute] Guid id, [FromBody] CursoRequestPut request)
+		{
+			await _cursoService.PutCursoAsync(id, request);
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(204)]
-        public async Task<ActionResult> DeleteCursoAsync([FromRoute] Guid id)
-        {
-            await _service.DeleteCursoAsync(id);
+			return NoContent();
+		}
 
-            return NoContent();
-        }
-    }
+		[HttpDelete("{id}")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> DeleteCursoAsync([FromRoute] Guid id)
+		{
+			await _cursoService.DeleteCursoAsync(id);
+
+			return NoContent();
+		}
+
+		[HttpGet("{cursoId}/professores", Name = "GetProfessoresByCursoIdAsync")]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<IEnumerable<ProfessorResponseComResponsavel>>> GetProfessoresByCursoIdAsync([FromRoute] Guid cursoId)
+		{
+			var professores = await _cursoProfessorservice.GetProfessorDeCursoByIdAsync(cursoId);
+			return Ok(professores);
+		}
+
+		[HttpPost("{cursoId}/professores", Name = "PostProfessorToCursoAsync")]
+		[ProducesResponseType(201)]
+		public async Task<ActionResult> PostProfessorToCursoAsync([FromBody] CursoProfessorRequest request, Guid cursoId)
+		{
+			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request, cursoId);
+			return Created(nameof(PostProfessorToCursoAsync), cursoProfessorId);
+		}
+
+		[HttpDelete("{cursoId}/professores/{professorId}", Name = "DeleteProfessorFromCursoAsync")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> DeleteProfessorFromCursoAsync([FromRoute] Guid cursoId, Guid professorId)
+		{
+
+			await _cursoProfessorservice.DeleteCursoProfessorAsync(cursoId, professorId);
+			return NoContent();
+		}
+	}
 }

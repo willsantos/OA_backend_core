@@ -25,20 +25,22 @@ namespace OA_Core.Tests.Controller
     public class CursoControllerTest
     {
         private readonly Fixture _fixture;
-        private readonly ICursoService _service;
-        private readonly IMapper _mapper;
+        private readonly ICursoService _cursoSevice;
+		private readonly ICursoProfessorService _cursoProfessorService;
+		private readonly IMapper _mapper;
 
         public CursoControllerTest()
         {
             _mapper = MapperConfig.Get();
             _fixture = FixtureConfig.GetFixture();
-            _service = Substitute.For<ICursoService>();
+            _cursoSevice = Substitute.For<ICursoService>();
+			_cursoProfessorService = Substitute.For<ICursoProfessorService>();
         }
 
         [Fact(DisplayName = "Adiciona um curso")]
         public async Task CriaCurso()
         {
-            var cursoController = new CursoController(_service);
+            var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
 
             var cursoRequest = new CursoRequest
             {
@@ -51,7 +53,7 @@ namespace OA_Core.Tests.Controller
             };
             var entity = _mapper.Map<Curso>(cursoRequest);
 
-            _service.PostCursoAsync(cursoRequest).Returns(entity.Id);
+            _cursoSevice.PostCursoAsync(cursoRequest).Returns(entity.Id);
 
             var controllerResult = await cursoController.PostCursoAsync(cursoRequest);
             var actionResult = Assert.IsType<CreatedResult>(controllerResult);
@@ -65,14 +67,14 @@ namespace OA_Core.Tests.Controller
         [Fact(DisplayName = "Busca todos os cursos")]
         public async Task GetAllCursoAsync()
         {
-            var cursoController = new CursoController(_service);
+            var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
 
             var entities = _fixture.Create<List<CursoResponse>>();
 
             int page = 0;
             int rows = 10;
 
-            _service.GetAllCursosAsync(page, rows).Returns(entities);
+            _cursoSevice.GetAllCursosAsync(page, rows).Returns(entities);
 
             var controllerResult = await cursoController.GetAllCursoAsync(page, rows);
 
@@ -87,12 +89,12 @@ namespace OA_Core.Tests.Controller
         [Fact(DisplayName = "Busca curso por ID")]
         public async Task GetCursoByIdAsync()
         {
-            var cursoController = new CursoController(_service);
+            var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
 
             var entity = _fixture.Create<CursoResponse>();
             Guid id = Guid.NewGuid();
 
-            _service.GetCursoByIdAsync(id).Returns(entity);
+            _cursoSevice.GetCursoByIdAsync(id).Returns(entity);
 
             var controllerResult = await cursoController.GetCursoByIdAsync(id);
 
@@ -103,29 +105,86 @@ namespace OA_Core.Tests.Controller
             Assert.Equal(entity, resultValue);
         }
 
-        [Fact(DisplayName = "Atualiza curso")]
+
+		[Fact(DisplayName = "Atualiza curso")]
         public async Task PutCursoAsync()
         {
-            var cursoController = new CursoController(_service);
+            var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
 
             Guid id = Guid.NewGuid();
             var request = _fixture.Create<CursoRequestPut>();
 
             await cursoController.PutCursoAsync(id, request);
 
-            await _service.Received().PutCursoAsync(id, request);
+            await _cursoSevice.Received().PutCursoAsync(id, request);
         }
 
         [Fact(DisplayName = "Exclui curso")]
         public async Task DeleteCursoAsync()
         {
-            var cursoController = new CursoController(_service);
+            var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
 
             Guid id = Guid.NewGuid();
 
             await cursoController.DeleteCursoAsync(id);
 
-            await _service.Received().DeleteCursoAsync(id);
+            await _cursoSevice.Received().DeleteCursoAsync(id);
         }
-    }
+
+		[Fact(DisplayName = "Adiciona um cursoProfessor")]
+		public async Task CriaCursoProfessor()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			var cursoRequest = new CursoProfessorRequest
+			{
+				ProfessorId = new Guid(),
+				Responsavel = true
+			};
+			var entity = _mapper.Map<CursoProfessor>(cursoRequest);
+			entity.CursoId = new Guid();
+
+			_cursoProfessorService.PostCursoProfessorAsync(cursoRequest, entity.CursoId).Returns(entity.Id);
+
+			var controllerResult = await cursoController.PostProfessorToCursoAsync(cursoRequest, entity.CursoId);
+			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
+
+
+			Assert.Equal(StatusCodes.Status201Created, actionResult.StatusCode);
+			Assert.Equal(entity.Id, actionResult.Value);
+		}
+
+		[Fact(DisplayName = "Busca relação cursoProfessor por ID")]
+		public async Task GetCursoProfessorByIdAsync()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			var entity = _fixture.Create<List<ProfessorResponseComResponsavel>>();
+			Guid id = Guid.NewGuid();
+
+			_cursoProfessorService.GetProfessorDeCursoByIdAsync(id).Returns(entity);
+
+			var controllerResult = await cursoController.GetProfessoresByCursoIdAsync(id);
+
+			Assert.IsType<OkObjectResult>(controllerResult.Result);
+
+			var resultValue = (controllerResult.Result as OkObjectResult).Value as List<ProfessorResponseComResponsavel>;
+
+			Assert.Equal(entity, resultValue);
+		}
+
+		[Fact(DisplayName = "Exclui cursoProfessor")]
+		public async Task DeleteCursoProfessorAsync()
+		{
+			var cursoController = new CursoController(_cursoSevice, _cursoProfessorService);
+
+			Guid cursoId = Guid.NewGuid();
+			Guid professorId = Guid.NewGuid();
+
+
+			await cursoController.DeleteProfessorFromCursoAsync(cursoId, professorId);
+
+			await _cursoProfessorService.Received().DeleteCursoProfessorAsync(cursoId, professorId);
+		}
+	}
 }

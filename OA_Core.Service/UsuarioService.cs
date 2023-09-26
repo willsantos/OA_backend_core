@@ -10,72 +10,77 @@ using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Service
 {
-    public class UsuarioService : IUsuarioService
-    {
-        private readonly IMapper _mapper;
-        private readonly IUsuarioRepository _repository;
-        private readonly INotificador _notificador;
+	public class UsuarioService : IUsuarioService
+	{
+		private readonly IMapper _mapper;
+		private readonly IUsuarioRepository _repository;
+		private readonly INotificador _notificador;
 
-        public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
-        {
-            _mapper = mapper;
-            _repository = repository;
-            _notificador = notificador;
-        }
-        public async Task DeleteUsuarioAsync(Guid id)
-        {
-            var usuario = await _repository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+		public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
+		{
+			_mapper = mapper;
+			_repository = repository;
+			_notificador = notificador;
+		}
+		public async Task DeleteUsuarioAsync(Guid id)
+		{
+			var usuario = await _repository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
-            usuario.DataDelecao = DateTime.Now;
-            await _repository.EditarAsync(usuario);
-        }
+			usuario.DataDelecao = DateTime.Now;
+			await _repository.EditarAsync(usuario);
+		}
 
-        public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
-        {
-            var listEntity = await _repository.ObterTodosAsync(page, rows);
+		public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
+		{
+			var listEntity = await _repository.ObterTodosAsync(page, rows);
 
-            return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
-        }
+			return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
+		}
 
-        public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
-        {
-            var usuario = await _repository.ObterPorIdAsync(id) ?? 
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+		public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
+		{
+			var usuario = await _repository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
-            return _mapper.Map<UsuarioResponse>(usuario);
-        }
+			return _mapper.Map<UsuarioResponse>(usuario);
+		}
 
-        public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
-        {
+		public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
+		{
 			//TODO: Encryptar senha
-            //TODO: Mandar email confirmacao usuario
-            var entity = _mapper.Map<Usuario>(usuarioRequest);
+			//TODO: Mandar email confirmacao usuario
+			var entity = _mapper.Map<Usuario>(usuarioRequest);
 
-            if (!entity.Valid)
-            {
-                _notificador.Handle(entity.ValidationResult);
-                return Guid.Empty;
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return Guid.Empty;
 
-            }
+			}
 
-            await _repository.AdicionarAsync(entity);
-            return entity.Id;
-        }
+			if (await _repository.ObterAsync(x => x.Email == entity.Email) != null)
+			{
+				throw new InformacaoException(StatusException.Conflito, $"Email {entity.Email} já cadastrado");
+			}
 
-        public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
-        {
+			await _repository.AdicionarAsync(entity);
+			return entity.Id;
+		}
+
+		public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
+		{
 			//TODO: Fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
-            var entity = _mapper.Map<Usuario>(usuarioRequest);
+			var entity = _mapper.Map<Usuario>(usuarioRequest);
 
-            if (!entity.Valid)
-            {
-                _notificador.Handle(entity.ValidationResult);
-                return;
-            }
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return;
+			}
 
-            var find = await _repository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
+			var find = await _repository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
 
 			find.Nome = entity.Nome;
 			find.Email = entity.Email;
@@ -83,9 +88,9 @@ namespace OA_Core.Service
 			find.DataNascimento = entity.DataNascimento;
 			find.Telefone = entity.Telefone;
 			find.Endereco = entity.Endereco;
-            entity.DataAlteracao = DateTime.Now;
+			entity.DataAlteracao = DateTime.Now;
 
-            await _repository.EditarAsync(find);
-        }
-    }
+			await _repository.EditarAsync(find);
+		}
+	}
 }

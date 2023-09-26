@@ -63,7 +63,8 @@ builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAulaRepository, AulaRepository>();
 builder.Services.AddScoped<IAulaService, AulaService>();
 builder.Services.AddScoped<IImagemService, ImagemService>();
-
+builder.Services.AddScoped<ICursoProfessorService, CursoProfessorService>();
+builder.Services.AddScoped<ICursoProfessorRepository, CursoProfessorRepository>();
 
 #endregion
 
