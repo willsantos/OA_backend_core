@@ -61,8 +61,6 @@ namespace OA_Core.Service
 			if (await _cursoRepository.ObterPorIdAsync(entity.CursoId) is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {entity.CursoId} inválido ou não existente");
 
-			//var testaaa = await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == entity.UsuarioId && x.CursoId == entity.CursoId);
-
 			if (await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == entity.UsuarioId && x.CursoId == entity.CursoId) != null)
 				throw new InformacaoException(StatusException.Conflito, $"Esse cadastro já foi realizado no banco");
 
