@@ -45,7 +45,16 @@ namespace OA_Core.Service
 			{
 				var response = _mapper.Map<CursoParaUsuarioResponse>(cursos.Curso);
 				response.Status = cursos.Status;
-				response.Progresso = cursos.Progresso;
+
+				if (cursos.Curso.Aulas > 0 && cursos.Progresso > 0)
+				{
+					response.Progresso = (cursos.Progresso * 100) / cursos.Curso.Aulas;
+				}
+				else
+				{
+					response.Progresso = 0;
+				}
+
 				cursoList.Add(response);
 			}
 
