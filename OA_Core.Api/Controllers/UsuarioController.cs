@@ -2,6 +2,7 @@
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Interfaces.Service;
+using OA_Core.Service;
 
 namespace OA_Core.Api.Controllers
 {
@@ -16,10 +17,12 @@ namespace OA_Core.Api.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _service;
+		private readonly IUsuarioCursoService _usuarioCursoService;
 
-        public UsuarioController(IUsuarioService service)
+        public UsuarioController(IUsuarioService service, IUsuarioCursoService usuarioCursoService)
         {
             _service = service;
+			_usuarioCursoService = usuarioCursoService;
         }
 
         [HttpGet]
@@ -67,5 +70,21 @@ namespace OA_Core.Api.Controllers
 
             return NoContent();
         }
-    }
+
+		[HttpGet("usuario-curso/{usuarioId}", Name = "GetCursosByUsuarioIdAsync")]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> GetCursosByUsuarioIdAsync([FromRoute] Guid usuarioId)
+		{
+			var cursos = await _usuarioCursoService.GetCursoDeUsuarioByIdAsync(usuarioId);
+			return Ok(cursos);
+		}
+
+		[HttpPost("usuario-curso/{usuaroId}", Name = "PostProfessorToCursoAsync")]
+		[ProducesResponseType(201)]
+		public async Task<ActionResult> PostUsuarioCursoAsync([FromBody] UsuarioCursoRequest request, Guid usuarioId)
+		{
+			var usuarioCursoId = await _usuarioCursoService.PostUsuarioCursoAsync(request, usuarioId);
+			return Created(nameof(PostUsuarioCursoAsync), usuarioCursoId);
+		}
+	}
 }
