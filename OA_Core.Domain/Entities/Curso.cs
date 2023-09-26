@@ -42,6 +42,6 @@ namespace OA_Core.Domain.Entities
 		public virtual Professor Professor { get; set; }
 
 		public virtual ICollection<CursoProfessor> CursoProfessores { get; set; } = new List<CursoProfessor>();
-
+		public virtual ICollection<UsuarioCurso> UsuarioCursos { get; set; } = new List<UsuarioCurso>();
 	}
 }

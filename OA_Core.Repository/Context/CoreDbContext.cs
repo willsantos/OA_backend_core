@@ -12,8 +12,9 @@ namespace OA_Core.Repository.Context
         public DbSet<Aluno> Aluno { get; set; }
         public DbSet<Aula> Aula { get; set; }
 		public DbSet<CursoProfessor> CursoProfessor { get; set; }
+		public DbSet<UsuarioCurso> UsuarioCurso { get; set; }
 
-        public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
+		public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
         }
 
@@ -26,7 +27,7 @@ namespace OA_Core.Repository.Context
 			modelBuilder.Entity<Aluno>(new AlunoEntityMap().Configure);
 			modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
 			modelBuilder.Entity<CursoProfessor>(new CursoProfessorEntityMap().Configure);
-
+			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure);
 		}
 	}
 }
