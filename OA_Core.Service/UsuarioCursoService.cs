@@ -30,7 +30,7 @@ namespace OA_Core.Service
 
 
 		//retorna uma lista dos cursos que ele está inscrito, com o status e o progresso de cada um, exibindo o progresso como porcentagem.
-		public async Task<List<CursoParaUsuarioResponse>> GetCursoDeUsuarioByIdAsync(Guid usuarioId)
+		public async Task<List<CursoParaUsuarioResponse>> ObterCursoDeUsuarioIdAsync(Guid usuarioId)
 		{
 			var curso = await _usuarioRepository.ObterPorIdAsync(usuarioId) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {usuarioId} não encontrado");
@@ -52,7 +52,7 @@ namespace OA_Core.Service
 			return cursoList;
 		}
 
-		public async Task<Guid> PostUsuarioCursoAsync(UsuarioCursoRequest usuarioCursoRequest)
+		public async Task<Guid> CadastraUsuarioCursoAsync(UsuarioCursoRequest usuarioCursoRequest)
         {
             var entity = _mapper.Map<UsuarioCurso>(usuarioCursoRequest);
 

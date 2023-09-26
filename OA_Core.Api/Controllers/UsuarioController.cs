@@ -71,19 +71,19 @@ namespace OA_Core.Api.Controllers
             return NoContent();
         }
 
-		[HttpGet("usuario-curso/{usuarioId}", Name = "GetCursosByUsuarioIdAsync")]
+		[HttpGet("usuario-curso/{usuarioId}", Name = "GetCursosDeUsuarioIdAsync")]
 		[ProducesResponseType(200)]
-		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> GetCursosByUsuarioIdAsync([FromRoute] Guid usuarioId)
+		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> GetCursosDeUsuarioIdAsync([FromRoute] Guid usuarioId)
 		{
-			var cursos = await _usuarioCursoService.GetCursoDeUsuarioByIdAsync(usuarioId);
+			var cursos = await _usuarioCursoService.ObterCursosDeUsuarioIdAsync(usuarioId);
 			return Ok(cursos);
 		}
 
-		[HttpPost("usuario-curso", Name = "PostUsuarioToCursoAsync")]
+		[HttpPost("usuario-curso", Name = "PostUsuarioCursoAsync")]
 		[ProducesResponseType(201)]
 		public async Task<ActionResult> PostUsuarioCursoAsync([FromBody] UsuarioCursoRequest request)
 		{
-			var usuarioCursoId = await _usuarioCursoService.PostUsuarioCursoAsync(request);
+			var usuarioCursoId = await _usuarioCursoService.CadastraUsuarioCursoAsync(request);
 			return Created(nameof(PostUsuarioCursoAsync), usuarioCursoId);
 		}
 	}
