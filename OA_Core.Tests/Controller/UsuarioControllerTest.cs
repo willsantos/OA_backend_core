@@ -38,8 +38,8 @@ namespace OA_Core.Tests.Controller
 		}
 
 
-		[Fact(DisplayName = "Adiciona um UsuarioCurso")]
-		public async Task CriaUsuarioCurso()
+		[Fact(DisplayName = "CriaUsuarioCurso_Valido_DeveRetornar201")]
+		public async Task CriaUsuarioCurso_Valido_DeveRetornar201()
 		{
 			var usuarioController = new UsuarioController(_cursoSevice, _usuarioCursoService);
 
@@ -62,8 +62,8 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(entity.Id, actionResult.Value);
 		}
 
-		[Fact(DisplayName = "Busca relação usuarioCurso por ID")]
-		public async Task GetUsuarioCursoByIdAsync()
+		[Fact(DisplayName = "GetUsuarioCursoByIdAsync_DeveRetornarLista")]
+		public async Task GetUsuarioCursoByIdAsync_DeveRetornarLista()
 		{
 			var usuarioController = new UsuarioController(_cursoSevice, _usuarioCursoService);
 
