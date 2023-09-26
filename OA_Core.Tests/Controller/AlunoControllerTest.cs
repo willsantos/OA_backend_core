@@ -40,11 +40,19 @@ namespace OA_Core.Tests.Controller
 			_service.PostAlunoAsync(alunoRequest).Returns(entity.Id);
 
 			var controllerResult = await alunoController.PostAlunoAsync(alunoRequest);
+			var actionResult = Assert.IsType<ActionResult<Guid>>(controllerResult);
+			var createdAtRouteResult = Assert.IsType<CreatedAtRouteResult>(actionResult.Result);
+
+
+			Assert.Equal(StatusCodes.Status201Created, createdAtRouteResult.StatusCode);
+			Assert.Equal(entity.Id, createdAtRouteResult.Value);
 		}
 
 		[Fact(DisplayName = "Busca todos os alunos")]
-		public async Task GetAllAlunoAsync()
+		public async Task AlunoController_BuscarTodosAlunoAsync_DeveBuscarTodos()
 		{
+
+			//Arrange
 			var alunoController = new AlunoController(_service);
 
 			var entities = _fixture.Create<List<AlunoResponse>>();
@@ -52,45 +60,54 @@ namespace OA_Core.Tests.Controller
 			int page = 0;
 			int rows = 10;
 
+			//Act
 			_service.GetAllAlunosAsync(page, rows).Returns(entities);
 
 			var controllerResult = await alunoController.GetAllAlunosAsync(page, rows);
 
-			Assert.IsType<OkObjectResult>(controllerResult.Result);
+			//Assert
+			controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
 			var resultValue = (controllerResult.Result as OkObjectResult).Value as PaginationResponse<AlunoResponse>;
 
-			Assert.Equal(entities, resultValue.Resultado);
+			resultValue.Resultado.Should().BeEquivalentTo(entities);
 		}
 
 		[Fact(DisplayName = "Busca aluno por id")]
-		public async Task GetAlunoByIdAsync()
+		public async Task AlunoController_BuscaAlunoPorIdAsync_DeveBuscarUm()
 		{
+			//Arrange
 			var alunoController = new AlunoController(_service);
 
-			var entitiy = _fixture.Create<AlunoResponse>();
+			var entity = _fixture.Create<AlunoResponse>();
 			Guid id = Guid.NewGuid();
 
-			_service.GetAlunoByIdAsync(id).Returns(entitiy);
+			//Act
+			_service.GetAlunoByIdAsync(id).Returns(entity);
 
 			var controllerResult = await alunoController.GetAlunoByIdAsync(id);
 
-			Assert.IsType<OkObjectResult>(controllerResult.Result);
+			//Assert
+			controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
 			var resultValue = (controllerResult.Result as OkObjectResult).Value as AlunoResponse;
 
-			Assert.Equal(entitiy, resultValue);
+			resultValue.Should().BeEquivalentTo(entity);
 		}
 
 		[Fact(DisplayName = "Atualiza aluno")]
-		public async Task PutAlunoAsync()
+		public async Task AlunoController_AtualizarAlunoAsync_DeveAtualizar()
 		{
+			//Arrange
 			var alunoController = new AlunoController(_service);
 
 			var request = _fixture.Create<AlunoRequestPut>();
 			Guid id = Guid.NewGuid();
 
+			//Act
 			var response = await alunoController.PutAlunoAsync(id, request);
+
+			//Assert
 			await _service.Received().PutAlunoAsync(id, request);
 
 			var objectResult = Assert.IsType<NoContentResult>(response);
@@ -98,16 +115,18 @@ namespace OA_Core.Tests.Controller
 		}
 
 		[Fact(DisplayName = "Deleta aluno")]
-		public async Task DeleteAlunoAsync()
+		public async Task AlunoController_DeleteAlunoAsync_DeveDeletar()
 		{
+			//Arrange
 			var alunoController = new AlunoController(_service);
 			Guid id = Guid.NewGuid();
-
 			var response = await alunoController.DeleteAlunoAsync(id);
+
+			//Assert
 			await _service.Received().DeleteAlunoAsync(id);
 
-			var objectResult = Assert.IsType<NoContentResult>(response);
-			Assert.Equal(StatusCodes.Status204NoContent, objectResult.StatusCode);
+			response.Should().BeOfType<NoContentResult>();
+			(response as NoContentResult).StatusCode.Should().Be(StatusCodes.Status204NoContent);
 		}
 	}
 }
