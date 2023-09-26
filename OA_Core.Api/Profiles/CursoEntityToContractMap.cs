@@ -12,6 +12,7 @@ namespace OA_Core.Api.Profiles
             CreateMap<Curso, CursoRequest>().ReverseMap();
             CreateMap<Curso, CursoResponse>().ReverseMap();
             CreateMap<Curso, CursoRequestPut>().ReverseMap();
+			CreateMap<Curso, CursoParaUsuarioResponse>().ReverseMap();
 
         }
     }
