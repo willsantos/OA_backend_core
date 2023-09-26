@@ -43,8 +43,8 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
 
 builder.Services.AddMvc(options =>
 {
-	//options.Filters.Add<NotificatonFilter>();
-	//options.Filters.Add<ExceptionFilter>();
+	options.Filters.Add<NotificatonFilter>();
+	options.Filters.Add<ExceptionFilter>();
 });
 
 #endregion
