@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OA_Core.Repository.Context;
 
@@ -10,9 +11,11 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926142005_CriacaoAssinaturaMudancaEntidade")]
+    partial class CriacaoAssinaturaMudancaEntidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,9 @@ namespace OA_Core.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("DataAtivacao")
                         .HasColumnType("datetime(6)");
 
@@ -65,6 +71,9 @@ namespace OA_Core.Repository.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataDelecao")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DataVencimento")

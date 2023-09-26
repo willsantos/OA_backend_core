@@ -6,8 +6,6 @@ namespace OA_Core.Domain.Contracts.Request
 	{
 		public Guid UsuarioId { get; set; }	
 		public AssinaturaTipoEnum Tipo { get; set; }
-		public AssinaturaStatusEnum Status { get; set; }
-		public DateTime DataAtivacao { get; set; }
-		public DateTime DataVencimento { get; set; }
+		public AssinaturaStatusEnum Status { get; set; }	
 	}
 }

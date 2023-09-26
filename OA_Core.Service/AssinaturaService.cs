@@ -7,8 +7,6 @@ using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Domain.Utils;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography;
 
 
 namespace OA_Core.Service
@@ -62,20 +60,20 @@ namespace OA_Core.Service
 
 		}
 
-		public async Task<Guid> PutCancelarAssinaturaAsync(AssinaturaCancelamentoRequest assinatura)
+		public async Task<Guid> PutCancelarAssinaturaAsync(Guid id, AssinaturaCancelamentoRequest assinatura)
 		{
 			// setar data de cancelamento e status para cancelado aqui
-			var assinaturaParaCancelar = await _assinaturaRepository.ObterPorIdAsync(assinatura.Id);
+			var assinaturaParaCancelar = await _assinaturaRepository.ObterPorIdAsync(id);
 			if(assinaturaParaCancelar is null) 
 			{
-				throw new InformacaoException(StatusException.NaoEncontrado, $"Assinatura {assinatura.Id} inválido ou não existe");
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Assinatura {id} inválido ou não existe");
 			}
 			assinaturaParaCancelar.MotivoCancelamento = assinatura.MotivoCancelamento;
 			assinaturaParaCancelar.DataCancelamento = DateTime.Now;
 			assinaturaParaCancelar.Status = AssinaturaStatusEnum.Cancelada;
 			await _assinaturaRepository.EditarAsync(assinaturaParaCancelar);
 
-			return assinatura.Id;
+			return id;
 		}
 	}
 }

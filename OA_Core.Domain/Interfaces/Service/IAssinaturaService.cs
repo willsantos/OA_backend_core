@@ -5,6 +5,6 @@ namespace OA_Core.Domain.Interfaces.Service
 	public interface IAssinaturaService
 	{
 		Task<Guid> PostAssinaturaAsync(AssinaturaRequest assinatura);
-		Task<Guid> PutCancelarAssinaturaAsync(AssinaturaCancelamentoRequest assinatura);
+		Task<Guid> PutCancelarAssinaturaAsync(Guid Id, AssinaturaCancelamentoRequest assinatura);
 	}
 }

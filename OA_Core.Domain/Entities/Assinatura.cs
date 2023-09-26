@@ -5,30 +5,19 @@ namespace OA_Core.Domain.Entities
 {
 	public class Assinatura : Entidade
 	{
-		public Assinatura(Guid usuarioId, AssinaturaTipoEnum tipo, AssinaturaStatusEnum status, DateTime dataAtivacao, DateTime dataVencimento, DateTime dataCancelamento, string motivoCancelamento)
+		public Assinatura(Guid usuarioId, AssinaturaTipoEnum tipo, AssinaturaStatusEnum status)
 		{
 			Id = Guid.NewGuid();
-			DataCriacao = DateTime.Now;		
-			DataAlteracao = null;
+			DataCriacao = DateTime.Now;					
 			UsuarioId = usuarioId;
 			Tipo = tipo;
-			Status = status;
-			DataAtivacao = dataAtivacao;
-			DataVencimento = dataVencimento;
-			DataCancelamento = dataCancelamento;
-			MotivoCancelamento = motivoCancelamento;
+			Status = status;					
 			Validate(this, new AssinaturaValidator());
 		}
 
-		public Assinatura(Guid usuarioId, Guid id, AssinaturaTipoEnum tipo, AssinaturaStatusEnum status, DateTime dataCriacao, DateTime dataAtivacao, DateTime dataVencimento, DateTime dataCancelamento, string motivoCancelamento)
+		public Assinatura(Guid id, string motivoCancelamento)
 		{
-			Id = id;
-			UsuarioId = usuarioId;
-			Tipo = tipo;
-			Status = status;
-			DataAtivacao = dataAtivacao;
-			DataVencimento = dataVencimento;
-			DataCancelamento = dataCancelamento;
+			Id = id;			
 			MotivoCancelamento = motivoCancelamento;
 		}
 		public Guid Id { get; set; }
@@ -38,8 +27,8 @@ namespace OA_Core.Domain.Entities
 		public AssinaturaStatusEnum Status { get; set; }
 		public DateTime DataAtivacao { get; set; }
 		public DateTime DataVencimento { get; set; }
-		public DateTime DataCancelamento { get; set; }
-		public string MotivoCancelamento { get; set; }
+		public DateTime? DataCancelamento { get; set; }
+		public string? MotivoCancelamento { get; set; }
 
 	}
 }

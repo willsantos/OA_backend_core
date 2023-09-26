@@ -33,7 +33,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> PutCancelarAssinaturaAsync([FromRoute] Guid id, [FromBody] AssinaturaCancelamentoRequest request)
 		{
-			await _assinaturaService.PutCancelarAssinaturaAsync(request);
+			await _assinaturaService.PutCancelarAssinaturaAsync(id, request);
 
 			return NoContent();
 		}

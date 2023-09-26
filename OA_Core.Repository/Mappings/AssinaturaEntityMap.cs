@@ -7,10 +7,11 @@ namespace OA_Core.Repository.Mappings
 	{
 		public void Configure(EntityTypeBuilder<Assinatura> builder)
 		{
-			builder.Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
-
-			//Filtro para não buscar entidades deletadas
-			builder.HasQueryFilter(c => c.DataDelecao == null);
+			builder.Ignore(a => a.Valid)
+				   .Ignore(a => a.ValidationResult)
+				   .Ignore(a => a.DataAlteracao)
+				   .Ignore(a => a.DataDelecao);	
+					
 
 			//Mapeamento de relações
 			builder.HasOne(a => a.Usuario)
