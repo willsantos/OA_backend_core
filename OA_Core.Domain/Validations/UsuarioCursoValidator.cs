@@ -13,7 +13,7 @@ namespace OA_Core.Domain.Validations
         public UsuarioCursoValidator()
         {
 			RuleFor(u => u.UsuarioId)
-				.NotNull()
+				.NotEmpty()
 				.WithMessage("UsuarioId não pode ser nulo");
 		}
     }

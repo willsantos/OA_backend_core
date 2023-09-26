@@ -62,6 +62,28 @@ namespace OA_Core.Tests.Service
 			Assert.IsType<Guid>(result);
 		}
 
+		[Fact(DisplayName = "CriarUsuarioCurso_ComUsuarioIdNulo_DeveLancarExcecao")]
+		public async Task CriarUsuarioCurso_ComUsuarioIdNulo_DeveLancarExcecao()
+		{
+			var cursoUsuarioService = new UsuarioCursoService(_mapper, _cursoUsuarioRepository, _usuarioRepository, _cursoRepository, _notifier);
+
+			var usuario = _fixture.Create<Usuario>();
+			var curso = _fixture.Create<Curso>();
+
+			var cursoUsuarioRequest = new UsuarioCursoRequest
+			{
+				CursoId = Guid.NewGuid(),
+				Progresso = 0,
+				Status = 0,
+			};
+
+			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
+			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
+			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
+
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest)); ;
+		}
+
 		[Fact(DisplayName = "CriarUsuarioCurso_Invalido_DeveLancarExcecao")]
 		public async Task CriarUsuarioCurso_Invalido_DeveLancarExcecao()
 		{

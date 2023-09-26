@@ -12,10 +12,11 @@ namespace OA_Core.Domain.Entities
 	public class UsuarioCurso : Entidade
 	{
 
-		public UsuarioCurso(Guid cursoId, string status, int progresso)
+		public UsuarioCurso(Guid cursoId, Guid usuarioId,string status, int progresso)
 		{
 			Id = Guid.NewGuid();
 			CursoId = cursoId;
+			UsuarioId = usuarioId;
 			Status = status;
 			Progresso = progresso;
 			DataCriacao = DateTime.Now;

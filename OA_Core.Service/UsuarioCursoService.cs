@@ -33,11 +33,11 @@ namespace OA_Core.Service
 		public async Task<List<CursoParaUsuarioResponse>> ObterCursosDeUsuarioIdAsync(Guid usuarioId)
 		{
 			var curso = await _usuarioRepository.ObterPorIdAsync(usuarioId) ??
-				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {usuarioId} não encontrado");
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario: {usuarioId}, não encontrado");
 
 			var usuarioCursos = await _usuarioCursoRepository.ObterTodosComIncludeAsync(x => x.UsuarioId == usuarioId);
 			if (usuarioCursos.Count() <= 0)
-				throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioCurso {usuarioId} não encontrado");
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Não foram encontrados cursos para o Usuario: {usuarioId}");
 
 			var cursoList = new List<CursoParaUsuarioResponse>();
 
@@ -57,12 +57,12 @@ namespace OA_Core.Service
             var entity = _mapper.Map<UsuarioCurso>(usuarioCursoRequest);
 
 			if (await _usuarioRepository.ObterPorIdAsync(entity.UsuarioId) is null)
-                throw new InformacaoException(StatusException.NaoEncontrado, $"UsuarioId: {entity.UsuarioId} inválido ou não existente");
+                throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario: {entity.UsuarioId} inválido ou não existente");
 			if (await _cursoRepository.ObterPorIdAsync(entity.CursoId) is null)
-				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {entity.CursoId} inválido ou não existente");
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Curso: {entity.CursoId} inválido ou não existente");
 
 			if (await _usuarioCursoRepository.ObterAsync(x => x.UsuarioId == entity.UsuarioId && x.CursoId == entity.CursoId) != null)
-				throw new InformacaoException(StatusException.Conflito, $"Esse cadastro já foi realizado no banco");
+				throw new InformacaoException(StatusException.Conflito, $"Não foi possível realizar o cadastro");
 
 			if (!entity.Valid)
 				throw new InformacaoException(StatusException.FormatoIncorreto, $"{entity.ValidationResult}");
