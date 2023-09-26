@@ -47,7 +47,8 @@ namespace OA_Core.Service
 
 			if (assinaturaExistente is not null)
 			{
-				entity.DataCriacao = assinaturaExistente.DataVencimento.AddDays(1);
+				entity.DataCriacao = DateTime.Now;
+				entity.DataAtivacao = assinaturaExistente.DataVencimento.AddDays(1);
 				entity.DataVencimento = entity.DataCriacao.AddYears(1);
 				await _assinaturaRepository.AdicionarAsync(entity);
 				return entity.Id;
