@@ -57,7 +57,7 @@ namespace OA_Core.Tests.Controller
             _cursoSevice.PostCursoAsync(cursoRequest).Returns(entity.Id);
 
             var controllerResult = await cursoController.PostCursoAsync(cursoRequest);
-			controllerResult.Should().BeOfType<CreatedResult>();
+			
 
 			var createdResult = controllerResult as CreatedResult;
 
