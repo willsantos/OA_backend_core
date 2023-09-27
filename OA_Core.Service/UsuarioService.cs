@@ -7,6 +7,7 @@ using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
+using OA_Core.Domain.Shared;
 
 namespace OA_Core.Service
 {
@@ -63,7 +64,7 @@ namespace OA_Core.Service
 			{
 				throw new InformacaoException(StatusException.Conflito, $"Email {entity.Email} já cadastrado");
 			}
-
+			entity.Senha = Criptografia.CriptografarSenha(entity.Senha);
 			await _repository.AdicionarAsync(entity);
 			return entity.Id;
 		}
