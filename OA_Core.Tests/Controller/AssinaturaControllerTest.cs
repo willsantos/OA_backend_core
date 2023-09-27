@@ -43,10 +43,22 @@ namespace OA_Core.Tests.Controller
 
 			var controllerResult = await controller.PostAssinaturaAsync(assintauraRequest);
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
-
-			//Assert
+			
 			actionResult.StatusCode.Should().Be(StatusCodes.Status201Created);
 			actionResult.Value.Should().Be(entity.Id);
+		}
+
+		[Fact(DisplayName = "Cancela assinatura com sucesso")]
+		public async Task PutAssinaturaAsync()
+		{
+			var cursoController = new AssinaturaController(_service);
+
+			Guid id = Guid.NewGuid();
+			var request = _fixture.Create<AssinaturaCancelamentoRequest>();
+
+			await cursoController.PutCancelarAssinaturaAsync(id, request);
+
+			await _service.Received().PutCancelarAssinaturaAsync(id, request);
 		}
 
 	}
