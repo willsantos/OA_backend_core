@@ -43,5 +43,21 @@ namespace OA_Core.Tests.Service
 			var result = await assinaturaService.PostAssinaturaAsync(assinaturaRequest);
 			result.Should().NotBe(Guid.Empty);
 		}
+
+		[Fact(DisplayName = "Cancela assinatura com sucesso")]
+		public async Task CancelaAssinatura()
+		{
+			//Arrange
+			var mockAssinaturaRepository = Substitute.For<IAssinaturaRepository>();
+			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var assinaturaService = new AssinaturaService(_mapper, mockAssinaturaRepository, mockUsuarioRepository, _notifier);
+			var assinaturaRequestPut = _fixture.Create<AssinaturaCancelamentoRequest>();
+			var professor = _fixture.Create<Assinatura>();
+			//Act
+			mockAssinaturaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
+			await assinaturaService.PutCancelarAssinaturaAsync(professor.Id, assinaturaRequestPut);
+			//Assert
+			await mockAssinaturaRepository.Received().EditarAsync(Arg.Is<Assinatura>(c => c.MotivoCancelamento == assinaturaRequestPut.MotivoCancelamento));
+		}
 	}
 }
