@@ -40,7 +40,7 @@ namespace OA_Core.Tests.Service
 			//Act
             MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
             mockAulaRepository.AdicionarAsync(Arg.Any<Aula>()).Returns(Task.CompletedTask);
-            var result = await aulaService.PostAulaAsync(aulaRequest);
+            var result = await aulaService.CadastrarAulaAsync(aulaRequest);
 
 			//Assert
             result.Should().NotBe(Guid.Empty);       
@@ -57,7 +57,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-            await aulaService.DeleteAulaAsync(aula.Id);
+            await aulaService.DeletarAulaAsync(aula.Id);
 
 			//Assert
             await mockAulaRepository.Received().EditarAsync(aula);
@@ -74,7 +74,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockAulaRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(aulas);
-            var result = await aulaService.GetAllAulasAsync(1, 5);
+            var result = await aulaService.ObterTodasAulasAsync(1, 5);
 
 			//Assert
             result.Should().HaveCount(5);
@@ -92,7 +92,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-            var result = await aulaService.GetAulaByIdAsync(aula.Id);
+            var result = await aulaService.ObterAulaPorIdAsync(aula.Id);
 
 			//Assert
             result.Should().BeEquivalentTo(aulaResponse);
@@ -110,7 +110,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-            await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
+            await aulaService.EditarAulaAsync(aula.Id, aulaRequestPut);
 
 			//Assert
             await mockAulaRepository.Received().EditarAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
@@ -127,7 +127,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.PostAulaAsync(cursoRequest));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.CadastrarAulaAsync(cursoRequest));
         }
 
         [Fact(DisplayName = "Atualiza uma Aula com Id inválido")]
@@ -141,7 +141,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.PutAulaAsync(Guid.NewGuid(), aulaRequestPut));
+            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.EditarAulaAsync(Guid.NewGuid(), aulaRequestPut));
         }
         
 
@@ -155,7 +155,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.GetAulaByIdAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.ObterAulaPorIdAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Deleta uma Aula com Id inválido")]
@@ -168,7 +168,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.DeleteAulaAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<InformacaoException>(() => aulaService.DeletarAulaAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Cria uma Aula com Campos inválidos")]
@@ -184,7 +184,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-            await aulaService.PostAulaAsync(aulaRequest);
+            await aulaService.CadastrarAulaAsync(aulaRequest);
 
 			//Assert
             _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
@@ -203,7 +203,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockAulaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aula);
-            await aulaService.PutAulaAsync(aula.Id, aulaRequestPut);
+            await aulaService.EditarAulaAsync(aula.Id, aulaRequestPut);
 
 			//Assert
             _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));

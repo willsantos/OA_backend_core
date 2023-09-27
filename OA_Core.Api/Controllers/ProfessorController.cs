@@ -22,47 +22,47 @@ namespace OA_Core.Api.Controllers
             _service = service;
         }
 
-        [HttpPost("cadastro", Name = "PostProfessorAsync")]
+        [HttpPost("cadastro", Name = "CadastrarProfessor")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult> PostProfessorAsync([FromBody] ProfessorRequest request)
+        public async Task<ActionResult> CadastrarProfessor([FromBody] ProfessorRequest request)
         {
-            var id = await _service.PostProfessorAsync(request);
-			return Created(nameof(PostProfessorAsync), id);
+            var id = await _service.CadastrarProfessorAsync(request);
+			return Created(nameof(CadastrarProfessor), id);
 		}
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<ProfessorResponse>>> GetAllProfessorAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
+        public async Task<ActionResult<PaginationResponse<ProfessorResponse>>> ObterTodosProfessores([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
-            var listResponse = await _service.GetAllProfessoresAsync(page, rows);
+            var listResponse = await _service.ObterTodosProfessoresAsync(page, rows);
             var paginationResponse = new PaginationResponse<ProfessorResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
         }
 
-        [HttpGet("{id}", Name = "GetProfessorByIdAsync")]
+        [HttpGet("{id}", Name = "ObterProfessorPorId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<ProfessorResponse>> GetProfessorByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<ProfessorResponse>> ObterProfessorPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetProfessorByIdAsync(id);
+            var response = await _service.ObterProfessorPorIdAsync(id);
 
             return Ok(response);
         }   
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutProfessorAsync([FromRoute] Guid id, [FromBody] ProfessorRequestPut request)
+        public async Task<ActionResult> EditarProfessor([FromRoute] Guid id, [FromBody] ProfessorRequestPut request)
         {
-            await _service.PutProfessorAsync(id, request);
+            await _service.EditarProfessorAsync(id, request);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> DeleteProfessorAsync([FromRoute] Guid id)
+        public async Task<ActionResult> DeletarProfessor([FromRoute] Guid id)
         {
-            await _service.DeleteProfessorAsync(id);
+            await _service.DeletarProfessorAsync(id);
 
             return NoContent();
         }

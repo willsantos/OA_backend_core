@@ -20,7 +20,7 @@ namespace OA_Core.Service
 			_imageFolderPath = Path.Combine(_environment.ContentRootPath, "images");
 		}
 
-		public async Task<string> SaveImageAsync(IFormFile file, TipoImagem TipoImagem)
+		public async Task<string> SalvarImagemAsync(IFormFile file, TipoImagem TipoImagem)
 		{
 			if (file == null || file.Length == 0)
 			{

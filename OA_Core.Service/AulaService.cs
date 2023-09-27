@@ -25,7 +25,7 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteAulaAsync(Guid id)
+        public async Task DeletarAulaAsync(Guid id)
         {
             var aula = await _aulaRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
@@ -34,14 +34,14 @@ namespace OA_Core.Service
             await _aulaRepository.EditarAsync(aula);
         }
 
-        public async Task<IEnumerable<AulaResponse>> GetAllAulasAsync(int page, int rows)
+        public async Task<IEnumerable<AulaResponse>> ObterTodasAulasAsync(int page, int rows)
         {
             var listEntity = await _aulaRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AulaResponse>>(listEntity);
         }
 
-        public async Task<AulaResponse> GetAulaByIdAsync(Guid id)
+        public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
         {
             var aula = await _aulaRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
@@ -49,7 +49,7 @@ namespace OA_Core.Service
             return _mapper.Map<AulaResponse>(aula);
         }
 
-        public async Task<Guid> PostAulaAsync(AulaRequest aulaRequest)
+        public async Task<Guid> CadastrarAulaAsync(AulaRequest aulaRequest)
         {
             var entity = _mapper.Map<Aula>(aulaRequest);
        
@@ -67,7 +67,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutAulaAsync(Guid id, AulaRequestPut aulaRequest)
+        public async Task EditarAulaAsync(Guid id, AulaRequestPut aulaRequest)
         {
             var entity = _mapper.Map<Aula>(aulaRequest);   
 

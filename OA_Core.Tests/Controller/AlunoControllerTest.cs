@@ -37,9 +37,9 @@ namespace OA_Core.Tests.Controller
 			
 			var entity = _mapper.Map<Aluno>(alunoRequest);
 
-			_service.PostAlunoAsync(alunoRequest).Returns(entity.Id);
+			_service.CadastrarAlunoAsync(alunoRequest).Returns(entity.Id);
 
-			var controllerResult = await alunoController.PostAlunoAsync(alunoRequest);
+			var controllerResult = await alunoController.CadastrarAluno(alunoRequest);
 			var actionResult = Assert.IsType<ActionResult<Guid>>(controllerResult);
 			var createdAtRouteResult = Assert.IsType<CreatedAtRouteResult>(actionResult.Result);
 
@@ -61,9 +61,9 @@ namespace OA_Core.Tests.Controller
 			int rows = 10;
 
 			//Act
-			_service.GetAllAlunosAsync(page, rows).Returns(entities);
+			_service.ObterTodosAlunosAsync(page, rows).Returns(entities);
 
-			var controllerResult = await alunoController.GetAllAlunosAsync(page, rows);
+			var controllerResult = await alunoController.ObterTodosAlunos(page, rows);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -83,9 +83,9 @@ namespace OA_Core.Tests.Controller
 			Guid id = Guid.NewGuid();
 
 			//Act
-			_service.GetAlunoByIdAsync(id).Returns(entity);
+			_service.ObterAlunoPorIdAsync(id).Returns(entity);
 
-			var controllerResult = await alunoController.GetAlunoByIdAsync(id);
+			var controllerResult = await alunoController.ObterAlunoPorId(id);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -105,10 +105,10 @@ namespace OA_Core.Tests.Controller
 			Guid id = Guid.NewGuid();
 
 			//Act
-			var response = await alunoController.PutAlunoAsync(id, request);
+			var response = await alunoController.EditarAluno(id, request);
 
 			//Assert
-			await _service.Received().PutAlunoAsync(id, request);
+			await _service.Received().EditarAlunoAsync(id, request);
 
 			var objectResult = Assert.IsType<NoContentResult>(response);
 			Assert.Equal(StatusCodes.Status204NoContent, objectResult.StatusCode);
@@ -120,10 +120,10 @@ namespace OA_Core.Tests.Controller
 			//Arrange
 			var alunoController = new AlunoController(_service);
 			Guid id = Guid.NewGuid();
-			var response = await alunoController.DeleteAlunoAsync(id);
+			var response = await alunoController.DeletarAluno(id);
 
 			//Assert
-			await _service.Received().DeleteAlunoAsync(id);
+			await _service.Received().DeletarAlunoAsync(id);
 
 			response.Should().BeOfType<NoContentResult>();
 			(response as NoContentResult).StatusCode.Should().Be(StatusCodes.Status204NoContent);

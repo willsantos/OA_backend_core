@@ -57,7 +57,7 @@ namespace OA_Core.Tests.Service
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
 
-			var result = await cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest);
+			var result = await cursoUsuarioService.CadastrarUsuarioACursoAsync(cursoUsuarioRequest);
 			Assert.NotNull(result);
 			Assert.IsType<Guid>(result);
 		}
@@ -81,7 +81,7 @@ namespace OA_Core.Tests.Service
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest)); ;
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastrarUsuarioACursoAsync(cursoUsuarioRequest)); ;
 		}
 
 		[Fact(DisplayName = "CriarUsuarioCurso_Invalido_DeveLancarExcecao")]
@@ -106,7 +106,7 @@ namespace OA_Core.Tests.Service
 			_cursoUsuarioRepository.ObterAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(usuarioCurso);
 			_cursoUsuarioRepository.AdicionarAsync(Arg.Any<UsuarioCurso>()).Returns(Task.CompletedTask);
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest)); ;
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastrarUsuarioACursoAsync(cursoUsuarioRequest)); ;
 		}
 
 		[Fact(DisplayName = "CriarUsuarioCurso_ComUsuarioIdInvalido_DeveLancarExcecao")]
@@ -117,7 +117,7 @@ namespace OA_Core.Tests.Service
 
 			var cursoUsuarioRequest = _fixture.Create<UsuarioCursoRequest>();
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastrarUsuarioACursoAsync(cursoUsuarioRequest));
 		}
 
 		[Fact(DisplayName = "CriarUsuarioCurso_ComCursoIdInvalido_DeveLancarExcecao")]
@@ -132,7 +132,7 @@ namespace OA_Core.Tests.Service
 			_usuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastraUsuarioCursoAsync(cursoUsuarioRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.CadastrarUsuarioACursoAsync(cursoUsuarioRequest));
 		}
 
 		[Fact(DisplayName = "ObterTodosUsuarioCursoPorExpressao_DeveRetornarLista")]
@@ -150,7 +150,7 @@ namespace OA_Core.Tests.Service
 
 			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
-			var result = await cursoUsuarioService.ObterCursosDeUsuarioIdAsync(Guid.NewGuid());
+			var result = await cursoUsuarioService.ObterCursosDeUsuarioPorIdAsync(Guid.NewGuid());
 
 			Assert.Equal(5, result.Count());
 		}
@@ -164,7 +164,7 @@ namespace OA_Core.Tests.Service
 
 			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.ObterCursosDeUsuarioIdAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.ObterCursosDeUsuarioPorIdAsync(Guid.NewGuid()));
 		}
 
 		[Fact(DisplayName = "ObterTodosUsuarioCursoPorExpressao_ComUsuarioCursoInvalido_DeveLancarExcecao")]
@@ -181,7 +181,7 @@ namespace OA_Core.Tests.Service
 			_cursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
 			_cursoUsuarioRepository.ObterTodosComIncludeAsync(Arg.Any<Expression<Func<UsuarioCurso, bool>>>()).Returns(cursoUsuarios);
 
-			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.ObterCursosDeUsuarioIdAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => cursoUsuarioService.ObterCursosDeUsuarioPorIdAsync(Guid.NewGuid()));
 		}
 	}
 }

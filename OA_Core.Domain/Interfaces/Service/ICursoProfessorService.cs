@@ -6,11 +6,11 @@ namespace OA_Core.Domain.Interfaces.Service
 {
 	public interface ICursoProfessorService
 	{
-		Task<Guid> PostCursoProfessorAsync(CursoProfessorRequest cursoRequest, Guid cursoId);
-		Task PutCursoProfessorAsync(Guid Cursoid, CursoProfessorRequest cursoRequest);
-		Task DeleteCursoProfessorAsync(Guid cursoId, Guid professorId);
-		Task<CursoProfessor> GetCursoProfessorByIdAsync(Guid id);
-		Task<IEnumerable<CursoProfessor>> GetAllCursoProfessorsAsync(int page, int rows);
-		Task<List<ProfessorResponseComResponsavel>> GetProfessorDeCursoByIdAsync(Guid cursoId);
+		Task<Guid> CadastrarCursoProfessorAsync(CursoProfessorRequest cursoRequest, Guid cursoId);
+		Task EditarCursoProfessorAsync(Guid Cursoid, CursoProfessorRequest cursoRequest);
+		Task DeletarCursoProfessorAsync(Guid cursoId, Guid professorId);
+		Task<CursoProfessor> ObterCursoProfessorPorIdAsync(Guid id);
+		Task<IEnumerable<CursoProfessor>> ObterTodosCursoProfessoresAsync(int page, int rows);
+		Task<List<ProfessorResponseComResponsavel>> ObterProfessoresDeCursoPorIdAsync(Guid cursoId);
 	}
 }
