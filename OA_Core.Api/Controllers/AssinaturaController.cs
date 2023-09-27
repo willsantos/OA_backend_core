@@ -20,7 +20,7 @@ namespace OA_Core.Api.Controllers
 		{
 			_assinaturaService = assinaturaService;
 		}
-		[HttpPost("cadastro", Name = "PostAssinaturaAsync")]
+		[HttpPost("cadastro", Name = "AdicionarAssinatura")]
 		[ProducesResponseType(201)]
 		public async Task<ActionResult> AdicionarAssinatura([FromBody] AssinaturaRequest request)
 		{
