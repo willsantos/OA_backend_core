@@ -27,7 +27,7 @@ namespace OA_Core.Service
 			_notificador = notificador;
 		}
 
-		public async Task<Guid> PostAssinaturaAsync(AssinaturaRequest assinatura)
+		public async Task<Guid> AdicionarAssinaturaAsync(AssinaturaRequest assinatura)
 		{
 			
 			var entity = _mapper.Map<Assinatura>(assinatura);
@@ -60,7 +60,7 @@ namespace OA_Core.Service
 
 		}
 
-		public async Task<Guid> PutCancelarAssinaturaAsync(Guid id, AssinaturaCancelamentoRequest assinatura)
+		public async Task<Guid> CancelarAssinaturaAsync(Guid id, AssinaturaCancelamentoRequest assinatura)
 		{			
 			var assinaturaParaCancelar = await _assinaturaRepository.ObterPorIdAsync(id);
 			if(assinaturaParaCancelar is null) 

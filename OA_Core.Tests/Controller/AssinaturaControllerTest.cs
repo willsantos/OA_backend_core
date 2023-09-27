@@ -30,6 +30,7 @@ namespace OA_Core.Tests.Controller
 		[Fact(DisplayName = "Adiciona assinatura")]
 		public async Task criarAssinatura()
 		{
+			//Arrange
 			var controller = new AssinaturaController(_service);
 			var assintauraRequest = new AssinaturaRequest
 			{
@@ -39,9 +40,12 @@ namespace OA_Core.Tests.Controller
 			};
 			var entity = _mapper.Map<Assinatura>(assintauraRequest);
 
-		    _service.PostAssinaturaAsync(assintauraRequest).Returns(entity.Id);
+			//Act
+			_service.AdicionarAssinaturaAsync(assintauraRequest).Returns(entity.Id);
 
-			var controllerResult = await controller.PostAssinaturaAsync(assintauraRequest);
+			var controllerResult = await controller.AdicionarAssinatura(assintauraRequest);
+
+			//Assert
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
 			
 			actionResult.StatusCode.Should().Be(StatusCodes.Status201Created);
@@ -51,14 +55,17 @@ namespace OA_Core.Tests.Controller
 		[Fact(DisplayName = "Cancela assinatura com sucesso")]
 		public async Task PutAssinaturaAsync()
 		{
+			//Arrange
 			var cursoController = new AssinaturaController(_service);
 
 			Guid id = Guid.NewGuid();
 			var request = _fixture.Create<AssinaturaCancelamentoRequest>();
 
-			await cursoController.PutCancelarAssinaturaAsync(id, request);
+			//Act
+			await cursoController.CancelarAssinatura(id, request);
 
-			await _service.Received().PutCancelarAssinaturaAsync(id, request);
+			//Assert
+			await _service.Received().CancelarAssinaturaAsync(id, request);
 		}
 
 	}

@@ -22,18 +22,18 @@ namespace OA_Core.Api.Controllers
 		}
 		[HttpPost("cadastro", Name = "PostAssinaturaAsync")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> PostAssinaturaAsync([FromBody] AssinaturaRequest request)
+		public async Task<ActionResult> AdicionarAssinatura([FromBody] AssinaturaRequest request)
 		{
-			var id = await _assinaturaService.PostAssinaturaAsync(request);
+			var id = await _assinaturaService.AdicionarAssinaturaAsync(request);
 
-			return Created(nameof(PostAssinaturaAsync), id);
+			return Created(nameof(AdicionarAssinatura), id);
 		}
 
 		[HttpPut("{id}")]
 		[ProducesResponseType(204)]
-		public async Task<ActionResult> PutCancelarAssinaturaAsync([FromRoute] Guid id, [FromBody] AssinaturaCancelamentoRequest request)
+		public async Task<ActionResult> CancelarAssinatura([FromRoute] Guid id, [FromBody] AssinaturaCancelamentoRequest request)
 		{
-			await _assinaturaService.PutCancelarAssinaturaAsync(id, request);
+			await _assinaturaService.CancelarAssinaturaAsync(id, request);
 
 			return NoContent();
 		}

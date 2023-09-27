@@ -40,7 +40,7 @@ namespace OA_Core.Tests.Service
 			mockAssinaturaRepository.AdicionarAsync(Arg.Any<Assinatura>()).Returns(Task.CompletedTask);
 
 			//Assert
-			var result = await assinaturaService.PostAssinaturaAsync(assinaturaRequest);
+			var result = await assinaturaService.AdicionarAssinaturaAsync(assinaturaRequest);
 			result.Should().NotBe(Guid.Empty);
 		}
 
@@ -55,7 +55,7 @@ namespace OA_Core.Tests.Service
 			var professor = _fixture.Create<Assinatura>();
 			//Act
 			mockAssinaturaRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-			await assinaturaService.PutCancelarAssinaturaAsync(professor.Id, assinaturaRequestPut);
+			await assinaturaService.CancelarAssinaturaAsync(professor.Id, assinaturaRequestPut);
 			//Assert
 			await mockAssinaturaRepository.Received().EditarAsync(Arg.Is<Assinatura>(c => c.MotivoCancelamento == assinaturaRequestPut.MotivoCancelamento));
 		}
