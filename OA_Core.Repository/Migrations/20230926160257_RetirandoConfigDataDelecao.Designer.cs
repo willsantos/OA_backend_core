@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OA_Core.Repository.Context;
 
@@ -10,9 +11,11 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926160257_RetirandoConfigDataDelecao")]
+    partial class RetirandoConfigDataDelecao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,40 +306,6 @@ namespace OA_Core.Repository.Migrations
                     b.ToTable("Usuario");
                 });
 
-            modelBuilder.Entity("OA_Core.Domain.Entities.UsuarioCurso", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("CursoId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Progresso")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CursoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("UsuarioCurso");
-                });
-
             modelBuilder.Entity("OA_Core.Domain.Entities.Aluno", b =>
                 {
                     b.HasOne("OA_Core.Domain.Entities.Usuario", "usuario")
@@ -411,40 +380,14 @@ namespace OA_Core.Repository.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("OA_Core.Domain.Entities.UsuarioCurso", b =>
-                {
-                    b.HasOne("OA_Core.Domain.Entities.Curso", "Curso")
-                        .WithMany("UsuarioCursos")
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OA_Core.Domain.Entities.Usuario", "Usuario")
-                        .WithMany("UsuarioCursos")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Curso");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
                 {
                     b.Navigation("CursoProfessores");
-
-                    b.Navigation("UsuarioCursos");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Professor", b =>
                 {
                     b.Navigation("CursoProfessores");
-                });
-
-            modelBuilder.Entity("OA_Core.Domain.Entities.Usuario", b =>
-                {
-                    b.Navigation("UsuarioCursos");
                 });
 #pragma warning restore 612, 618
         }

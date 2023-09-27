@@ -67,6 +67,8 @@ builder.Services.AddScoped<ICursoProfessorService, CursoProfessorService>();
 builder.Services.AddScoped<ICursoProfessorRepository, CursoProfessorRepository>();
 builder.Services.AddScoped<IUsuarioCursoService, UsuarioCursoService>();
 builder.Services.AddScoped<IUsuarioCursoRepository, UsuarioCursoRepository>();
+builder.Services.AddScoped<IAssinaturaService, AssinaturaService>();
+builder.Services.AddScoped<IAssinaturaRepository, AssinaturaRepository>();
 
 #endregion
 
