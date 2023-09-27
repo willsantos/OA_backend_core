@@ -44,7 +44,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockUsuarioRepository.AdicionarAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
-			var resultado = await usuarioService.PostUsuarioAsync(usuarioRequest);
+			var resultado = await usuarioService.CadastrarUsuarioAsync(usuarioRequest);
 
 			//Assert
 			resultado.Should().NotBe(Guid.Empty, "Guid não pode ser nula");
@@ -66,7 +66,7 @@ namespace OA_Core.Tests.Service
 
 			// Act
 			// Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.PostUsuarioAsync(usuarioRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.CadastrarUsuarioAsync(usuarioRequest));
 		}
 
 		[Theory(DisplayName = "Obtém todos os usuários")]
@@ -85,7 +85,7 @@ namespace OA_Core.Tests.Service
 			var usuario = UsuarioFixture.GerarUsuarios(linhas, true);
 			//Act
 			mockUsuarioRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(usuario);
-			var resultado = await usuarioService.GetAllUsuariosAsync(pagina, linhas);
+			var resultado = await usuarioService.ObterTodosUsuariosAsync(pagina, linhas);
 			//Assert
 			resultado.Should().HaveCount(linhas);
 		}
@@ -101,7 +101,7 @@ namespace OA_Core.Tests.Service
 			var usuarioResponse = _mapper.Map<UsuarioResponse>(usuario);
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			var resultado = await usuarioService.GetUsuarioByIdAsync(usuario.Id);
+			var resultado = await usuarioService.ObterUsuarioPorIdAsync(usuario.Id);
 			//Assert
 			resultado.Should().BeEquivalentTo(usuarioResponse);
 		}
@@ -118,7 +118,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			await usuarioService.PutUsuarioAsync(usuario.Id, usuarioRequest);
+			await usuarioService.EditarUsuarioAsync(usuario.Id, usuarioRequest);
 
 			//Assert
 			await mockUsuarioRepository.Received().EditarAsync(Arg.Is<Usuario>(u => u.Nome == usuarioRequest.Nome));
@@ -135,7 +135,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			await usuarioService.DeleteUsuarioAsync(usuario.Id);
+			await usuarioService.DeletarUsuarioAsync(usuario.Id);
 			//Assert
 			await mockUsuarioRepository.Received().EditarAsync(usuario);
 
@@ -152,7 +152,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockUsuarioRepository.AdicionarAsync(Arg.Any<Usuario>()).Returns(Task.CompletedTask);
-			await usuarioService.PostUsuarioAsync(usuarioRequest);
+			await usuarioService.CadastrarUsuarioAsync(usuarioRequest);
 
 			//Assert
 			_notificador.Received().Handle(
@@ -171,7 +171,7 @@ namespace OA_Core.Tests.Service
 			var usuarioRequest = _mapper.Map<UsuarioRequest>(UsuarioFixture.GerarUsuario());
 
 			//Act - Assert			
-			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.PutUsuarioAsync(Guid.NewGuid(), usuarioRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.EditarUsuarioAsync(Guid.NewGuid(), usuarioRequest));
 		}
 
 		[Fact(DisplayName = "Tenta Atualizar um Usuario inválido")]
@@ -186,7 +186,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			await usuarioService.PutUsuarioAsync(usuario.Id, usuarioRequest);
+			await usuarioService.EditarUsuarioAsync(usuario.Id, usuarioRequest);
 
 			//Assert
 			_notificador.Received().Handle(
@@ -206,7 +206,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.GetUsuarioByIdAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.ObterUsuarioPorIdAsync(Guid.NewGuid()));
 		}
 
 		[Fact(DisplayName = "Tenta Deletar um usuário pelo Id inválido")]
@@ -220,7 +220,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.DeleteUsuarioAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => usuarioService.DeletarUsuarioAsync(Guid.NewGuid()));
 		}
 
 

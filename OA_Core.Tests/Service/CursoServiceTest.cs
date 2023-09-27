@@ -40,7 +40,7 @@ namespace OA_Core.Tests.Service
 			//Act
             MockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
             mockCursoRepository.AdicionarAsync(Arg.Any<Curso>()).Returns(Task.CompletedTask);
-            var resultado = await cursoService.PostCursoAsync(cursoRequest);
+            var resultado = await cursoService.CadastrarCursoAsync(cursoRequest);
 
 			//Assert
 			resultado.Should().NotBe(Guid.Empty, "Guid não pode ser nula");
@@ -57,7 +57,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-            await cursoService.DeleteCursoAsync(curso.Id);
+            await cursoService.DeletarCursoAsync(curso.Id);
 
 			//Assert
             await mockCursoRepository.Received().EditarAsync(curso);
@@ -74,7 +74,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockCursoRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(cursos);
-            var result = await cursoService.GetAllCursosAsync(1, 5);
+            var result = await cursoService.ObterTodosCursosAsync(1, 5);
 
 			//Assert
             result.Should().HaveCount(5);
@@ -93,7 +93,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-            var result = await cursoService.GetCursoByIdAsync(curso.Id);
+            var result = await cursoService.ObterCursoPorIdAsync(curso.Id);
 
 			//Assert
 			result.Should().BeEquivalentTo(cursoResponse);
@@ -111,7 +111,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
             mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-            await cursoService.PutCursoAsync(curso.Id, cursoRequestPut);
+            await cursoService.EditarCursoAsync(curso.Id, cursoRequestPut);
 
 			//Assert
             await mockCursoRepository.Received().EditarAsync(Arg.Is<Curso>(c => c.Nome == cursoRequestPut.Nome));
@@ -129,7 +129,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.PutCursoAsync(Guid.NewGuid(), cursoRequestPut));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.EditarCursoAsync(Guid.NewGuid(), cursoRequestPut));
         }
 
         [Fact(DisplayName = "Cria um Curso com ProfessorId inválido")]
@@ -143,7 +143,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.PostCursoAsync(cursoRequest));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.CadastrarCursoAsync(cursoRequest));
         }
 
         [Fact(DisplayName = "Obtém um Curso pelo Id inválido")]
@@ -155,7 +155,7 @@ namespace OA_Core.Tests.Service
             var cursoService = new CursoService(_mapper, mockCursoRepository, mockProfessorRepository, _notifier);
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.GetCursoByIdAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.ObterCursoPorIdAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Deleta um Curso com Id inválido")]
@@ -167,7 +167,7 @@ namespace OA_Core.Tests.Service
             var cursoService = new CursoService(_mapper, mockCursoRepository, mockProfessorRepository, _notifier);
 			//Act
 			//Assert
-            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.DeleteCursoAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<InformacaoException>(() => cursoService.DeletarCursoAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Cria um Curso com Campos inválidos")]
@@ -182,7 +182,7 @@ namespace OA_Core.Tests.Service
             cursoRequest.Categoria = string.Empty;
 			//Act
             MockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-            await cursoService.PostCursoAsync(cursoRequest);
+            await cursoService.CadastrarCursoAsync(cursoRequest);
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Categoria" && e.ErrorMessage == "Categoria precisa ser preenchida")));
         }
@@ -199,7 +199,7 @@ namespace OA_Core.Tests.Service
             var curso = _fixture.Create<Curso>();
 			//Act
 			mockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(curso);
-            await cursoService.PutCursoAsync(curso.Id, cursoRequestPut);
+            await cursoService.EditarCursoAsync(curso.Id, cursoRequestPut);
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Categoria" && e.ErrorMessage == "Categoria precisa ser preenchida")));
         }
