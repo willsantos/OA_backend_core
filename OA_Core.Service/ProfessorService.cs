@@ -25,7 +25,7 @@ namespace OA_Core.Service
             _usuarioRepository = usuarioRepository;            
         }
 
-        public async Task DeleteProfessorAsync(Guid id)
+        public async Task DeletarProfessorAsync(Guid id)
         {
             var professor = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
@@ -34,14 +34,14 @@ namespace OA_Core.Service
             await _repository.EditarAsync(professor);
         }
 
-        public async Task<IEnumerable<ProfessorResponse>> GetAllProfessoresAsync(int page, int rows)
+        public async Task<IEnumerable<ProfessorResponse>> ObterTodosProfessoresAsync(int page, int rows)
         {
             var listEntity = await _repository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<ProfessorResponse>>(listEntity);
         }
 
-        public async Task<ProfessorResponse> GetProfessorByIdAsync(Guid id)
+        public async Task<ProfessorResponse> ObterProfessorPorIdAsync(Guid id)
         {
             var professor = await _repository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Professor {id} não encontrado");
@@ -49,7 +49,7 @@ namespace OA_Core.Service
             return _mapper.Map<ProfessorResponse>(professor);
         }
 
-        public async Task<Guid> PostProfessorAsync(ProfessorRequest professorRequest)
+        public async Task<Guid> CadastrarProfessorAsync(ProfessorRequest professorRequest)
         {
             var entity = _mapper.Map<Professor>(professorRequest);
        
@@ -67,7 +67,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutProfessorAsync(Guid id, ProfessorRequestPut professorRequest)
+        public async Task EditarProfessorAsync(Guid id, ProfessorRequestPut professorRequest)
         {
             var entity = _mapper.Map<Professor>(professorRequest);   
 

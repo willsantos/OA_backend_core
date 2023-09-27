@@ -20,7 +20,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<Guid>> CadastrarAluno([FromBody] AlunoRequest request)
         {
-            var id = await _service.PostAlunoAsync(request);
+            var id = await _service.CadastrarAlunoAsync(request);
 
             return CreatedAtRoute("ObterAlunoPorId", new { id }, id);
         }
@@ -29,7 +29,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationResponse<AlunoResponse>>> ObterTodosAlunos([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
-            var listResponse = await _service.GetAllAlunosAsync(page, rows);
+            var listResponse = await _service.ObterTodosAlunosAsync(page, rows);
             var paginationResponse = new PaginationResponse<AlunoResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
@@ -39,7 +39,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<AlunoResponse>> ObterAlunoPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetAlunoByIdAsync(id);
+            var response = await _service.ObterAlunoPorIdAsync(id);
 
             return Ok(response);
         }
@@ -48,7 +48,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> EditarAluno([FromRoute] Guid id, [FromBody] AlunoRequestPut request)
         {
-            await _service.PutAlunoAsync(id, request);
+            await _service.EditarAlunoAsync(id, request);
 
             return NoContent();
         }
@@ -57,7 +57,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeletarAluno([FromRoute] Guid id)
         {
-            await _service.DeleteAlunoAsync(id);
+            await _service.DeletarAlunoAsync(id);
 
             return NoContent();
         }

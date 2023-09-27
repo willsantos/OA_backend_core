@@ -26,7 +26,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult> CadastrarAula([FromBody] AulaRequest request)
         {
-            var id = await _service.PostAulaAsync(request);
+            var id = await _service.CadastrarAulaAsync(request);
             return Created(nameof(CadastrarAula), id);
         }
 
@@ -34,7 +34,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationResponse<AulaResponse>>> ObterTodasAulas([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
-            var listResponse = await _service.GetAllAulasAsync(page, rows);
+            var listResponse = await _service.ObterTodasAulasAsync(page, rows);
             var paginationResponse = new PaginationResponse<AulaResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
@@ -44,7 +44,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<AulaResponse>> ObterAulaPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetAulaByIdAsync(id);
+            var response = await _service.ObterAulaPorIdAsync(id);
 
             return Ok(response);
         }
@@ -53,7 +53,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> EditarAula([FromRoute] Guid id, [FromBody] AulaRequestPut request)
         {
-            await _service.PutAulaAsync(id, request);
+            await _service.EditarAulaAsync(id, request);
 
             return NoContent();
         }
@@ -62,7 +62,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeletarAula([FromRoute] Guid id)
         {
-            await _service.DeleteAulaAsync(id);
+            await _service.DeletarAulaAsync(id);
 
             return NoContent();
         }

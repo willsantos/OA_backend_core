@@ -49,7 +49,7 @@ namespace OA_Core.Tests.Controller
 			var entity = _mapper.Map<Professor>(professorRequest);
 
 			//Act
-			_service.PostProfessorAsync(professorRequest).Returns(entity.Id);
+			_service.CadastrarProfessorAsync(professorRequest).Returns(entity.Id);
 			var controllerResult = await professorController.CadastrarProfessor(professorRequest);
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
 
@@ -70,7 +70,7 @@ namespace OA_Core.Tests.Controller
 			int rows = 10;
 
 			//Act
-			_service.GetAllProfessoresAsync(page, rows).Returns(entities);
+			_service.ObterTodosProfessoresAsync(page, rows).Returns(entities);
 			var controllerResult = await professorController.ObterTodosProfessores(page, rows);
 
 			//Assert
@@ -92,7 +92,7 @@ namespace OA_Core.Tests.Controller
 			Guid id = Guid.NewGuid();
 
 			//Act
-			_service.GetProfessorByIdAsync(id).Returns(entity);
+			_service.ObterProfessorPorIdAsync(id).Returns(entity);
 
 			var controllerResult = await professorController.ObterProfessorPorId(id);
 
@@ -117,7 +117,7 @@ namespace OA_Core.Tests.Controller
 			await cursoController.EditarProfessor(id, request);
 
 			//Assert
-			await _service.Received().PutProfessorAsync(id, request);
+			await _service.Received().EditarProfessorAsync(id, request);
 		}
 
 		[Fact(DisplayName = "Exclui Professor com sucesso")]
@@ -132,7 +132,7 @@ namespace OA_Core.Tests.Controller
 			await cursoController.DeletarProfessor(id);
 
 			//Assert
-			await _service.Received().DeleteProfessorAsync(id);
+			await _service.Received().DeletarProfessorAsync(id);
 		}		
 	}
 	

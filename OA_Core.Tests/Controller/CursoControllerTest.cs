@@ -54,7 +54,7 @@ namespace OA_Core.Tests.Controller
             };
             var entity = _mapper.Map<Curso>(cursoRequest);
 
-            _cursoSevice.PostCursoAsync(cursoRequest).Returns(entity.Id);
+            _cursoSevice.CadastrarCursoAsync(cursoRequest).Returns(entity.Id);
 
             var controllerResult = await cursoController.CadastrarCruso(cursoRequest);
 			
@@ -78,7 +78,7 @@ namespace OA_Core.Tests.Controller
             int rows = 10;
 
 			//Act
-            _cursoSevice.GetAllCursosAsync(page, rows).Returns(entities);
+            _cursoSevice.ObterTodosCursosAsync(page, rows).Returns(entities);
 
             var controllerResult = await cursoController.ObterTodosCursos(page, rows);
 
@@ -101,7 +101,7 @@ namespace OA_Core.Tests.Controller
             Guid id = Guid.NewGuid();
 
 			//Act
-            _cursoSevice.GetCursoByIdAsync(id).Returns(entity);
+            _cursoSevice.ObterCursoPorIdAsync(id).Returns(entity);
 
             var controllerResult = await cursoController.ObterCursoPorId(id);
 
@@ -127,7 +127,7 @@ namespace OA_Core.Tests.Controller
             await cursoController.EditarCurso(id, request);
 
 			//Assert
-            await _cursoSevice.Received().PutCursoAsync(id, request);
+            await _cursoSevice.Received().EditarCursoAsync(id, request);
         }
 
         [Fact(DisplayName = "Exclui curso")]
@@ -142,7 +142,7 @@ namespace OA_Core.Tests.Controller
             await cursoController.DeletarCurso(id);
 
 			//Assert
-            await _cursoSevice.Received().DeleteCursoAsync(id);
+            await _cursoSevice.Received().DeletarCursoAsync(id);
         }
 
 		[Fact(DisplayName = "Adiciona um cursoProfessor")]
@@ -160,7 +160,7 @@ namespace OA_Core.Tests.Controller
 			entity.CursoId = new Guid();
 
 			//Act
-			_cursoProfessorService.PostCursoProfessorAsync(cursoRequest, entity.CursoId).Returns(entity.Id);
+			_cursoProfessorService.CadastrarCursoProfessorAsync(cursoRequest, entity.CursoId).Returns(entity.Id);
 			var controllerResult = await cursoController.CadastrarProfessorACurso(cursoRequest, entity.CursoId);
 
 			//Assert
@@ -182,7 +182,7 @@ namespace OA_Core.Tests.Controller
 			Guid id = Guid.NewGuid();
 
 			//Act
-			_cursoProfessorService.GetProfessorDeCursoByIdAsync(id).Returns(entity);
+			_cursoProfessorService.ObterProfessoresDeCursoPorIdAsync(id).Returns(entity);
 
 			var controllerResult = await cursoController.ObterProfessoresDeCurso(id);
 
@@ -207,7 +207,7 @@ namespace OA_Core.Tests.Controller
 			await cursoController.DeletarProfessorDeCurso(cursoId, professorId);
 
 			//Assert
-			await _cursoProfessorService.Received().DeleteCursoProfessorAsync(cursoId, professorId);
+			await _cursoProfessorService.Received().DeletarCursoProfessorAsync(cursoId, professorId);
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace OA_Core.Api.Controllers
 		[HttpPost("enviar")]
 		public async Task<IActionResult> EnviarImagem([FromForm] IFormFile file, TipoImagem tipoImagem)
 		{
-			var imageUrl = await _imagemService.SaveImageAsync(file, tipoImagem);
+			var imageUrl = await _imagemService.SalvarImagemAsync(file, tipoImagem);
 
 			return Ok(imageUrl);
 		}

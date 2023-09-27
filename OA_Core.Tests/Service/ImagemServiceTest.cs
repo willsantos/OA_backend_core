@@ -35,7 +35,7 @@ namespace OA_Core.Tests.Service
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act
-			var result = await imagemService.SaveImageAsync(formFile, tipoimagem);
+			var result = await imagemService.SalvarImagemAsync(formFile, tipoimagem);
 
 			var expectedPath = Path.Combine("images", tipoimagem.ToString().ToLower(), "test_image");
 
@@ -61,7 +61,7 @@ namespace OA_Core.Tests.Service
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act and Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SaveImageAsync(formFile, tipoimagem));
+			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SalvarImagemAsync(formFile, tipoimagem));
 		}
 
 		[Fact(DisplayName = "Faz um upload com formato de arquivo invalido")]
@@ -81,7 +81,7 @@ namespace OA_Core.Tests.Service
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act and Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SaveImageAsync(formFile, tipoimagem));
+			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SalvarImagemAsync(formFile, tipoimagem));
 		}
 
 		[Fact(DisplayName = "Faz um upload invalido Nulo")]
@@ -98,7 +98,7 @@ namespace OA_Core.Tests.Service
 			var imagemService = new ImagemService(hostingEnvironment);
 
 			// Act and Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SaveImageAsync(form, tipoimagem));
+			await Assert.ThrowsAsync<InformacaoException>(() => imagemService.SalvarImagemAsync(form, tipoimagem));
 		}
 	}
 }

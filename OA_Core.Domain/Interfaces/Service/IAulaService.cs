@@ -5,10 +5,10 @@ namespace OA_Core.Domain.Interfaces.Service
 {
     public interface IAulaService
     {
-        Task<Guid> PostAulaAsync(AulaRequest aulaRequest);
-        Task PutAulaAsync(Guid id, AulaRequestPut aulaRequest);
-        Task DeleteAulaAsync(Guid id);
-        Task<AulaResponse> GetAulaByIdAsync(Guid id);
-        Task<IEnumerable<AulaResponse>> GetAllAulasAsync(int page, int rows);
+        Task<Guid> CadastrarAulaAsync(AulaRequest aulaRequest);
+        Task EditarAulaAsync(Guid id, AulaRequestPut aulaRequest);
+        Task DeletarAulaAsync(Guid id);
+        Task<AulaResponse> ObterAulaPorIdAsync(Guid id);
+        Task<IEnumerable<AulaResponse>> ObterTodasAulasAsync(int page, int rows);
     }
 }

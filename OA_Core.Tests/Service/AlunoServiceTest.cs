@@ -44,7 +44,7 @@ namespace OA_Core.Tests.Service
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
-			var resultado = await service.PostAlunoAsync(alunoRequest);
+			var resultado = await service.CadastrarAlunoAsync(alunoRequest);
 
 			//Assert
 			resultado.Should().NotBe(Guid.Empty, "Guid não pode ser nula");
@@ -67,7 +67,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(alunos);
-			var resultado = await service.GetAllAlunosAsync(pagina, linhas);
+			var resultado = await service.ObterTodosAlunosAsync(pagina, linhas);
 
 			//Assert
 			resultado.Should().HaveCount(linhas);
@@ -85,7 +85,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
-            var result = await service.GetAlunoByIdAsync(aluno.Id);
+            var result = await service.ObterAlunoPorIdAsync(aluno.Id);
 
 			//Assert
 			result.Should().BeEquivalentTo(alunoResponse);
@@ -101,7 +101,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => service.GetAlunoByIdAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => service.ObterAlunoPorIdAsync(Guid.NewGuid()));
         }
 
         [Fact(DisplayName = "Deleta aluno")]
@@ -115,7 +115,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockRepository.ObterPorIdAsync(aluno.Id).Returns(aluno);
-			await service.DeleteAlunoAsync(aluno.Id);
+			await service.DeletarAlunoAsync(aluno.Id);
 
 			//Assert
             await mockRepository.Received().EditarAsync(aluno);
@@ -135,7 +135,7 @@ namespace OA_Core.Tests.Service
 			//Act
 			MockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
 			mockRepository.AdicionarAsync(Arg.Any<Aluno>()).Returns(Task.CompletedTask);
-			await service.PostAlunoAsync(alunoRequest);
+			await service.CadastrarAlunoAsync(alunoRequest);
 
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));
@@ -153,7 +153,7 @@ namespace OA_Core.Tests.Service
 			//Act
 
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => service.PostAlunoAsync(alunoRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => service.CadastrarAlunoAsync(alunoRequest));
 		}
 
 		[Fact(DisplayName = "Atualiza um aluno")]
@@ -168,7 +168,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
-			await service.PutAlunoAsync(aluno.Id, alunoRequest);
+			await service.EditarAlunoAsync(aluno.Id, alunoRequest);
 
 			//Assert
 			await mockRepository.Received().EditarAsync(Arg.Is<Aluno>(x => x.Foto == alunoRequest.Foto));
@@ -187,7 +187,7 @@ namespace OA_Core.Tests.Service
 
 			//Act
 			mockRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(aluno);
-			await service.PutAlunoAsync(aluno.Id, alunoRequest);
+			await service.EditarAlunoAsync(aluno.Id, alunoRequest);
 
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Foto" && e.ErrorMessage == "É necessário anexar a foto")));

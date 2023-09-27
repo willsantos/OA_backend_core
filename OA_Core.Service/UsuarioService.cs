@@ -22,7 +22,7 @@ namespace OA_Core.Service
 			_repository = repository;
 			_notificador = notificador;
 		}
-		public async Task DeleteUsuarioAsync(Guid id)
+		public async Task DeletarUsuarioAsync(Guid id)
 		{
 			var usuario = await _repository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
@@ -31,14 +31,14 @@ namespace OA_Core.Service
 			await _repository.EditarAsync(usuario);
 		}
 
-		public async Task<IEnumerable<UsuarioResponse>> GetAllUsuariosAsync(int page, int rows)
+		public async Task<IEnumerable<UsuarioResponse>> ObterTodosUsuariosAsync(int page, int rows)
 		{
 			var listEntity = await _repository.ObterTodosAsync(page, rows);
 
 			return _mapper.Map<IEnumerable<UsuarioResponse>>(listEntity);
 		}
 
-		public async Task<UsuarioResponse> GetUsuarioByIdAsync(Guid id)
+		public async Task<UsuarioResponse> ObterUsuarioPorIdAsync(Guid id)
 		{
 			var usuario = await _repository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
@@ -46,7 +46,7 @@ namespace OA_Core.Service
 			return _mapper.Map<UsuarioResponse>(usuario);
 		}
 
-		public async Task<Guid> PostUsuarioAsync(UsuarioRequest usuarioRequest)
+		public async Task<Guid> CadastrarUsuarioAsync(UsuarioRequest usuarioRequest)
 		{
 			//TODO: Encryptar senha
 			//TODO: Mandar email confirmacao usuario
@@ -68,7 +68,7 @@ namespace OA_Core.Service
 			return entity.Id;
 		}
 
-		public async Task PutUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
+		public async Task EditarUsuarioAsync(Guid id, UsuarioRequest usuarioRequest)
 		{
 			//TODO: Fazer verificacoes de seguranca para permitir a edicao a partir de quem estiver logado no sistema
 			var entity = _mapper.Map<Usuario>(usuarioRequest);

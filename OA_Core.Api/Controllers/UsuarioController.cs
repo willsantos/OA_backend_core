@@ -29,7 +29,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationResponse<UsuarioResponse>>> ObterTodosUsuarios([FromQuery] int page = 0, [FromQuery]int rows = 25)
         {
-            var listResponse = await _service.GetAllUsuariosAsync(page, rows);
+            var listResponse = await _service.ObterTodosUsuariosAsync(page, rows);
             var paginationResponse = new PaginationResponse<UsuarioResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
@@ -39,7 +39,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<UsuarioResponse>> ObterUsuarioPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetUsuarioByIdAsync(id);
+            var response = await _service.ObterUsuarioPorIdAsync(id);
 
             return Ok(response);
         }
@@ -48,7 +48,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<Guid>> CadastrarUsuario([FromBody] UsuarioRequest request)
         {         
-            var id = await _service.PostUsuarioAsync(request);
+            var id = await _service.CadastrarUsuarioAsync(request);
 
             return CreatedAtRoute("ObterUsuarioPorId", new { id }, id);
         }
@@ -57,7 +57,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> EditarUsuario([FromRoute] Guid id, [FromBody] UsuarioRequest request)
         {
-            await _service.PutUsuarioAsync(id, request);
+            await _service.EditarUsuarioAsync(id, request);
 
             return NoContent();
         }
@@ -66,7 +66,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeletarUsuario([FromRoute] Guid id)
         {
-            await _service.DeleteUsuarioAsync(id);
+            await _service.DeletarUsuarioAsync(id);
 
             return NoContent();
         }
@@ -75,7 +75,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(200)]
 		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> ObterCursosDeUsuarioPorId([FromRoute] Guid usuarioId)
 		{
-			var cursos = await _usuarioCursoService.ObterCursosDeUsuarioIdAsync(usuarioId);
+			var cursos = await _usuarioCursoService.ObterCursosDeUsuarioPorIdAsync(usuarioId);
 			return Ok(cursos);
 		}
 
@@ -83,7 +83,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(201)]
 		public async Task<ActionResult> CadastrarCursoAUsuario([FromBody] UsuarioCursoRequest request)
 		{
-			var usuarioCursoId = await _usuarioCursoService.CadastraUsuarioCursoAsync(request);
+			var usuarioCursoId = await _usuarioCursoService.CadastrarUsuarioACursoAsync(request);
 			return Created(nameof(CadastrarCursoAUsuario), usuarioCursoId);
 		}
 	}

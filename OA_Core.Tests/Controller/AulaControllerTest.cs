@@ -55,7 +55,7 @@ namespace OA_Core.Tests.Controller
             var entity = _mapper.Map<Aula>(aulaRequest);
 
 			//Act
-            _service.PostAulaAsync(aulaRequest).Returns(entity.Id);
+            _service.CadastrarAulaAsync(aulaRequest).Returns(entity.Id);
 
             var controllerResult = await aulaController.CadastrarAula(aulaRequest);
 
@@ -79,7 +79,7 @@ namespace OA_Core.Tests.Controller
             int rows = 10;
 
 			//Act
-            _service.GetAllAulasAsync(page, rows).Returns(entities);
+            _service.ObterTodasAulasAsync(page, rows).Returns(entities);
             var controllerResult = await aulaController.ObterTodasAulas(page, rows);
 
 			//Assert
@@ -103,7 +103,7 @@ namespace OA_Core.Tests.Controller
             Guid id = Guid.NewGuid();
 
 			//Act
-            _service.GetAulaByIdAsync(id).Returns(entity);
+            _service.ObterAulaPorIdAsync(id).Returns(entity);
             var controllerResult = await aulaController.ObterAulaPorId(id);
 
 			//Assert
@@ -132,7 +132,7 @@ namespace OA_Core.Tests.Controller
 
 			//Assert
             result.Should().BeOfType<NoContentResult>();
-            await _service.Received().PutAulaAsync(id, request);
+            await _service.Received().EditarAulaAsync(id, request);
         }
 
         [Fact(DisplayName = "Exclui aula")]
@@ -148,7 +148,7 @@ namespace OA_Core.Tests.Controller
 
 			//Assert
             result.Should().BeOfType<NoContentResult>();
-            await _service.Received().DeleteAulaAsync(id);
+            await _service.Received().DeletarAulaAsync(id);
         }
     }
 }

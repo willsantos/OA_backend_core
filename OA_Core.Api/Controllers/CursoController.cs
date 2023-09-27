@@ -30,7 +30,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(201)]
 		public async Task<ActionResult> CadastrarCruso([FromBody] CursoRequest request)
 		{
-			var id = await _cursoService.PostCursoAsync(request);
+			var id = await _cursoService.CadastrarCursoAsync(request);
 			return Created(nameof(CadastrarCruso), id);
 		}
 
@@ -38,7 +38,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(200)]
 		public async Task<ActionResult<PaginationResponse<CursoResponse>>> ObterTodosCursos([FromQuery] int page = 0, [FromQuery] int rows = 25)
 		{
-			var listResponse = await _cursoService.GetAllCursosAsync(page, rows);
+			var listResponse = await _cursoService.ObterTodosCursosAsync(page, rows);
 			var paginationResponse = new PaginationResponse<CursoResponse>(page, rows, listResponse);
 
 			return Ok(paginationResponse);
@@ -48,7 +48,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(200)]
 		public async Task<ActionResult<CursoResponse>> ObterCursoPorId([FromRoute] Guid id)
 		{
-			var response = await _cursoService.GetCursoByIdAsync(id);
+			var response = await _cursoService.ObterCursoPorIdAsync(id);
 
 			return Ok(response);
 		}
@@ -57,7 +57,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> EditarCurso([FromRoute] Guid id, [FromBody] CursoRequestPut request)
 		{
-			await _cursoService.PutCursoAsync(id, request);
+			await _cursoService.EditarCursoAsync(id, request);
 
 			return NoContent();
 		}
@@ -66,7 +66,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> DeletarCurso([FromRoute] Guid id)
 		{
-			await _cursoService.DeleteCursoAsync(id);
+			await _cursoService.DeletarCursoAsync(id);
 
 			return NoContent();
 		}
@@ -75,7 +75,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(200)]
 		public async Task<ActionResult<IEnumerable<ProfessorResponseComResponsavel>>> ObterProfessoresDeCurso([FromRoute] Guid cursoId)
 		{
-			var professores = await _cursoProfessorservice.GetProfessorDeCursoByIdAsync(cursoId);
+			var professores = await _cursoProfessorservice.ObterProfessoresDeCursoPorIdAsync(cursoId);
 			return Ok(professores);
 		}
 
@@ -83,7 +83,7 @@ namespace OA_Core.Api.Controllers
 		[ProducesResponseType(201)]
 		public async Task<ActionResult> CadastrarProfessorACurso([FromBody] CursoProfessorRequest request, Guid cursoId)
 		{
-			var cursoProfessorId = await _cursoProfessorservice.PostCursoProfessorAsync(request, cursoId);
+			var cursoProfessorId = await _cursoProfessorservice.CadastrarCursoProfessorAsync(request, cursoId);
 			return Created(nameof(CadastrarProfessorACurso), cursoProfessorId);
 		}
 
@@ -92,7 +92,7 @@ namespace OA_Core.Api.Controllers
 		public async Task<ActionResult> DeletarProfessorDeCurso([FromRoute] Guid cursoId, Guid professorId)
 		{
 
-			await _cursoProfessorservice.DeleteCursoProfessorAsync(cursoId, professorId);
+			await _cursoProfessorservice.DeletarCursoProfessorAsync(cursoId, professorId);
 			return NoContent();
 		}
 	}

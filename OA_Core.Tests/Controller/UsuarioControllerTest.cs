@@ -53,7 +53,7 @@ namespace OA_Core.Tests.Controller
 
 			var entity = _mapper.Map<UsuarioCurso>(usuarioRequest);
 
-			_usuarioCursoService.CadastraUsuarioCursoAsync(usuarioRequest).Returns(entity.Id);
+			_usuarioCursoService.CadastrarUsuarioACursoAsync(usuarioRequest).Returns(entity.Id);
 
 			var controllerResult = await usuarioController.CadastrarCursoAUsuario(usuarioRequest);
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
@@ -70,7 +70,7 @@ namespace OA_Core.Tests.Controller
 			var entity = _fixture.Create<List<CursoParaUsuarioResponse>>();
 			Guid id = Guid.NewGuid();
 
-			_usuarioCursoService.ObterCursosDeUsuarioIdAsync(id).Returns(entity);
+			_usuarioCursoService.ObterCursosDeUsuarioPorIdAsync(id).Returns(entity);
 
 			var controllerResult = await usuarioController.ObterCursosDeUsuarioPorId(id);
 

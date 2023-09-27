@@ -26,7 +26,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult> CadastrarProfessor([FromBody] ProfessorRequest request)
         {
-            var id = await _service.PostProfessorAsync(request);
+            var id = await _service.CadastrarProfessorAsync(request);
 			return Created(nameof(CadastrarProfessor), id);
 		}
 
@@ -34,7 +34,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<PaginationResponse<ProfessorResponse>>> ObterTodosProfessores([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
-            var listResponse = await _service.GetAllProfessoresAsync(page, rows);
+            var listResponse = await _service.ObterTodosProfessoresAsync(page, rows);
             var paginationResponse = new PaginationResponse<ProfessorResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
@@ -44,7 +44,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<ProfessorResponse>> ObterProfessorPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetProfessorByIdAsync(id);
+            var response = await _service.ObterProfessorPorIdAsync(id);
 
             return Ok(response);
         }   
@@ -53,7 +53,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> EditarProfessor([FromRoute] Guid id, [FromBody] ProfessorRequestPut request)
         {
-            await _service.PutProfessorAsync(id, request);
+            await _service.EditarProfessorAsync(id, request);
 
             return NoContent();
         }
@@ -62,7 +62,7 @@ namespace OA_Core.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeletarProfessor([FromRoute] Guid id)
         {
-            await _service.DeleteProfessorAsync(id);
+            await _service.DeletarProfessorAsync(id);
 
             return NoContent();
         }
