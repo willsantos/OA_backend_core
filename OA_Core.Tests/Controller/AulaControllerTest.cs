@@ -37,8 +37,9 @@ namespace OA_Core.Tests.Controller
         }
 
         [Fact(DisplayName = "Adiciona uma aula")]
-        public async Task CriaAula()
+        public async Task AulaController_CriaAula_DeveCriar()
         {
+			//Arrange
             var aulaController = new AulaController(_service);
 
             var aulaRequest = new AulaRequest
@@ -53,11 +54,12 @@ namespace OA_Core.Tests.Controller
             };
             var entity = _mapper.Map<Aula>(aulaRequest);
 
+			//Act
             _service.PostAulaAsync(aulaRequest).Returns(entity.Id);
 
             var controllerResult = await aulaController.PostAulaAsync(aulaRequest);
 
-            //var actionResult = Assert.IsType<CreatedResult>(controllerResult);
+			//Assert
             var actionResult = controllerResult.Should().BeOfType<CreatedResult>().Subject;
 
             actionResult.StatusCode.Should().Be(StatusCodes.Status201Created);
@@ -66,8 +68,9 @@ namespace OA_Core.Tests.Controller
 
 
         [Fact(DisplayName = "Busca todas as aulas")]
-        public async Task GetAllAulaAsync()
+        public async Task AulaController_BuscaTodasAulaAsync_DeveBuscarTodas()
         {
+			//Arrange
             var aulaController = new AulaController(_service);
 
             var entities = _fixture.Create<List<AulaResponse>>();
@@ -75,15 +78,15 @@ namespace OA_Core.Tests.Controller
             int page = 0;
             int rows = 10;
 
+			//Act
             _service.GetAllAulasAsync(page, rows).Returns(entities);
-
             var controllerResult = await aulaController.GetAllAulaAsync(page, rows);
+
+			//Assert
             controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
             var okObjectResult = controllerResult.Result.As<OkObjectResult>();
             okObjectResult.Value.Should().BeAssignableTo<PaginationResponse<AulaResponse>>();
-
-
             var resultValue = okObjectResult.Value as PaginationResponse<AulaResponse>;
             resultValue.Resultado.Should().BeEquivalentTo(entities);
 
@@ -91,17 +94,19 @@ namespace OA_Core.Tests.Controller
 
 
         [Fact(DisplayName = "Busca aula por ID")]
-        public async Task GetAulaByIdAsync()
+        public async Task AulaController_BuscaAulaByIdAsync_DeveBuscarUm()
         {
+			//Arrange
             var aulaController = new AulaController(_service);
 
             var entity = _fixture.Create<AulaResponse>();
             Guid id = Guid.NewGuid();
 
+			//Act
             _service.GetAulaByIdAsync(id).Returns(entity);
-
             var controllerResult = await aulaController.GetAulaByIdAsync(id);
 
+			//Assert
             controllerResult.Result.Should().BeOfType<OkObjectResult>();
 
             var okObjectResult = controllerResult.Result.As<OkObjectResult>();
@@ -114,30 +119,35 @@ namespace OA_Core.Tests.Controller
         }
 
         [Fact(DisplayName = "Atualiza aula")]
-        public async Task PutAulaAsync()
+        public async Task AulaController_AtualizaAulaAsync_DeveAtualizar()
         {
+			//Arrange
             var aulaController = new AulaController(_service);
 
             Guid id = Guid.NewGuid();
             var request = _fixture.Create<AulaRequestPut>();
 
+			//Act
             var result = await aulaController.PutAulaAsync(id, request);
-            result.Should().BeOfType<NoContentResult>();
 
+			//Assert
+            result.Should().BeOfType<NoContentResult>();
             await _service.Received().PutAulaAsync(id, request);
         }
 
         [Fact(DisplayName = "Exclui aula")]
-        public async Task DeleteAulaAsync()
+        public async Task AulaController_DeleteAulaAsync_DeveAtualizar()
         {
+			//Arrange
             var aulaController = new AulaController(_service);
 
             Guid id = Guid.NewGuid();
 
+			//Act
             var result = await aulaController.DeleteAulaAsync(id);
+
+			//Assert
             result.Should().BeOfType<NoContentResult>();
-
-
             await _service.Received().DeleteAulaAsync(id);
         }
     }
