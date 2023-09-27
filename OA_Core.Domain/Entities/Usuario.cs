@@ -23,5 +23,8 @@ namespace OA_Core.Domain.Entities
         public DateTime DataNascimento { get; set; }
         public string Telefone { get; set; }
         public string Endereco { get; set; }
-    }
+
+		public virtual ICollection<UsuarioCurso> UsuarioCursos { get; set; } = new List<UsuarioCurso>();
+
+	}
 }
