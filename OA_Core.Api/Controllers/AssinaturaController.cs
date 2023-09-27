@@ -22,7 +22,7 @@ namespace OA_Core.Api.Controllers
 		}
 		[HttpPost("cadastro", Name = "PostAssinaturaAsync")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult<Guid>> PostAssinaturaAsync([FromBody] AssinaturaRequest request)
+		public async Task<ActionResult> PostAssinaturaAsync([FromBody] AssinaturaRequest request)
 		{
 			var id = await _assinaturaService.PostAssinaturaAsync(request);
 

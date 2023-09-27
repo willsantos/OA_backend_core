@@ -61,8 +61,7 @@ namespace OA_Core.Service
 		}
 
 		public async Task<Guid> PutCancelarAssinaturaAsync(Guid id, AssinaturaCancelamentoRequest assinatura)
-		{
-			// setar data de cancelamento e status para cancelado aqui
+		{			
 			var assinaturaParaCancelar = await _assinaturaRepository.ObterPorIdAsync(id);
 			if(assinaturaParaCancelar is null) 
 			{
