@@ -26,7 +26,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Fact(DisplayName = "Cria um Assinatura Válido")]
-		public async Task CriarAssinatura()
+		public async Task CriarAssinatura_Valida_DeveRetornarId()
 		{
 			//Arrange
 			var mockAssinaturaRepository = Substitute.For<IAssinaturaRepository>();
@@ -45,7 +45,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Fact(DisplayName = "Cancela assinatura com sucesso")]
-		public async Task CancelaAssinatura()
+		public async Task CancelaAssinatura_Valido_DeveRetornarId()
 		{
 			//Arrange
 			var mockAssinaturaRepository = Substitute.For<IAssinaturaRepository>();

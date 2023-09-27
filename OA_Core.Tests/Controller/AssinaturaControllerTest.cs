@@ -28,7 +28,7 @@ namespace OA_Core.Tests.Controller
 		}
 
 		[Fact(DisplayName = "Adiciona assinatura")]
-		public async Task criarAssinatura()
+		public async Task CriarAssinatura_Valido_DeveRetornar201()
 		{
 			//Arrange
 			var controller = new AssinaturaController(_service);
@@ -53,7 +53,7 @@ namespace OA_Core.Tests.Controller
 		}
 
 		[Fact(DisplayName = "Cancela assinatura com sucesso")]
-		public async Task PutAssinaturaAsync()
+		public async Task EditarAssinatura_Valido_DeveRetornar204()
 		{
 			//Arrange
 			var cursoController = new AssinaturaController(_service);
