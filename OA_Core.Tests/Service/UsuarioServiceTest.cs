@@ -70,6 +70,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Theory(DisplayName = "Obtém todos os usuários")]
+		[InlineData(0, 20)]
 		[InlineData(1, 20)]
 		[InlineData(1, 1)]
 		[InlineData(1, 100)]
