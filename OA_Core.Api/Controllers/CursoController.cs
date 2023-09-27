@@ -26,12 +26,12 @@ namespace OA_Core.Api.Controllers
 			_cursoProfessorservice = cursoProfessorService;
 		}
 
-		[HttpPost("cadastro", Name = "CadastrarCruso")]
+		[HttpPost("cadastro", Name = "CadastrarCurso")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> CadastrarCruso([FromBody] CursoRequest request)
+		public async Task<ActionResult> CadastrarCurso([FromBody] CursoRequest request)
 		{
 			var id = await _cursoService.CadastrarCursoAsync(request);
-			return Created(nameof(CadastrarCruso), id);
+			return Created(nameof(CadastrarCurso), id);
 		}
 
 		[HttpGet]
