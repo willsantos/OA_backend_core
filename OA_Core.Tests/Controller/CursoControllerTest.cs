@@ -56,7 +56,7 @@ namespace OA_Core.Tests.Controller
 
             _cursoSevice.CadastrarCursoAsync(cursoRequest).Returns(entity.Id);
 
-            var controllerResult = await cursoController.CadastrarCruso(cursoRequest);
+            var controllerResult = await cursoController.CadastrarCurso(cursoRequest);
 			
 
 			var createdResult = controllerResult as CreatedResult;
