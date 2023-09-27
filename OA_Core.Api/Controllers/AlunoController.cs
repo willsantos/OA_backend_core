@@ -16,18 +16,18 @@ namespace OA_Core.Api.Controllers
             _service = service;
         }
 
-        [HttpPost("cadastro", Name = "PostAlunoAsync")]
+        [HttpPost("cadastro", Name = "CadastrarAluno")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<Guid>> PostAlunoAsync([FromBody] AlunoRequest request)
+        public async Task<ActionResult<Guid>> CadastrarAluno([FromBody] AlunoRequest request)
         {
             var id = await _service.PostAlunoAsync(request);
 
-            return CreatedAtRoute("GetAlunoByIdAsync", new { id }, id);
+            return CreatedAtRoute("ObterAlunoPorId", new { id }, id);
         }
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<AlunoResponse>>> GetAllAlunosAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
+        public async Task<ActionResult<PaginationResponse<AlunoResponse>>> ObterTodosAlunos([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
             var listResponse = await _service.GetAllAlunosAsync(page, rows);
             var paginationResponse = new PaginationResponse<AlunoResponse>(page, rows, listResponse);
@@ -35,9 +35,9 @@ namespace OA_Core.Api.Controllers
             return Ok(paginationResponse);
         }
 
-        [HttpGet("{id}", Name = "GetAlunoByIdAsync")]
+        [HttpGet("{id}", Name = "ObterAlunoPorId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<AlunoResponse>> GetAlunoByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<AlunoResponse>> ObterAlunoPorId([FromRoute] Guid id)
         {
             var response = await _service.GetAlunoByIdAsync(id);
 
@@ -46,7 +46,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutAlunoAsync([FromRoute] Guid id, [FromBody] AlunoRequestPut request)
+        public async Task<ActionResult> EditarAluno([FromRoute] Guid id, [FromBody] AlunoRequestPut request)
         {
             await _service.PutAlunoAsync(id, request);
 
@@ -55,7 +55,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> DeleteAlunoAsync([FromRoute] Guid id)
+        public async Task<ActionResult> DeletarAluno([FromRoute] Guid id)
         {
             await _service.DeleteAlunoAsync(id);
 

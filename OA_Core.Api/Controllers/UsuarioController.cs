@@ -27,7 +27,7 @@ namespace OA_Core.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<UsuarioResponse>>> GetAllUsuariosAsync([FromQuery] int page = 0, [FromQuery]int rows = 25)
+        public async Task<ActionResult<PaginationResponse<UsuarioResponse>>> ObterTodosUsuarios([FromQuery] int page = 0, [FromQuery]int rows = 25)
         {
             var listResponse = await _service.GetAllUsuariosAsync(page, rows);
             var paginationResponse = new PaginationResponse<UsuarioResponse>(page, rows, listResponse);
@@ -35,27 +35,27 @@ namespace OA_Core.Api.Controllers
             return Ok(paginationResponse);
         }
 
-        [HttpGet("{id}", Name = "GetUsuarioByIdAsync")]
+        [HttpGet("{id}", Name = "ObterUsuarioPorId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<UsuarioResponse>> GetUsuarioByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<UsuarioResponse>> ObterUsuarioPorId([FromRoute] Guid id)
         {
             var response = await _service.GetUsuarioByIdAsync(id);
 
             return Ok(response);
         }
 
-        [HttpPost("cadastro", Name = "PostUsuarioAsync")]
+        [HttpPost("cadastro", Name = "CadastrarUsuario")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<Guid>> PostUsuarioAsync([FromBody] UsuarioRequest request)
+        public async Task<ActionResult<Guid>> CadastrarUsuario([FromBody] UsuarioRequest request)
         {         
             var id = await _service.PostUsuarioAsync(request);
 
-            return CreatedAtRoute("GetUsuarioByIdAsync", new { id }, id);
+            return CreatedAtRoute("ObterUsuarioPorId", new { id }, id);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutUsuarioAsync([FromRoute] Guid id, [FromBody] UsuarioRequest request)
+        public async Task<ActionResult> EditarUsuario([FromRoute] Guid id, [FromBody] UsuarioRequest request)
         {
             await _service.PutUsuarioAsync(id, request);
 
@@ -64,27 +64,27 @@ namespace OA_Core.Api.Controllers
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> DeleteUsuarioAsync([FromRoute] Guid id)
+        public async Task<ActionResult> DeletarUsuario([FromRoute] Guid id)
         {
             await _service.DeleteUsuarioAsync(id);
 
             return NoContent();
         }
 
-		[HttpGet("usuario-curso/{usuarioId}", Name = "GetCursosDeUsuarioIdAsync")]
+		[HttpGet("usuario-curso/{usuarioId}", Name = "ObterCursosDeUsuarioPorId")]
 		[ProducesResponseType(200)]
-		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> GetCursosDeUsuarioIdAsync([FromRoute] Guid usuarioId)
+		public async Task<ActionResult<IEnumerable<CursoParaUsuarioResponse>>> ObterCursosDeUsuarioPorId([FromRoute] Guid usuarioId)
 		{
 			var cursos = await _usuarioCursoService.ObterCursosDeUsuarioIdAsync(usuarioId);
 			return Ok(cursos);
 		}
 
-		[HttpPost("usuario-curso", Name = "PostUsuarioCursoAsync")]
+		[HttpPost("usuario-curso", Name = "CadastrarCursoAUsuario")]
 		[ProducesResponseType(201)]
-		public async Task<ActionResult> PostUsuarioCursoAsync([FromBody] UsuarioCursoRequest request)
+		public async Task<ActionResult> CadastrarCursoAUsuario([FromBody] UsuarioCursoRequest request)
 		{
 			var usuarioCursoId = await _usuarioCursoService.CadastraUsuarioCursoAsync(request);
-			return Created(nameof(PostUsuarioCursoAsync), usuarioCursoId);
+			return Created(nameof(CadastrarCursoAUsuario), usuarioCursoId);
 		}
 	}
 }
