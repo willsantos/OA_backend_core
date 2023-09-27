@@ -55,7 +55,7 @@ namespace OA_Core.Tests.Controller
 
 			_usuarioCursoService.CadastraUsuarioCursoAsync(usuarioRequest).Returns(entity.Id);
 
-			var controllerResult = await usuarioController.PostUsuarioCursoAsync(usuarioRequest);
+			var controllerResult = await usuarioController.CadastrarCursoAUsuario(usuarioRequest);
 			var actionResult = Assert.IsType<CreatedResult>(controllerResult);
 
 			Assert.Equal(StatusCodes.Status201Created, actionResult.StatusCode);
@@ -72,7 +72,7 @@ namespace OA_Core.Tests.Controller
 
 			_usuarioCursoService.ObterCursosDeUsuarioIdAsync(id).Returns(entity);
 
-			var controllerResult = await usuarioController.GetCursosDeUsuarioIdAsync(id);
+			var controllerResult = await usuarioController.ObterCursosDeUsuarioPorId(id);
 
 			Assert.IsType<OkObjectResult>(controllerResult.Result);
 

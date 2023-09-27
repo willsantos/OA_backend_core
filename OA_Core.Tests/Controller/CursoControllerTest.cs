@@ -56,7 +56,7 @@ namespace OA_Core.Tests.Controller
 
             _cursoSevice.PostCursoAsync(cursoRequest).Returns(entity.Id);
 
-            var controllerResult = await cursoController.PostCursoAsync(cursoRequest);
+            var controllerResult = await cursoController.CadastrarCruso(cursoRequest);
 			
 
 			var createdResult = controllerResult as CreatedResult;
@@ -80,7 +80,7 @@ namespace OA_Core.Tests.Controller
 			//Act
             _cursoSevice.GetAllCursosAsync(page, rows).Returns(entities);
 
-            var controllerResult = await cursoController.GetAllCursoAsync(page, rows);
+            var controllerResult = await cursoController.ObterTodosCursos(page, rows);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -103,7 +103,7 @@ namespace OA_Core.Tests.Controller
 			//Act
             _cursoSevice.GetCursoByIdAsync(id).Returns(entity);
 
-            var controllerResult = await cursoController.GetCursoByIdAsync(id);
+            var controllerResult = await cursoController.ObterCursoPorId(id);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -124,7 +124,7 @@ namespace OA_Core.Tests.Controller
             var request = _fixture.Create<CursoRequestPut>();
 
 			//Act
-            await cursoController.PutCursoAsync(id, request);
+            await cursoController.EditarCurso(id, request);
 
 			//Assert
             await _cursoSevice.Received().PutCursoAsync(id, request);
@@ -139,7 +139,7 @@ namespace OA_Core.Tests.Controller
             Guid id = Guid.NewGuid();
 
 			//Act
-            await cursoController.DeleteCursoAsync(id);
+            await cursoController.DeletarCurso(id);
 
 			//Assert
             await _cursoSevice.Received().DeleteCursoAsync(id);
@@ -161,7 +161,7 @@ namespace OA_Core.Tests.Controller
 
 			//Act
 			_cursoProfessorService.PostCursoProfessorAsync(cursoRequest, entity.CursoId).Returns(entity.Id);
-			var controllerResult = await cursoController.PostProfessorToCursoAsync(cursoRequest, entity.CursoId);
+			var controllerResult = await cursoController.CadastrarProfessorACurso(cursoRequest, entity.CursoId);
 
 			//Assert
 			controllerResult.Should().BeOfType<CreatedResult>();
@@ -184,7 +184,7 @@ namespace OA_Core.Tests.Controller
 			//Act
 			_cursoProfessorService.GetProfessorDeCursoByIdAsync(id).Returns(entity);
 
-			var controllerResult = await cursoController.GetProfessoresByCursoIdAsync(id);
+			var controllerResult = await cursoController.ObterProfessoresDeCurso(id);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -204,7 +204,7 @@ namespace OA_Core.Tests.Controller
 			Guid professorId = Guid.NewGuid();
 
 			//Act
-			await cursoController.DeleteProfessorFromCursoAsync(cursoId, professorId);
+			await cursoController.DeletarProfessorDeCurso(cursoId, professorId);
 
 			//Assert
 			await _cursoProfessorService.Received().DeleteCursoProfessorAsync(cursoId, professorId);

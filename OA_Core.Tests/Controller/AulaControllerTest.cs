@@ -57,7 +57,7 @@ namespace OA_Core.Tests.Controller
 			//Act
             _service.PostAulaAsync(aulaRequest).Returns(entity.Id);
 
-            var controllerResult = await aulaController.PostAulaAsync(aulaRequest);
+            var controllerResult = await aulaController.CadastrarAula(aulaRequest);
 
 			//Assert
             var actionResult = controllerResult.Should().BeOfType<CreatedResult>().Subject;
@@ -80,7 +80,7 @@ namespace OA_Core.Tests.Controller
 
 			//Act
             _service.GetAllAulasAsync(page, rows).Returns(entities);
-            var controllerResult = await aulaController.GetAllAulaAsync(page, rows);
+            var controllerResult = await aulaController.ObterTodasAulas(page, rows);
 
 			//Assert
             controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -104,7 +104,7 @@ namespace OA_Core.Tests.Controller
 
 			//Act
             _service.GetAulaByIdAsync(id).Returns(entity);
-            var controllerResult = await aulaController.GetAulaByIdAsync(id);
+            var controllerResult = await aulaController.ObterAulaPorId(id);
 
 			//Assert
             controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -128,7 +128,7 @@ namespace OA_Core.Tests.Controller
             var request = _fixture.Create<AulaRequestPut>();
 
 			//Act
-            var result = await aulaController.PutAulaAsync(id, request);
+            var result = await aulaController.EditarAula(id, request);
 
 			//Assert
             result.Should().BeOfType<NoContentResult>();
@@ -144,7 +144,7 @@ namespace OA_Core.Tests.Controller
             Guid id = Guid.NewGuid();
 
 			//Act
-            var result = await aulaController.DeleteAulaAsync(id);
+            var result = await aulaController.DeletarAula(id);
 
 			//Assert
             result.Should().BeOfType<NoContentResult>();

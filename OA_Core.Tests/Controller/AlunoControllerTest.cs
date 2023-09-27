@@ -39,7 +39,7 @@ namespace OA_Core.Tests.Controller
 
 			_service.PostAlunoAsync(alunoRequest).Returns(entity.Id);
 
-			var controllerResult = await alunoController.PostAlunoAsync(alunoRequest);
+			var controllerResult = await alunoController.CadastrarAluno(alunoRequest);
 			var actionResult = Assert.IsType<ActionResult<Guid>>(controllerResult);
 			var createdAtRouteResult = Assert.IsType<CreatedAtRouteResult>(actionResult.Result);
 
@@ -63,7 +63,7 @@ namespace OA_Core.Tests.Controller
 			//Act
 			_service.GetAllAlunosAsync(page, rows).Returns(entities);
 
-			var controllerResult = await alunoController.GetAllAlunosAsync(page, rows);
+			var controllerResult = await alunoController.ObterTodosAlunos(page, rows);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -85,7 +85,7 @@ namespace OA_Core.Tests.Controller
 			//Act
 			_service.GetAlunoByIdAsync(id).Returns(entity);
 
-			var controllerResult = await alunoController.GetAlunoByIdAsync(id);
+			var controllerResult = await alunoController.ObterAlunoPorId(id);
 
 			//Assert
 			controllerResult.Result.Should().BeOfType<OkObjectResult>();
@@ -105,7 +105,7 @@ namespace OA_Core.Tests.Controller
 			Guid id = Guid.NewGuid();
 
 			//Act
-			var response = await alunoController.PutAlunoAsync(id, request);
+			var response = await alunoController.EditarAluno(id, request);
 
 			//Assert
 			await _service.Received().PutAlunoAsync(id, request);
@@ -120,7 +120,7 @@ namespace OA_Core.Tests.Controller
 			//Arrange
 			var alunoController = new AlunoController(_service);
 			Guid id = Guid.NewGuid();
-			var response = await alunoController.DeleteAlunoAsync(id);
+			var response = await alunoController.DeletarAluno(id);
 
 			//Assert
 			await _service.Received().DeleteAlunoAsync(id);
