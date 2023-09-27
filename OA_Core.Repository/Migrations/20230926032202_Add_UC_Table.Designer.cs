@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OA_Core.Repository.Context;
 
@@ -10,9 +11,11 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230926032202_Add_UC_Table")]
+    partial class Add_UC_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,43 +53,6 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Aluno");
-                });
-
-            modelBuilder.Entity("OA_Core.Domain.Entities.Assinatura", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("DataAtivacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DataCancelamento")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataVencimento")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("MotivoCancelamento")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Assinatura");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Aula", b =>
@@ -346,17 +312,6 @@ namespace OA_Core.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("usuario");
-                });
-
-            modelBuilder.Entity("OA_Core.Domain.Entities.Assinatura", b =>
-                {
-                    b.HasOne("OA_Core.Domain.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Aula", b =>

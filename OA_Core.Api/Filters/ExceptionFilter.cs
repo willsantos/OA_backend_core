@@ -12,18 +12,25 @@ namespace OA_Core.Api.Filters
         public override Task OnExceptionAsync(ExceptionContext context)
         {
             var response = new InformacaoResponse();
+			var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             if (context.Exception is InformacaoException)
             {
                 InformacaoException informacaoException = (InformacaoException)context.Exception;
                 response.Codigo = informacaoException.Codigo;
                 response.Mensagens = informacaoException.Mensagens;
-            } 
+
+				if (environment != Environments.Production)
+					response.MensagemDebug = context.Exception.Message;
+				
+			} 
             else
             {
                 response.Codigo = StatusException.Erro;
                 response.Mensagens = new List<string> { "Erro inesperado " };
-            }
+				if (environment != Environments.Production)
+					response.MensagemDebug = context.Exception.Message;
+			}
 
             context.Result = new ObjectResult(response)
             {
