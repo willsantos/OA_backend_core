@@ -47,7 +47,7 @@ namespace OA_Core.Tests.Service
 			mockProfessorRepository.AdicionarAsync(Arg.Any<Professor>()).Returns(Task.CompletedTask);
 
 			//Assert
-			var result = await professorService.PostProfessorAsync(professorRequest);
+			var result = await professorService.CadastrarProfessorAsync(professorRequest);
 			result.Should().NotBe(Guid.Empty);
 		}
 
@@ -61,7 +61,7 @@ namespace OA_Core.Tests.Service
 			var professores = _fixture.CreateMany<Professor>(5);
 			mockProfessorRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(professores);
 			//Act
-			var result = await cursoService.GetAllProfessoresAsync(1, 5);
+			var result = await cursoService.ObterTodosProfessoresAsync(1, 5);
 			//Assert
 			result.Should().HaveCount(5);
 		}
@@ -77,7 +77,7 @@ namespace OA_Core.Tests.Service
 			var professorResponse = _mapper.Map<ProfessorResponse>(professor);
 			//Act
 			mockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-			var result = await cursoService.GetProfessorByIdAsync(professor.Id);
+			var result = await cursoService.ObterProfessorPorIdAsync(professor.Id);
 			//Assert
 			result.Should().BeEquivalentTo(professorResponse);
 		}
@@ -93,7 +93,7 @@ namespace OA_Core.Tests.Service
 			var professor = _fixture.Create<Professor>();
 			//Act
 			mockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-			await cursoService.PutProfessorAsync(professor.Id, professorRequestPut);
+			await cursoService.EditarProfessorAsync(professor.Id, professorRequestPut);
 			//Assert
 			await mockProfessorRepository.Received().EditarAsync(Arg.Is<Professor>(c => c.Formacao == professorRequestPut.Formacao));
 		}
@@ -109,7 +109,7 @@ namespace OA_Core.Tests.Service
 			var professor = _fixture.Create<Professor>();
 			//Act
 			mockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-			await professorService.DeleteProfessorAsync(professor.Id);
+			await professorService.DeletarProfessorAsync(professor.Id);
 			//Assert
 			await mockProfessorRepository.Received().EditarAsync(professor);
 		}
@@ -123,7 +123,7 @@ namespace OA_Core.Tests.Service
 			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
 			var professorRequest = _fixture.Create<ProfessorRequest>();
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => professorService.PostProfessorAsync(professorRequest));
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.CadastrarProfessorAsync(professorRequest));
 		}
 
 		[Fact(DisplayName = "Tenta obter Professor por Id inválido")]
@@ -134,7 +134,7 @@ namespace OA_Core.Tests.Service
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => professorService.GetProfessorByIdAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.ObterProfessorPorIdAsync(Guid.NewGuid()));
 		}
 
 		[Fact(DisplayName = "Tenta Deletar Professor com Id inválido")]
@@ -145,7 +145,7 @@ namespace OA_Core.Tests.Service
 			var mockUsuarioRepository = Substitute.For<IUsuarioRepository>();
 			var professorService = new ProfessorService(_mapper, mockProfessorRepository, mockUsuarioRepository, _notifier);
 			//Assert
-			await Assert.ThrowsAsync<InformacaoException>(() => professorService.DeleteProfessorAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<InformacaoException>(() => professorService.DeletarProfessorAsync(Guid.NewGuid()));
 		}
 
 		[Fact(DisplayName = "Tenta Criar Professor com Campos inválidos")]
@@ -160,7 +160,7 @@ namespace OA_Core.Tests.Service
 			professorRequest.Formacao = string.Empty;
 			//Act
 			mockUsuarioRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(usuario);
-			await professorService.PostProfessorAsync(professorRequest);
+			await professorService.CadastrarProfessorAsync(professorRequest);
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Formacao" && e.ErrorMessage == "Formacao precisa ser preenchida")));
 		}
@@ -177,7 +177,7 @@ namespace OA_Core.Tests.Service
 			var professor = _fixture.Create<Professor>();
 			//Act
 			mockProfessorRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
-			await professorService.PutProfessorAsync(professor.Id, professorRequestPut);
+			await professorService.EditarProfessorAsync(professor.Id, professorRequestPut);
 			//Assert
 			_notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Biografia" && e.ErrorMessage == "Biografia precisa ser preenchida")));
 		}

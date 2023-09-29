@@ -22,47 +22,47 @@ namespace OA_Core.Api.Controllers
             _service = service;
         }
 
-        [HttpPost("cadastro", Name = "PostAulaAsync")]
+        [HttpPost("cadastro", Name = "CadastrarAula")]
         [ProducesResponseType(201)]
-        public async Task<ActionResult> PostAulaAsync([FromBody] AulaRequest request)
+        public async Task<ActionResult> CadastrarAula([FromBody] AulaRequest request)
         {
-            var id = await _service.PostAulaAsync(request);
-            return Created(nameof(PostAulaAsync), id);
+            var id = await _service.CadastrarAulaAsync(request);
+            return Created(nameof(CadastrarAula), id);
         }
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<PaginationResponse<AulaResponse>>> GetAllAulaAsync([FromQuery] int page = 0, [FromQuery] int rows = 25)
+        public async Task<ActionResult<PaginationResponse<AulaResponse>>> ObterTodasAulas([FromQuery] int page = 0, [FromQuery] int rows = 25)
         {
-            var listResponse = await _service.GetAllAulasAsync(page, rows);
+            var listResponse = await _service.ObterTodasAulasAsync(page, rows);
             var paginationResponse = new PaginationResponse<AulaResponse>(page, rows, listResponse);
 
             return Ok(paginationResponse);
         }
 
-        [HttpGet("{id}", Name = "GetAulaByIdAsync")]
+        [HttpGet("{id}", Name = "ObterAulaPorId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<AulaResponse>> GetAulaByIdAsync([FromRoute] Guid id)
+        public async Task<ActionResult<AulaResponse>> ObterAulaPorId([FromRoute] Guid id)
         {
-            var response = await _service.GetAulaByIdAsync(id);
+            var response = await _service.ObterAulaPorIdAsync(id);
 
             return Ok(response);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> PutAulaAsync([FromRoute] Guid id, [FromBody] AulaRequestPut request)
+        public async Task<ActionResult> EditarAula([FromRoute] Guid id, [FromBody] AulaRequestPut request)
         {
-            await _service.PutAulaAsync(id, request);
+            await _service.EditarAulaAsync(id, request);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<ActionResult> DeleteAulaAsync([FromRoute] Guid id)
+        public async Task<ActionResult> DeletarAula([FromRoute] Guid id)
         {
-            await _service.DeleteAulaAsync(id);
+            await _service.DeletarAulaAsync(id);
 
             return NoContent();
         }

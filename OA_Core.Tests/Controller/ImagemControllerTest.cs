@@ -49,9 +49,9 @@ namespace OA_Core.Tests.Controller
 			var tipoimagem = TipoImagem.fotoOutro;
 
 
-			_service.SaveImageAsync(formFile, tipoimagem).Returns("mock_resultado_sem_problemas");
+			_service.SalvarImagemAsync(formFile, tipoimagem).Returns("mock_resultado_sem_problemas");
 
-			var controllerResult = await imagemController.UploadImagem(formFile, tipoimagem);
+			var controllerResult = await imagemController.EnviarImagem(formFile, tipoimagem);
 
 			controllerResult.Should().NotBeNull();
 			controllerResult.Should().BeAssignableTo<OkObjectResult>();

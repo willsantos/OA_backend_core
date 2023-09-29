@@ -25,7 +25,7 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteAlunoAsync(Guid id)
+        public async Task DeletarAlunoAsync(Guid id)
         {
             var aluno = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {id} não encontrado");
@@ -34,14 +34,14 @@ namespace OA_Core.Service
             await _alunoRepository.EditarAsync(aluno);
         }
 
-        public async Task<IEnumerable<AlunoResponse>> GetAllAlunosAsync(int page, int rows)
+        public async Task<IEnumerable<AlunoResponse>> ObterTodosAlunosAsync(int page, int rows)
         {
             var listEntity = await _alunoRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<AlunoResponse>>(listEntity);
         }
 
-        public async Task<AlunoResponse> GetAlunoByIdAsync(Guid id)
+        public async Task<AlunoResponse> ObterAlunoPorIdAsync(Guid id)
         {
             var usuario = await _alunoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aluno {id} não encontrado");
@@ -49,7 +49,7 @@ namespace OA_Core.Service
             return _mapper.Map<AlunoResponse>(usuario);
         }
 
-        public async Task<Guid> PostAlunoAsync(AlunoRequest alunoRequest)
+        public async Task<Guid> CadastrarAlunoAsync(AlunoRequest alunoRequest)
         {
             var entity = _mapper.Map<Aluno>(alunoRequest);
 			alunoRequest.Cpf.Verificar();
@@ -72,7 +72,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
+        public async Task EditarAlunoAsync(Guid id, AlunoRequestPut alunoRequest)
         {
 
 			var entity = _mapper.Map<Aluno>(alunoRequest);

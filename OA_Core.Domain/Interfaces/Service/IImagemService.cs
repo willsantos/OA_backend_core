@@ -10,7 +10,7 @@ namespace OA_Core.Domain.Interfaces.Service
 {
 	public interface IImagemService
 	{
-		Task<string> SaveImageAsync(IFormFile file, TipoImagem tipoImagem);
+		Task<string> SalvarImagemAsync(IFormFile file, TipoImagem tipoImagem);
 
 	}
 }

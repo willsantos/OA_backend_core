@@ -25,7 +25,7 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteCursoAsync(Guid id)
+        public async Task DeletarCursoAsync(Guid id)
         {
             var curso = await _cursoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Curso {id} não encontrado");
@@ -34,14 +34,14 @@ namespace OA_Core.Service
             await _cursoRepository.EditarAsync(curso);
         }
 
-        public async Task<IEnumerable<CursoResponse>> GetAllCursosAsync(int page, int rows)
+        public async Task<IEnumerable<CursoResponse>> ObterTodosCursosAsync(int page, int rows)
         {
             var listEntity = await _cursoRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<CursoResponse>>(listEntity);
         }
 
-        public async Task<CursoResponse> GetCursoByIdAsync(Guid id)
+        public async Task<CursoResponse> ObterCursoPorIdAsync(Guid id)
         {
             var curso = await _cursoRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Curso {id} não encontrado");
@@ -49,7 +49,7 @@ namespace OA_Core.Service
             return _mapper.Map<CursoResponse>(curso);
         }
 
-        public async Task<Guid> PostCursoAsync(CursoRequest cursoRequest)
+        public async Task<Guid> CadastrarCursoAsync(CursoRequest cursoRequest)
         {
             var entity = _mapper.Map<Curso>(cursoRequest);
        
@@ -67,7 +67,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutCursoAsync(Guid id, CursoRequestPut cursoRequest)
+        public async Task EditarCursoAsync(Guid id, CursoRequestPut cursoRequest)
         {
             var entity = _mapper.Map<Curso>(cursoRequest);   
 

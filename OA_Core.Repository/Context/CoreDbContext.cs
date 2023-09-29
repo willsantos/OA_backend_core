@@ -11,6 +11,7 @@ namespace OA_Core.Repository.Context
         public DbSet<Curso> Curso { get; set; }
         public DbSet<Aluno> Aluno { get; set; }
         public DbSet<Aula> Aula { get; set; }
+		public DbSet<Assinatura> Assinatura { get; set; }
 		public DbSet<CursoProfessor> CursoProfessor { get; set; }
 		public DbSet<UsuarioCurso> UsuarioCurso { get; set; }
 
@@ -20,7 +21,6 @@ namespace OA_Core.Repository.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
 			modelBuilder.Entity<Usuario>(new UsuarioEntityMap().Configure);
 			modelBuilder.Entity<Professor>(new ProfessorEntityMap().Configure);
 			modelBuilder.Entity<Curso>(new CursoEntityMap().Configure);
@@ -28,6 +28,7 @@ namespace OA_Core.Repository.Context
 			modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
 			modelBuilder.Entity<CursoProfessor>(new CursoProfessorEntityMap().Configure);
 			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure);
+			modelBuilder.Entity<Assinatura>(new AssinaturaEntityMap().Configure);
 		}
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{

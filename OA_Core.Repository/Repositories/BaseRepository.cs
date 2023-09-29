@@ -16,47 +16,50 @@ namespace OA_Core.Repository.Repositories
 
 		public async Task AdicionarAsync(T item)
 		{
-				await _coreDbContext.Set<T>().AddAsync(item);
-				await _coreDbContext.SaveChangesAsync();
+			await _coreDbContext.Set<T>().AddAsync(item);
+			await _coreDbContext.SaveChangesAsync();
 		}
 
 		public async Task EditarAsync(T item)
 		{
 			_coreDbContext.Set<T>().Update(item);
-				await _coreDbContext.SaveChangesAsync();
+			await _coreDbContext.SaveChangesAsync();
 		}
 
 		public async Task<T> ObterAsync(Expression<Func<T, bool>> expression)
 		{
-				return await _coreDbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(expression);
+			return await _coreDbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(expression);
 		}
 
 		public async Task<T> ObterPorIdAsync(Guid id)
 		{
-				return await _coreDbContext.Set<T>().FindAsync(id);
+			return await _coreDbContext.Set<T>().FindAsync(id);
 		}
 
 		public async Task<IEnumerable<T>> ObterTodosAsync(Expression<Func<T, bool>> expression)
 		{
-				return await _coreDbContext.Set<T>().Where(expression).ToListAsync();
+			return await _coreDbContext.Set<T>().Where(expression).ToListAsync();
 		}
 
 		public async Task<IEnumerable<T>> ObterTodosAsync(int page, int rows)
 		{
-				var query = _coreDbContext.Set<T>().AsQueryable();
+			if (page <= 0)
+				page = 1;
 
-				var items = await query
-					.Skip((page - 1) * rows)
-					.Take(rows)
-					.ToListAsync();
+			var query = _coreDbContext.Set<T>().AsQueryable();
 
-				return items;
+			var items = await query
+				.Skip((page - 1) * rows)
+				.Take(rows)
+				.ToListAsync();
+
+			return items;
 		}
 
 		public async Task RemoverAsync(T item)
 		{
-				_coreDbContext.Set<T>().Remove(item);
-				await _coreDbContext.SaveChangesAsync();
+			_coreDbContext.Set<T>().Remove(item);
+			await _coreDbContext.SaveChangesAsync();
 		}
 	}
 }

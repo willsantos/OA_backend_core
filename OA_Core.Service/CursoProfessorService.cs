@@ -28,7 +28,7 @@ namespace OA_Core.Service
             _notificador = notificador;
         }
 
-        public async Task DeleteCursoProfessorAsync(Guid cursoId, Guid professorId)
+        public async Task DeletarCursoProfessorAsync(Guid cursoId, Guid professorId)
         {
             var cursoProfessor = await _cursoProfessorRepository.ObterAsync(x => x.CursoId == cursoId && x.ProfessorId == professorId) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor não encontrado");
@@ -40,14 +40,14 @@ namespace OA_Core.Service
             await _cursoProfessorRepository.EditarAsync(cursoProfessor);
         }
 
-        public async Task<IEnumerable<CursoProfessor>> GetAllCursoProfessorsAsync(int page, int rows)
+        public async Task<IEnumerable<CursoProfessor>> ObterTodosCursoProfessoresAsync(int page, int rows)
         {
             var listEntity = await _cursoProfessorRepository.ObterTodosAsync(page, rows);
 
             return _mapper.Map<IEnumerable<CursoProfessor>>(listEntity);
         }
 
-        public async Task<CursoProfessor> GetCursoProfessorByIdAsync(Guid id)
+        public async Task<CursoProfessor> ObterCursoProfessorPorIdAsync(Guid id)
         {
             var cursoProfessor = await _cursoProfessorRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"CursoProfessor {id} não encontrado");
@@ -55,7 +55,7 @@ namespace OA_Core.Service
             return _mapper.Map<CursoProfessor>(cursoProfessor);
         }
 
-		public async Task<List<ProfessorResponseComResponsavel>> GetProfessorDeCursoByIdAsync(Guid cursoId)
+		public async Task<List<ProfessorResponseComResponsavel>> ObterProfessoresDeCursoPorIdAsync(Guid cursoId)
 		{
 			var curso = await _cursoRepository.ObterPorIdAsync(cursoId) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Curso {cursoId} não encontrado");
@@ -76,7 +76,7 @@ namespace OA_Core.Service
 			return professores;
 		}
 
-		public async Task<Guid> PostCursoProfessorAsync(CursoProfessorRequest cursoProfessorRequest, Guid cursoId)
+		public async Task<Guid> CadastrarCursoProfessorAsync(CursoProfessorRequest cursoProfessorRequest, Guid cursoId)
         {
             var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);
 			entity.CursoId = cursoId;
@@ -94,7 +94,7 @@ namespace OA_Core.Service
             return entity.Id;
         }
 
-        public async Task PutCursoProfessorAsync(Guid cursoId, CursoProfessorRequest cursoProfessorRequest)
+        public async Task EditarCursoProfessorAsync(Guid cursoId, CursoProfessorRequest cursoProfessorRequest)
         {
             var entity = _mapper.Map<CursoProfessor>(cursoProfessorRequest);   
 			entity.CursoId = cursoId;
