@@ -89,7 +89,6 @@ namespace OA_Core.Service
 			find.DataNascimento = entity.DataNascimento;
 			find.Telefone = entity.Telefone;
 			find.Endereco = entity.Endereco;
-			entity.DataAlteracao = DateTime.Now;
 
 			await _repository.EditarAsync(find);
 		}

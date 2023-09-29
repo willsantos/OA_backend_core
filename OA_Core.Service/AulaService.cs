@@ -80,7 +80,6 @@ namespace OA_Core.Service
             var find = await _aulaRepository.ObterPorIdAsync(id) ??
                 throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
-			find.DataAlteracao = DateTime.Now;
 			find.Nome = entity.Nome;
 			find.Duracao = entity.Duracao;
 			find.Descricao = entity.Descricao;

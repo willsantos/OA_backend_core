@@ -111,7 +111,6 @@ namespace OA_Core.Service
 			find.CursoId = entity.CursoId;
 			find.ProfessorId = entity.ProfessorId;
 			find.Responsavel = entity.Responsavel;
-            find.DataAlteracao = DateTime.Now;
 
             await _cursoProfessorRepository.EditarAsync(find);
         }
