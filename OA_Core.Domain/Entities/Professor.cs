@@ -12,7 +12,6 @@ namespace OA_Core.Domain.Entities
             Experiencia = experiencia;
             Foto = foto;
             Biografia = biografia;
-            DataCriacao = DateTime.Now;
             Validate(this, new ProfessorValidator());
         }
         public Professor(string formacao, string experiencia, string foto, string biografia)
