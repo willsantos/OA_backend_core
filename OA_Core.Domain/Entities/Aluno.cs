@@ -11,7 +11,6 @@ namespace OA_Core.Domain.Entities
             UsuarioId = usuarioId;
 			Foto = foto;
 			Cpf = cpf;
-            DataCriacao = DateTime.Now;
             Validate(this, new AlunoValidator());
         }
         public Aluno(string foto, string cpf)

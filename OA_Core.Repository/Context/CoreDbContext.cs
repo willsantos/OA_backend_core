@@ -29,5 +29,27 @@ namespace OA_Core.Repository.Context
 			modelBuilder.Entity<CursoProfessor>(new CursoProfessorEntityMap().Configure);
 			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure);
 		}
+		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			foreach (var entry in ChangeTracker.Entries())
+			{
+				if (entry.Entity is Entidade baseEntity)
+				{
+					switch (entry.State)
+					{
+						case EntityState.Added:
+							baseEntity.DataCriacao = DateTime.Now;
+							break;
+
+						case EntityState.Modified:
+							entry.Property("DataCriacao").IsModified = false;
+							baseEntity.DataAlteracao = DateTime.Now;
+							break;
+					}
+				}
+			}
+
+			return await base.SaveChangesAsync(cancellationToken);
+		}
 	}
 }
