@@ -15,10 +15,5 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
       - name: Apply migrations with dotnet-ef-migrations
-        uses: warrenbrasil/dotnet-migrations@v2
-        with:
-          project-path: OA_CORE.Repository
-          startup-project-path: OA_CORE.Api
-          context: CoreDbContext
-          connection: ${{ secrets.CONNECTION_STRING }}
+        run: dotnet ef database update --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext
 
