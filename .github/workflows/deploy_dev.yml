@@ -17,10 +17,11 @@ jobs:
       - name: Install dotnet-ef
         run: dotnet tool install --global dotnet-ef
       - name: Restore with dotnet-ef
-        run: dotnet restore
-      - name: List folders
-        run: ls -la
+        run: |
+          export PATH=$PATH:$HOME/.dotnet/tools
+          . ~/.bashrc
+          dotnet tool restore
       - name: Apply migrations with dotnet-ef-migrations
-        run: dotnet ef database update --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
+        run: dotnet ef database update --verbose --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
       
 
