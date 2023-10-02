@@ -23,9 +23,9 @@ jobs:
       - name: List folders
         run: ls -a
       - name: List files and folders in OA_CORE.Repository
-        run: ls -a OA_CORE.Repository
+        run: ls -a OA_Core.Repository
       - name: List files and folders in OA_CORE.Api
-        run: ls -a OA_CORE.Api
+        run: ls -a OA_Core.Api
       - name: Apply migrations with dotnet-ef-migrations
         run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
         env:
