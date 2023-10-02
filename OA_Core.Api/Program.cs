@@ -28,7 +28,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var appConfig = builder.Configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 builder.Services.AddSingleton(appConfig);
 
-Console.WriteLine(appConfig.ConnectionString);
+Console.WriteLine("CONNECTION STRING:"+appConfig.ConnectionString);
 
 #endregion
 
