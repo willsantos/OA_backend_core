@@ -21,4 +21,6 @@ jobs:
           . ~/.bashrc
           dotnet tool restore
       - name: Apply migrations with dotnet-ef-migrations
-        run: dotnet ef database update --verbose --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
+        run: dotnet ef database update --verbose -p OA_CORE.Repository/OA_Core.Repository.csproj -s OA_CORE.Api/OA_Core.Api.csproj -c CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
