@@ -16,6 +16,10 @@ jobs:
         run: dotnet build --configuration Release
       - name: Install dotnet-ef
         run: dotnet tool install --global dotnet-ef
+      - name: Restore with dotnet-ef
+        run: dotnet restore
+      - name: List folders
+        run: ls -la
       - name: Apply migrations with dotnet-ef-migrations
         run: dotnet ef database update --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
       
