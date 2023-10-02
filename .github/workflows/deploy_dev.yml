@@ -17,8 +17,8 @@ jobs:
       - name: Apply migrations with dotnet-ef-migrations
         uses: warrenbrasil/dotnet-migrations@v2
         with:
-          project-path: ./OA_CORE.Repository
-          startup-project-path: ./OA_CORE.Api
+          project-path: OA_CORE.Repository
+          startup-project-path: OA_CORE.Api
           context: CoreDbContext
           connection: ${{ secrets.CONNECTION_STRING }}
 
