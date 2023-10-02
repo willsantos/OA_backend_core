@@ -20,6 +20,8 @@ jobs:
           export PATH=$PATH:$HOME/.dotnet/tools
           . ~/.bashrc
           dotnet tool restore
+      - name: List folders
+        run: ls -a
       - name: List files and folders in OA_CORE.Repository
         run: ls -a OA_CORE.Repository
       - name: List files and folders in OA_CORE.Api
