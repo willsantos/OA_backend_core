@@ -8,8 +8,9 @@ namespace OA_Core.Domain.Enums
 {
     public enum TipoAula
     {
-        video,
-        audio,
-        outro
+        AulaOnline,
+        AulaVideo,
+		AulaTexto,
+        AulaDownload
     }
 }

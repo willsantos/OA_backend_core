@@ -113,7 +113,7 @@ namespace OA_Core.Tests.Service
             await aulaService.EditarAulaAsync(aula.Id, aulaRequestPut);
 
 			//Assert
-            await mockAulaRepository.Received().EditarAsync(Arg.Is<Aula>(c => c.Nome == aulaRequestPut.Nome));
+            await mockAulaRepository.Received().EditarAsync(Arg.Is<Aula>(c => c.Titulo == aulaRequestPut.Titulo));
         }
 
         [Fact(DisplayName = "Cria uma Aula com CursoId inválido")]
@@ -180,14 +180,14 @@ namespace OA_Core.Tests.Service
             var aulaService = new AulaService(_mapper, mockAulaRepository, MockCursoRepository, _notifier);
             var professor = _fixture.Create<Curso>();
             var aulaRequest = _fixture.Create<AulaRequest>();
-            aulaRequest.Caminho = string.Empty;
+            aulaRequest.Titulo = string.Empty;
 
 			//Act
             MockCursoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(professor);
             await aulaService.CadastrarAulaAsync(aulaRequest);
 
 			//Assert
-            _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
+            _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Titulo" && e.ErrorMessage == "Titulo precisa ser preenchido")));
         }
 
         [Fact(DisplayName = "Atualiza uma Aula com Campos inválidos")]
@@ -198,7 +198,7 @@ namespace OA_Core.Tests.Service
             var mockCursoRepository = Substitute.For<ICursoRepository>();
             var aulaService = new AulaService(_mapper, mockAulaRepository, mockCursoRepository, _notifier);
             var aulaRequestPut = _fixture.Create<AulaRequestPut>();
-            aulaRequestPut.Caminho = string.Empty;
+            aulaRequestPut.Titulo = string.Empty;
             var aula = _fixture.Create<Aula>();
 
 			//Act
@@ -206,7 +206,7 @@ namespace OA_Core.Tests.Service
             await aulaService.EditarAulaAsync(aula.Id, aulaRequestPut);
 
 			//Assert
-            _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Caminho" && e.ErrorMessage == "Caminho precisa ser preenchido")));
+            _notifier.Received().Handle(Arg.Is<FluentValidation.Results.ValidationResult>(v => v.Errors.Any(e => e.PropertyName == "Titulo" && e.ErrorMessage == "Titulo precisa ser preenchido")));
         }
 
     }

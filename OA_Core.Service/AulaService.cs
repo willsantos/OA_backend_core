@@ -10,85 +10,100 @@ using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Service
 {
-    public class AulaService : IAulaService
-    {
-        private readonly IMapper _mapper;
-        private readonly IAulaRepository _aulaRepository;
-        private readonly ICursoRepository _cursoRepository;
-        private readonly INotificador _notificador;
+	public class AulaService : IAulaService
+	{
+		private readonly IMapper _mapper;
+		private readonly IAulaRepository _aulaRepository;
+		private readonly ICursoRepository _cursoRepository;
+		private readonly INotificador _notificador;
 
-        public AulaService(IMapper mapper, IAulaRepository aulaRepository, ICursoRepository cursoRepository, INotificador notificador)
-        {
-            _mapper = mapper;
-            _aulaRepository = aulaRepository;
-            _cursoRepository = cursoRepository;
-            _notificador = notificador;
-        }
+		public AulaService(IMapper mapper, IAulaRepository aulaRepository, ICursoRepository cursoRepository, INotificador notificador)
+		{
+			_mapper = mapper;
+			_aulaRepository = aulaRepository;
+			_cursoRepository = cursoRepository;
+			_notificador = notificador;
+		}
 
-        public async Task DeletarAulaAsync(Guid id)
-        {
-            var aula = await _aulaRepository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
+		public async Task DeletarAulaAsync(Guid id)
+		{
+			var aula = await _aulaRepository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
-            aula.DataDelecao = DateTime.Now;
-            await _aulaRepository.EditarAsync(aula);
-        }
+			aula.DataDelecao = DateTime.Now;
+			await _aulaRepository.EditarAsync(aula);
+		}
 
-        public async Task<IEnumerable<AulaResponse>> ObterTodasAulasAsync(int page, int rows)
-        {
-            var listEntity = await _aulaRepository.ObterTodosAsync(page, rows);
+		public async Task<IEnumerable<AulaResponse>> ObterTodasAulasAsync(int page, int rows)
+		{
+			var listEntity = await _aulaRepository.ObterTodosAsync(page, rows);
 
-            return _mapper.Map<IEnumerable<AulaResponse>>(listEntity);
-        }
+			return _mapper.Map<IEnumerable<AulaResponse>>(listEntity);
+		}
 
-        public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
-        {
-            var aula = await _aulaRepository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
+		public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
+		{
+			var aula = await _aulaRepository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
-            return _mapper.Map<AulaResponse>(aula);
-        }
+			return _mapper.Map<AulaResponse>(aula);
+		}
 
-        public async Task<Guid> CadastrarAulaAsync(AulaRequest aulaRequest)
-        {
-            var entity = _mapper.Map<Aula>(aulaRequest);
-       
-            if (await _cursoRepository.ObterPorIdAsync(aulaRequest.CursoId) is null)
-                throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {aulaRequest.CursoId} inválido ou não existente");
-            
-            if (!entity.Valid)
-            {
-                _notificador.Handle(entity.ValidationResult);
-                return Guid.Empty;
+		public async Task<Guid> CadastrarAulaAsync(AulaRequest request)
+		{
+			Aula entity;
 
-            }          
+			switch (request.Tipo)
+			{
+				case TipoAula.AulaOnline:
+					entity = _mapper.Map<AulaOnline>(request);
+					break;
+				case TipoAula.AulaVideo:
+					entity = _mapper.Map<AulaVideo>(request);
+					break;
+				case TipoAula.AulaTexto:
+					entity = _mapper.Map<AulaTexto>(request);
+					break;
+				case TipoAula.AulaDownload:
+					entity = _mapper.Map<AulaDownload>(request);
+					break;
+				default:
+					throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de aula inválido");
+			}
 
-            await _aulaRepository.AdicionarAsync(entity);
-            return entity.Id;
-        }
+			if (await _cursoRepository.ObterPorIdAsync(request.CursoId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {request.CursoId} inválido ou não existente");
 
-        public async Task EditarAulaAsync(Guid id, AulaRequestPut aulaRequest)
-        {
-            var entity = _mapper.Map<Aula>(aulaRequest);   
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return Guid.Empty;
+			}
 
-            if (!entity.Valid)
-            {
-                _notificador.Handle(entity.ValidationResult);
-                return;
-            }
+			await _aulaRepository.AdicionarAsync(entity);
+			return entity.Id;
+		}
 
-            var find = await _aulaRepository.ObterPorIdAsync(id) ??
-                throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
+		public async Task EditarAulaAsync(Guid id, AulaRequestPut aulaRequest)
+		{
+			var entity = _mapper.Map<Aula>(aulaRequest);
+
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				return;
+			}
+
+			var find = await _aulaRepository.ObterPorIdAsync(id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
 			find.DataAlteracao = DateTime.Now;
-			find.Nome = entity.Nome;
+			find.Titulo = entity.Titulo;
 			find.Duracao = entity.Duracao;
-			find.Descricao = entity.Descricao;
-			find.Caminho = entity.Caminho;
 			find.Tipo = entity.Tipo;
 			find.Ordem = entity.Ordem;
 
-            await _aulaRepository.EditarAsync(find);
-        }
-    }
+			await _aulaRepository.EditarAsync(find);
+		}
+	}
 }

@@ -44,9 +44,7 @@ namespace OA_Core.Tests.Controller
 
             var aulaRequest = new AulaRequest
             {
-                Nome = "TestEntity",
-                Descricao = "TestEntity",
-                Caminho = "TestEntity",
+                Titulo = "TestEntity",
                 Tipo = 0,
                 Duracao = 0,
                 Ordem = 0,
