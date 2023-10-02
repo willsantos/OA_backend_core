@@ -29,7 +29,7 @@ jobs:
       - name: show connection string
         run: echo ${{secrets.CONNECTION_STRING}}
       - name: Apply migrations with dotnet-ef-migrations
-        run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
+        run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext
         env:
           ASPNETCORE_ENVIRONMENT: Development
           AppConfig__ConnectionString: ${{secrets.CONNECTION_STRING}}
