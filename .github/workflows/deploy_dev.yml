@@ -13,8 +13,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
       - name: Install dotnet-ef
         run: dotnet tool install --global dotnet-ef
       - name: Restore with dotnet-ef
