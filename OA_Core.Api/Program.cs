@@ -28,16 +28,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var appConfig = builder.Configuration.GetSection(nameof(AppConfig)).Get<AppConfig>();
 builder.Services.AddSingleton(appConfig);
 
-var cnnDebug = appConfig.ConnectionString.Split(";");
-
-Console.WriteLine("CONNECTION STRING:"+ appConfig.ConnectionString);
-Console.WriteLine("CONNECTION STRING:"+ cnnDebug[0]);
-Console.WriteLine("CONNECTION STRING:"+ cnnDebug[1]);
-Console.WriteLine("CONNECTION STRING:"+ cnnDebug[2]);
-Console.WriteLine("CONNECTION STRING:"+ cnnDebug[3]);
-Console.WriteLine("CONNECTION STRING:"+ cnnDebug[4]);
-
-
 #endregion
 
 #region DbContext
