@@ -1,0 +1,24 @@
+name: Apply migrations
+on:
+  push:
+    branches: [ develop ]
+jobs:
+  apply-migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+      - name: Apply migrations with dotnet-ef-migrations
+        uses: warrenbrasil/dotnet-migrations@v2
+        with:
+          project-path: ./OA_CORE.Repository
+          startup-project-path: ./OA_CORE.Api
+          context: CoreDbContext
+          connection: ${{ secrets.CONNECTION_STRING }}
+
