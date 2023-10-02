@@ -30,4 +30,4 @@ jobs:
         run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
         env:
           ASPNETCORE_ENVIRONMENT: Development
-          ConnectionString: ${{secrets.CONNECTION_STRING}}
+          AppConfig__ConnectionString: ${{secrets.CONNECTION_STRING}}
