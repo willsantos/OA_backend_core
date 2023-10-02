@@ -13,7 +13,6 @@ namespace OA_Core.Domain.Entities
             DataNascimento = dataNascimento;
             Telefone = telefone;
             Endereco = endereco;
-            DataCriacao = DateTime.Now;
             Validate(this, new UsuarioValidator());
         }
 

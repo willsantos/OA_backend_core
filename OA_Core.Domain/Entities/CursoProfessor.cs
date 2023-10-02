@@ -16,7 +16,6 @@ namespace OA_Core.Domain.Entities
 			Id = Guid.NewGuid();
 			ProfessorId = professorId;
 			Responsavel = responsavel;
-			DataCriacao = DateTime.Now;
 			Validate(this, new CursoProfessorValidator());
 		}
 
