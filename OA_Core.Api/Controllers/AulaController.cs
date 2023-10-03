@@ -49,7 +49,16 @@ namespace OA_Core.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPut("{id}")]
+		[HttpGet("{cursoId}", Name = "ObterAulasPorCursoId")]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<AulaResponse>> ObterAulaPorCursoId([FromRoute] Guid cursoId)
+		{
+			var response = await _service.ObterAulasPorCursoIdAsync(cursoId);
+
+			return Ok(response);
+		}
+
+		[HttpPut("{id}")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> EditarAula([FromRoute] Guid id, [FromBody] AulaRequestPut request)
         {
@@ -63,6 +72,15 @@ namespace OA_Core.Api.Controllers
 		public async Task<ActionResult> EditarOrdemAula([FromRoute] Guid id, [FromBody] OrdemRequest ordem)
 		{
 			await _service.EditarOrdemAulaAsync(id, ordem);
+
+			return NoContent();
+		}
+
+		[HttpPatch("{cursoId}/ordens")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> EditarOrdemAula([FromRoute] Guid cursoId, [FromBody] OrdensRequest[] ordens)
+		{
+			await _service.EditarOrdensAulasAsync(cursoId, ordens);
 
 			return NoContent();
 		}

@@ -48,6 +48,20 @@ namespace OA_Core.Service
 			return _mapper.Map<IEnumerable<AulaResponse>>(listResponse).OrderByDescending(x => x.Ordem);
 		}
 
+		public async Task<IEnumerable<AulaResponse>> ObterAulasPorCursoIdAsync(Guid cursoId)
+		{
+			var listEntity = await _aulaRepository.ObterTodosAsync(x => x.CursoId == cursoId);
+
+			var listResponse = new List<AulaResponse>();
+			foreach (var item in listEntity)
+			{
+				var response = _mapper.Map<AulaResponse>(item);
+				listResponse.Add(response);
+			}
+
+			return _mapper.Map<IEnumerable<AulaResponse>>(listResponse).OrderByDescending(x => x.Ordem);
+		}
+
 		public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
 		{
 			var aula = await _aulaRepository.ObterPorIdAsync(id) ??
