@@ -10,5 +10,7 @@ namespace OA_Core.Domain.Interfaces.Service
         Task DeletarAulaAsync(Guid id);
         Task<AulaResponse> ObterAulaPorIdAsync(Guid id);
         Task<IEnumerable<AulaResponse>> ObterTodasAulasAsync(int page, int rows);
-    }
+		Task EditarOrdemAulaAsync(Guid id, OrdemRequest ordem);
+
+	}
 }

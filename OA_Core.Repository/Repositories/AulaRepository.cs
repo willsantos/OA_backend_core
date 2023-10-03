@@ -7,8 +7,11 @@ namespace OA_Core.Repository.Repositories
 {
 	public class AulaRepository : BaseRepository<Aula>, IAulaRepository
 	{
+		private readonly CoreDbContext _context;
+
 		public AulaRepository(CoreDbContext coreDbContext) : base(coreDbContext)
 		{
+			_context = coreDbContext;
 		}
 	}
 }

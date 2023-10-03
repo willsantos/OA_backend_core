@@ -38,38 +38,27 @@ namespace OA_Core.Service
 		{
 			var listEntity = await _aulaRepository.ObterTodosAsync(page, rows);
 
-			return _mapper.Map<IEnumerable<AulaResponse>>(listEntity);
+			var listResponse = new List<AulaResponse>();
+			foreach (var item in listEntity)
+			{
+				var response = _mapper.Map<AulaResponse>(item);
+				listResponse.Add(response);
+			}
+
+			return _mapper.Map<IEnumerable<AulaResponse>>(listResponse);
 		}
 
 		public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
 		{
 			var aula = await _aulaRepository.ObterPorIdAsync(id) ??
-				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
+					throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
 			return _mapper.Map<AulaResponse>(aula);
 		}
 
 		public async Task<Guid> CadastrarAulaAsync(AulaRequest request)
 		{
-			Aula entity;
-
-			switch (request.Tipo)
-			{
-				case TipoAula.AulaOnline:
-					entity = _mapper.Map<AulaOnline>(request);
-					break;
-				case TipoAula.AulaVideo:
-					entity = _mapper.Map<AulaVideo>(request);
-					break;
-				case TipoAula.AulaTexto:
-					entity = _mapper.Map<AulaTexto>(request);
-					break;
-				case TipoAula.AulaDownload:
-					entity = _mapper.Map<AulaDownload>(request);
-					break;
-				default:
-					throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de aula inválido");
-			}
+			Aula entity = AulaTPHMapper(request);
 
 			if (await _cursoRepository.ObterPorIdAsync(request.CursoId) is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"CursoId: {request.CursoId} inválido ou não existente");
@@ -84,9 +73,9 @@ namespace OA_Core.Service
 			return entity.Id;
 		}
 
-		public async Task EditarAulaAsync(Guid id, AulaRequestPut aulaRequest)
+		public async Task EditarAulaAsync(Guid id, AulaRequestPut request)
 		{
-			var entity = _mapper.Map<Aula>(aulaRequest);
+			Aula entity = AulaPutTPHMapper(request);
 
 			if (!entity.Valid)
 			{
@@ -97,13 +86,89 @@ namespace OA_Core.Service
 			var find = await _aulaRepository.ObterPorIdAsync(id) ??
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
-			find.DataAlteracao = DateTime.Now;
+
 			find.Titulo = entity.Titulo;
 			find.Duracao = entity.Duracao;
 			find.Tipo = entity.Tipo;
 			find.Ordem = entity.Ordem;
 
-			await _aulaRepository.EditarAsync(find);
+			switch (entity.Tipo)
+			{
+				case TipoAula.AulaOnline:
+					var aulaOnline = find as AulaOnline;
+					var entityOnline = entity as AulaOnline;
+					aulaOnline.Url = entityOnline.Url;
+					aulaOnline.HorarioFim = entityOnline.HorarioFim;
+					aulaOnline.HorarioInicio = entityOnline.HorarioInicio;
+					break;
+
+				default:
+					break;
+			}
+
+			await _aulaRepository.EditarAsync(entity);
+		}
+
+		public async Task EditarOrdemAulaAsync(Guid id, OrdemRequest ordem)
+		{
+			var entity = await _aulaRepository.ObterPorIdAsync(id) ??
+							throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
+
+			entity.Ordem = ordem.Ordem;
+			entity.DataAlteracao = DateTime.Now;
+
+			await _aulaRepository.EditarAsync(entity);
+
+		}
+
+		private Aula AulaPutTPHMapper(AulaRequestPut aulaRequest)
+		{
+			Aula entity;
+
+			switch (aulaRequest.Tipo)
+			{
+				case TipoAula.AulaOnline:
+					entity = _mapper.Map<AulaOnline>(aulaRequest);
+					break;
+				case TipoAula.AulaVideo:
+					entity = _mapper.Map<AulaVideo>(aulaRequest);
+					break;
+				case TipoAula.AulaTexto:
+					entity = _mapper.Map<AulaTexto>(aulaRequest);
+					break;
+				case TipoAula.AulaDownload:
+					entity = _mapper.Map<AulaDownload>(aulaRequest);
+					break;
+				default:
+					throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de aula inválido");
+			}
+
+			return entity;
+		}
+
+		private Aula AulaTPHMapper(AulaRequest aulaRequest)
+		{
+			Aula entity;
+
+			switch (aulaRequest.Tipo)
+			{
+				case TipoAula.AulaOnline:
+					entity = _mapper.Map<AulaOnline>(aulaRequest);
+					break;
+				case TipoAula.AulaVideo:
+					entity = _mapper.Map<AulaVideo>(aulaRequest);
+					break;
+				case TipoAula.AulaTexto:
+					entity = _mapper.Map<AulaTexto>(aulaRequest);
+					break;
+				case TipoAula.AulaDownload:
+					entity = _mapper.Map<AulaDownload>(aulaRequest);
+					break;
+				default:
+					throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de aula inválido");
+			}
+
+			return entity;
 		}
 	}
 }

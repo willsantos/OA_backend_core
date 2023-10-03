@@ -28,6 +28,7 @@ namespace OA_Core.Repository.Context
 			modelBuilder.Entity<Aula>(new AulaEntityMap().Configure);
 			modelBuilder.Entity<Assinatura>(new AssinaturaEntityMap().Configure);
             modelBuilder.Entity<CursoProfessor>(new CursoProfessorEntityMap().Configure);
-			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure);        }
+			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure); 
+		}
     }
 }

@@ -58,7 +58,16 @@ namespace OA_Core.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+		[HttpPatch("{id}/ordens")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> EditarOrdemAula([FromRoute] Guid id, [FromBody] OrdemRequest ordem)
+		{
+			await _service.EditarOrdemAulaAsync(id, ordem);
+
+			return NoContent();
+		}
+
+		[HttpDelete("{id}")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeletarAula([FromRoute] Guid id)
         {
