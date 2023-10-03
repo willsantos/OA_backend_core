@@ -45,7 +45,7 @@ namespace OA_Core.Service
 				listResponse.Add(response);
 			}
 
-			return _mapper.Map<IEnumerable<AulaResponse>>(listResponse);
+			return _mapper.Map<IEnumerable<AulaResponse>>(listResponse).OrderByDescending(x => x.Ordem);
 		}
 
 		public async Task<AulaResponse> ObterAulaPorIdAsync(Guid id)
@@ -102,10 +102,21 @@ namespace OA_Core.Service
 							throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
 
 			entity.Ordem = ordem.Ordem;
-			entity.DataAlteracao = DateTime.Now;
 
 			await _aulaRepository.EditarAsync(entity);
+		}
 
+		public async Task EditarOrdensAulasAsync(Guid cursoId, OrdensRequest[] ordens)
+		{
+			var aulas = await _aulaRepository.ObterTodosAsync(x => x.CursoId == cursoId);
+
+			foreach (var item in ordens)
+			{
+				var aula = aulas.First(a => a.Id == item.Id);
+				aula.Ordem = item.Ordem;
+			}
+
+			await _aulaRepository.EditarVariosAsync(aulas);
 		}
 
 		private Aula AulaTPHMapper(AulaRequestPut aulaRequest)
