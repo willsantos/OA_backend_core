@@ -75,17 +75,23 @@ namespace OA_Core.Service
 
 		public async Task EditarAulaAsync(Guid id, AulaRequestPut request)
 		{
-			Aula entity = AulaPutTPHMapper(request);
+			var find = await _aulaRepository.ObterAsync(x => x.Id == id) ??
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrada");
 
+			if (find.Tipo != request.Tipo)
+			{
+				throw new InformacaoException(StatusException.Conflito, $"Não é possível mudar o tipo da aula");
+			}
+
+			Aula entity = AulaTPHMapper(request);
 			entity.Id = id;
+			entity.CursoId = find.CursoId;
 
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);
 				return;
 			}
-
-			entity.DataAlteracao = DateTime.Now;
 
 			await _aulaRepository.EditarAsync(entity);
 		}
@@ -102,32 +108,7 @@ namespace OA_Core.Service
 
 		}
 
-		private Aula AulaPutTPHMapper(AulaRequestPut aulaRequest)
-		{
-			Aula entity;
-
-			switch (aulaRequest.Tipo)
-			{
-				case TipoAula.AulaOnline:
-					entity = _mapper.Map<AulaOnline>(aulaRequest);
-					break;
-				case TipoAula.AulaVideo:
-					entity = _mapper.Map<AulaVideo>(aulaRequest);
-					break;
-				case TipoAula.AulaTexto:
-					entity = _mapper.Map<AulaTexto>(aulaRequest);
-					break;
-				case TipoAula.AulaDownload:
-					entity = _mapper.Map<AulaDownload>(aulaRequest);
-					break;
-				default:
-					throw new InformacaoException(StatusException.FormatoIncorreto, $"Formato de aula inválido");
-			}
-
-			return entity;
-		}
-
-		private Aula AulaTPHMapper(AulaRequest aulaRequest)
+		private Aula AulaTPHMapper(AulaRequestPut aulaRequest)
 		{
 			Aula entity;
 
