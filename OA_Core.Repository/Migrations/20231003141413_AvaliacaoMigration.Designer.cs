@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OA_Core.Repository.Context;
 
@@ -10,9 +11,11 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231003141413_AvaliacaoMigration")]
+    partial class AvaliacaoMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,59 +137,6 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("CursoId");
 
                     b.ToTable("Aula");
-                });
-
-            modelBuilder.Entity("OA_Core.Domain.Entities.Avaliacao", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Ativa")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("AulaId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("DataAlteracao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DataDelecao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DataEntrega")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<double?>("NotaMaxima")
-                        .HasColumnType("double");
-
-                    b.Property<double?>("NotaMinima")
-                        .HasColumnType("double");
-
-                    b.Property<DateTime?>("Tempo")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TotalQuestoes")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AulaId");
-
-                    b.ToTable("Avaliacao");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
@@ -421,17 +371,6 @@ namespace OA_Core.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("curso");
-                });
-
-            modelBuilder.Entity("OA_Core.Domain.Entities.Avaliacao", b =>
-                {
-                    b.HasOne("OA_Core.Domain.Entities.Aula", "Aula")
-                        .WithMany()
-                        .HasForeignKey("AulaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aula");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
