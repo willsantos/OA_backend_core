@@ -27,6 +27,11 @@ namespace OA_Core.Api.Profiles
 			CreateMap<AulaVideo, AulaResponse>().ReverseMap();
 			CreateMap<AulaTexto, AulaResponse>().ReverseMap();
 			CreateMap<AulaDownload, AulaResponse>().ReverseMap();
+
+			CreateMap<AulaOnline, AulaRequestPut>().ReverseMap();
+			CreateMap<AulaVideo, AulaRequestPut>().ReverseMap();
+			CreateMap<AulaTexto, AulaRequestPut>().ReverseMap();
+			CreateMap<AulaDownload, AulaRequestPut>().ReverseMap();
 		}
     }
 }

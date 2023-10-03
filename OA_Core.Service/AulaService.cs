@@ -77,34 +77,15 @@ namespace OA_Core.Service
 		{
 			Aula entity = AulaPutTPHMapper(request);
 
+			entity.Id = id;
+
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);
 				return;
 			}
 
-			var find = await _aulaRepository.ObterPorIdAsync(id) ??
-				throw new InformacaoException(StatusException.NaoEncontrado, $"Aula {id} não encontrado");
-
-
-			find.Titulo = entity.Titulo;
-			find.Duracao = entity.Duracao;
-			find.Tipo = entity.Tipo;
-			find.Ordem = entity.Ordem;
-
-			switch (entity.Tipo)
-			{
-				case TipoAula.AulaOnline:
-					var aulaOnline = find as AulaOnline;
-					var entityOnline = entity as AulaOnline;
-					aulaOnline.Url = entityOnline.Url;
-					aulaOnline.HorarioFim = entityOnline.HorarioFim;
-					aulaOnline.HorarioInicio = entityOnline.HorarioInicio;
-					break;
-
-				default:
-					break;
-			}
+			entity.DataAlteracao = DateTime.Now;
 
 			await _aulaRepository.EditarAsync(entity);
 		}
