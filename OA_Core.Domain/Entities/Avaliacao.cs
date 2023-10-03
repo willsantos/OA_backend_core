@@ -34,5 +34,6 @@ namespace OA_Core.Domain.Entities
 		public bool Ativa { get; set; }
         public DateTime? DataEntrega { get; set; }
         public Guid AulaId { get; set; }
+		public virtual Aula Aula { get; set; }
     }
 }
