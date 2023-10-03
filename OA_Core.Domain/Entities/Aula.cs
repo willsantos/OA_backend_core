@@ -13,7 +13,6 @@ namespace OA_Core.Domain.Entities
             Ordem = ordem;
             Tipo = tipo;
             CursoId = cursoId;
-            DataCriacao = DateTime.Now;
             Validate(this, new AulaValidator());
         }
 

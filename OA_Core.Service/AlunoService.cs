@@ -94,7 +94,6 @@ namespace OA_Core.Service
 
 			find.Cpf = alunoRequest.Cpf.Exibir();
 			find.Foto = alunoRequest.Foto;
-			find.DataAlteracao = DateTime.Now;
 			await _alunoRepository.EditarAsync(find);
 		}
     }

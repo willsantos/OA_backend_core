@@ -85,7 +85,6 @@ namespace OA_Core.Service
 			find.Categoria = entity.Categoria;
 			find.Descricao = entity.Descricao;
 			find.PreRequisito = entity.PreRequisito;
-            find.DataAlteracao = DateTime.Now;
 
             await _cursoRepository.EditarAsync(find);
         }

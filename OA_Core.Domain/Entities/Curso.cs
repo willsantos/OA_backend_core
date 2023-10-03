@@ -13,7 +13,6 @@ namespace OA_Core.Domain.Entities
             PreRequisito = preRequisito;
             Preco = preco;
             ProfessorId = professorId;
-            DataCriacao = DateTime.Now;
 			Aulas = aulas;
 
 			Validate(this, new CursoValidator());

@@ -1,0 +1,27 @@
+name: Apply migrations
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+jobs:
+  apply-migrations:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Install dotnet-ef
+        run: dotnet tool install --global dotnet-ef
+      - name: Restore with dotnet-ef
+        run: |
+          export PATH=$PATH:$HOME/.dotnet/tools
+          . ~/.bashrc
+          dotnet tool restore
+      - name: Apply migrations with dotnet-ef-migrations
+        run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          AppConfig__ConnectionString: ${{secrets.CONNECTION_STRING}}

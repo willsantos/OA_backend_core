@@ -19,7 +19,6 @@ namespace OA_Core.Domain.Entities
 			UsuarioId = usuarioId;
 			Status = status;
 			Progresso = progresso;
-			DataCriacao = DateTime.Now;
 			Validate(this, new UsuarioCursoValidator());
 		}
 

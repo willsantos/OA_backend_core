@@ -84,7 +84,6 @@ namespace OA_Core.Service
 			find.Experiencia = entity.Experiencia;
 			find.Foto = entity.Foto;
 			find.Biografia = entity.Biografia;
-            entity.DataAlteracao = DateTime.Now;
 
             await _repository.EditarAsync(find);
         }
