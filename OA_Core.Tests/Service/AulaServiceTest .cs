@@ -51,7 +51,7 @@ namespace OA_Core.Tests.Service
             var result = await _aulaService.CadastrarAulaAsync(aulaRequest);
 
 			//Assert
-            result.Should().NotBe(Guid.Empty);       
+            result.Should().NotBe(Guid.Empty);
         }
                 
         [Fact(DisplayName = "Deleta uma Aula Válida")]
@@ -140,6 +140,26 @@ namespace OA_Core.Tests.Service
 			await _aulaRepository.Received().EditarAsync(Arg.Any<AulaDownload>());
 		}
 
+		[Fact(DisplayName = "Edita uma aula video")]
+		public async Task AulaService_EditaAulaVideo_DeveEditar()
+		{
+			// Arrange
+			var aula = _fixture.Build<AulaVideo>()
+				.With(a => a.Tipo, TipoAula.AulaVideo)
+				.Create();
+
+			var request = _mapper.Map<AulaRequestPut>(aula);
+
+			_aulaRepository.ObterAsync(Arg.Any<Expression<Func<Aula, bool>>>()).Returns(aula);
+			_aulaRepository.EditarAsync(Arg.Any<Aula>()).Returns(Task.CompletedTask);
+
+			// Act
+			await _aulaService.EditarAulaAsync(aula.Id, request);
+
+			// Assert
+			await _aulaRepository.Received().EditarAsync(Arg.Any<AulaVideo>());
+		}
+
 		[Fact(DisplayName = "Edita uma aula com titulo invalido")]
 		public async Task AulaService_EditaAulaInvalida_DeveRetornarErro()
 		{
@@ -206,6 +226,18 @@ namespace OA_Core.Tests.Service
 			// Assert
 			aula.Ordem.Should().Be(ordemRequest.Ordem);
 			await _aulaRepository.Received().EditarAsync(aula);
+		}
+
+		[Fact(DisplayName = "Edita a ordem de uma aula inexistente")]
+		public async Task AulaService_EditaOrdemAulaInexistente_DeveRetornarErro()
+		{
+			// Arrange
+			var id = Guid.NewGuid();
+			var ordemRequest = new OrdemRequest { Ordem = 1 };
+
+			// Act
+			// Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => _aulaService.EditarOrdemAulaAsync(id, ordemRequest));
 		}
 
 		[Fact(DisplayName = "Edita as ordens de aulas de um curso")]
