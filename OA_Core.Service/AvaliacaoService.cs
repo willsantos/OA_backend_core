@@ -47,7 +47,8 @@ namespace OA_Core.Service
 
 			throw new NotImplementedException();
 		}
-
+		//A avaliação só pode ser deletada se não tiver nenhum relacionamento com AvaliacaoUsuario.
+		//Não é softdelete, nesse caso é delete mesmo.
 		public Task DeletarAvaliacaoAsync(Guid id)
 		{
 			throw new NotImplementedException();
@@ -66,6 +67,7 @@ namespace OA_Core.Service
 		public async Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
 			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoUsuarioRequest);
+			//pesquisar usuario pra ver se existe e só assim permitir cadastro
 			if (await _repository.ObterPorIdAsync(avaliacaoUsuarioRequest.AvaliacaoId) is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {avaliacaoUsuarioRequest.AvaliacaoId} inválida ou não existente");
 			if (!entity.Valid)
