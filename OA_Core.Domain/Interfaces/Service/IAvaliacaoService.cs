@@ -6,7 +6,7 @@ namespace OA_Core.Domain.Interfaces.Service
 	public interface IAvaliacaoService
 	{
 		Task<Guid> CadastrarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest);
-		Task<Guid> IniciarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest);
+		Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest);
 		Task EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest);
 		Task AtvivarDesativarAvaliacaoAsync(Guid id /*AvaliacaoAtivaDesativaRequest avaliacaoRequest*/);
 		Task EncerrarAvaliacaoAsync(Guid id /*AvaliacaoAtivaDesativaRequest avaliacaoRequest*/);

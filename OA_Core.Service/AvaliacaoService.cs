@@ -14,15 +14,17 @@ namespace OA_Core.Service
 	{
 		private readonly IAulaRepository _aulaRepository;
 		private readonly IAvaliacaoRepository _repository;
+		private readonly IAvaliacaoUsuarioRepository _avaliacaoUsuarioRepository;
 		private readonly INotificador _notificador;
 		private readonly IMapper _mapper;
 
-		public AvaliacaoService(IAvaliacaoRepository repository, INotificador notificador, IMapper mapper, IAulaRepository aulaRepository)
+		public AvaliacaoService(IAvaliacaoRepository repository, INotificador notificador, IMapper mapper, IAulaRepository aulaRepository, IAvaliacaoUsuarioRepository avaliacaoUsuarioRepository)
 		{
+			_avaliacaoUsuarioRepository = avaliacaoUsuarioRepository;
 			_repository = repository;
 			_notificador = notificador;
 			_mapper = mapper;
-			_aulaRepository = aulaRepository;
+			_aulaRepository = aulaRepository;			
 		}
 
 		public async Task<Guid> CadastrarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest)
@@ -42,6 +44,7 @@ namespace OA_Core.Service
 		}
 		public Task AtvivarDesativarAvaliacaoAsync(Guid id)
 		{
+
 			throw new NotImplementedException();
 		}
 
@@ -60,9 +63,19 @@ namespace OA_Core.Service
 			throw new NotImplementedException();
 		}
 
-		public Task<Guid> IniciarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest)
+		public async Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
-			throw new NotImplementedException();
+			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoUsuarioRequest);
+			if (await _avaliacaoUsuarioRepository.ObterAsync(a=> a.AvaliacaoId == avaliacaoUsuarioRequest.AvaliacaoId && a.UsuarioId == avaliacaoUsuarioRequest.UsuarioId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"AvaliacaoUsuario {avaliacaoUsuarioRequest.AvaliacaoId}{avaliacaoUsuarioRequest.UsuarioId} inválida ou não existente");
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				 throw new InformacaoException(StatusException.FormatoIncorreto, $"AvaliacaoUsuario {avaliacaoUsuarioRequest.AvaliacaoId}{avaliacaoUsuarioRequest.UsuarioId} inválida");
+
+			}
+			entity.Inicio = DateTime.Now;
+			await _avaliacaoUsuarioRepository.AdicionarAsync(entity);
 		}
 
 		public Task<AvaliacaoResponse> ObterAvaliacaoPorIdAsync(Guid id)
