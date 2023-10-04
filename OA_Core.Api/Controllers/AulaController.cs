@@ -49,7 +49,7 @@ namespace OA_Core.Api.Controllers
             return Ok(response);
         }
 
-		[HttpGet("{cursoId}", Name = "ObterAulasPorCursoId")]
+		[HttpGet("{cursoId}/aulas", Name = "ObterAulasPorCursoId")]
 		[ProducesResponseType(200)]
 		public async Task<ActionResult<AulaResponse>> ObterAulaPorCursoId([FromRoute] Guid cursoId)
 		{
@@ -76,7 +76,7 @@ namespace OA_Core.Api.Controllers
 			return NoContent();
 		}
 
-		[HttpPatch("{cursoId}/ordens")]
+		[HttpPatch("{cursoId}/cursos/ordens")]
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> EditarOrdemAula([FromRoute] Guid cursoId, [FromBody] OrdensRequest[] ordens)
 		{
