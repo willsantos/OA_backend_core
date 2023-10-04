@@ -10,7 +10,7 @@ namespace OA_Core.Domain.Entities
 		public AvaliacaoUsuario(Guid avaliacaoId, 						
 								Guid usuarioId)
 		{
-					
+			AvaliacaoId = avaliacaoId;
 			UsuarioId = usuarioId;		
 			Validate(this, new AvaliacaoUsuarioValidator());
 		}
