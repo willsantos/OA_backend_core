@@ -1,6 +1,7 @@
 ﻿using OA_Core.Domain.Enums;
 using OA_Core.Domain.Validations;
 
+
 namespace OA_Core.Domain.Entities
 {
     public class Avaliacao : Entidade

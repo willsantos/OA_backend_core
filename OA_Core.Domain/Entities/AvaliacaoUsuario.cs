@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using OA_Core.Domain.Validations;
 using System;
-using System.ComponentModel.DataAnnotations;
+using FluentValidation.Results;
 
 namespace OA_Core.Domain.Entities
 {
@@ -12,8 +12,7 @@ namespace OA_Core.Domain.Entities
 								Guid usuarioId, 
 								Usuario usuario, 
 								double? notaObtida, 
-								bool aprovado, 
-								DateTime inicio, 
+								bool aprovado, 								 
 								DateTime? fim)
 		{
 			AvaliacaoId = avaliacaoId;
@@ -22,9 +21,9 @@ namespace OA_Core.Domain.Entities
 			Usuario = usuario;
 			NotaObtida = notaObtida;
 			Aprovado = aprovado;
-			Inicio = inicio;
+			Inicio = DateTime.Now;
 			Fim = fim;
-			//Validate(this, new AvaliacaoUsuarioValidator());
+			Validate(this, new AvaliacaoUsuarioValidator());
 		}
 
 		public Guid AvaliacaoId{ get; set; }
@@ -36,12 +35,12 @@ namespace OA_Core.Domain.Entities
 		public DateTime Inicio { get; set; }
 		public DateTime? Fim { get; set; }
 		public bool Valid { get; set; }
-		public ValidationResult ValidationResult { get; set; }		
+		public ValidationResult ValidationResult { get; set; }
 
-		//public bool Validate<T>(T model, AbstractValidator<T> validator)
-		//{
-		//	ValidationResult = validator.Validate(model);
-		//	return Valid = ValidationResult.IsValid;
-		//}
+		public bool Validate<T>(T model, AbstractValidator<T> validator)
+		{
+			ValidationResult = validator.Validate(model);
+			return Valid = ValidationResult.IsValid;
+		}
 	}
 }
