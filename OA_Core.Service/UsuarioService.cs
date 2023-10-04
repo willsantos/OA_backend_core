@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
@@ -8,6 +9,8 @@ using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Domain.Shared;
+using Serilog;
+using Serilog.Events;
 
 namespace OA_Core.Service
 {
@@ -16,7 +19,6 @@ namespace OA_Core.Service
 		private readonly IMapper _mapper;
 		private readonly IUsuarioRepository _repository;
 		private readonly INotificador _notificador;
-
 		public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
 		{
 			_mapper = mapper;

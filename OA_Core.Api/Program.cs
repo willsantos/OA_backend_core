@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using OA_Core.Api.Configuration;
 using OA_Core.Api.Filters;
 using OA_Core.Domain.Config;
 using OA_Core.Domain.Interfaces.Notifications;
@@ -8,6 +10,7 @@ using OA_Core.Domain.Notifications;
 using OA_Core.Repository.Context;
 using OA_Core.Repository.Repositories;
 using OA_Core.Service;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +19,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
+#region Serilog
+SerilogExtension.AddSerilogApi(builder);
 
+#endregion
 #region AutoMapper
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
