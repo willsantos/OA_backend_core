@@ -22,5 +22,14 @@ namespace OA_Core.Api.Controllers
 
 			return Created(nameof(CadastrarAvaliacao), id);
 		}
+
+		[HttpPost("cadastro", Name = "CadastrarAvaliacaoUsuario")]
+		[ProducesResponseType(201)]
+		public async Task<ActionResult> IniciarAvaliacaoUsuario([FromBody] AvaliacaoUsuarioRequest request)
+		{
+			await _service.IniciarAvaliacaoAsync(request);
+
+			return NoContent();
+		}
 	}
 }
