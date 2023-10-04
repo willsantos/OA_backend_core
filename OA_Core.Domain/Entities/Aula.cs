@@ -5,7 +5,7 @@ namespace OA_Core.Domain.Entities
 {
     public abstract class Aula : Entidade
     {
-        public Aula(string titulo, TipoAula tipo, int duracao, int ordem, Guid cursoId)
+        protected Aula(string titulo, TipoAula tipo, int duracao, int ordem, Guid cursoId)
         { 
             Id = Guid.NewGuid();
             Titulo = titulo;
@@ -16,7 +16,7 @@ namespace OA_Core.Domain.Entities
             Validate(this, new AulaValidator());
         }
 
-        public Aula(string titulo, TipoAula tipo, int duracao, int ordem)
+        protected Aula(string titulo, TipoAula tipo, int duracao, int ordem)
         {
             Titulo = titulo;
             Duracao = duracao;
