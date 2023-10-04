@@ -7,18 +7,14 @@ namespace OA_Core.Domain.Entities
 {
 	public class AvaliacaoUsuario 
 	{
-		public AvaliacaoUsuario(Guid avaliacaoId, 
-								Avaliacao avaliacao, 
-								Guid usuarioId, 
-								Usuario usuario, 
+		public AvaliacaoUsuario(Guid avaliacaoId, 						
+								Guid usuarioId, 							 
 								double? notaObtida, 
 								bool aprovado, 								 
 								DateTime? fim)
 		{
-			AvaliacaoId = avaliacaoId;
-			Avaliacao = avaliacao;
+			AvaliacaoId = avaliacaoId;		
 			UsuarioId = usuarioId;
-			Usuario = usuario;
 			NotaObtida = notaObtida;
 			Aprovado = aprovado;
 			Inicio = DateTime.Now;
