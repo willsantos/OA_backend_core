@@ -66,8 +66,8 @@ namespace OA_Core.Service
 		public async Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
 			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoUsuarioRequest);
-			if (await _avaliacaoUsuarioRepository.ObterAsync(a=> a.AvaliacaoId == avaliacaoUsuarioRequest.AvaliacaoId && a.UsuarioId == avaliacaoUsuarioRequest.UsuarioId) is null)
-				throw new InformacaoException(StatusException.NaoEncontrado, $"AvaliacaoUsuario {avaliacaoUsuarioRequest.AvaliacaoId}{avaliacaoUsuarioRequest.UsuarioId} inválida ou não existente");
+			if (await _repository.ObterPorIdAsync(avaliacaoUsuarioRequest.AvaliacaoId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {avaliacaoUsuarioRequest.AvaliacaoId} inválida ou não existente");
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);

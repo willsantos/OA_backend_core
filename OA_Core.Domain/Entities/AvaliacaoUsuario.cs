@@ -8,17 +8,10 @@ namespace OA_Core.Domain.Entities
 	public class AvaliacaoUsuario 
 	{
 		public AvaliacaoUsuario(Guid avaliacaoId, 						
-								Guid usuarioId, 							 
-								double? notaObtida, 
-								bool aprovado, 								 
-								DateTime? fim)
+								Guid usuarioId)
 		{
-			AvaliacaoId = avaliacaoId;		
-			UsuarioId = usuarioId;
-			NotaObtida = notaObtida;
-			Aprovado = aprovado;
-			Inicio = DateTime.Now;
-			Fim = fim;
+					
+			UsuarioId = usuarioId;		
 			Validate(this, new AvaliacaoUsuarioValidator());
 		}
 
