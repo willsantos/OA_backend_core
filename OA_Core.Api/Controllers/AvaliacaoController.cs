@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Interfaces.Service;
 
 namespace OA_Core.Api.Controllers
@@ -50,6 +51,14 @@ namespace OA_Core.Api.Controllers
 			return NoContent();
 		}
 
+		[HttpPut("{id}", Name = "EditarAvaliacao")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult<AvaliacaoResponse>> EditarAvaliacao([FromBody] AvaliacaoRequest request, [FromRoute] Guid id)
+		{
+			var entity = await _service.EditarAvaliacaoAsync(id, request);
+
+			return Ok(entity);
+		}
 		//Excluir
 		//Buscar por Id
 		//Buscar todos
