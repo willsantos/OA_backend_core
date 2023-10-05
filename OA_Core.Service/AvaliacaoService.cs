@@ -59,15 +59,16 @@ namespace OA_Core.Service
 		//A avaliação só pode ser deletada se não tiver nenhum relacionamento com AvaliacaoUsuario.
 		//Não é softdelete, nesse caso é delete mesmo.
 		//Caso já exista o relacionamento, ela só pode ser desativada.
-		public Task DeletarAvaliacaoAsync(Guid id)
+		public async Task DeletarAvaliacaoAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			if (await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == id) is not null)
+				throw new InformacaoException(StatusException.Conflito, $"Essa avaliacao nao pode ser excluida");
+			var entity = await _repository.ObterPorIdAsync(id);
+			if(entity is null)
+				throw new InformacaoException(StatusException.FormatoIncorreto, $"Essa avaliacao não existe ou formato está incorreto");
+			await _repository.RemoverAsync(entity);
 		}
 
-		//A alteração também é permitida se não existir nenhum relacionamento com AvaliacaoUsuario,
-		//depois que existe o relacionamento não pode mais.
-		//usar find.Id para setar id já existente e não criar um novo
-		//Vc pode editar todos os campos, desde que não tenha nenhum relacionamento com o Avaliação usuário.
 		public async Task<AvaliacaoResponse> EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
 		{
 			var entity = await _repository.ObterPorIdAsync(id);

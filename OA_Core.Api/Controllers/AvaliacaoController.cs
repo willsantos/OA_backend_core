@@ -59,9 +59,18 @@ namespace OA_Core.Api.Controllers
 
 			return Ok(entity);
 		}
+
+		[HttpDelete("{id}", Name = "DeletarAvaliacao")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> DeletarAvaliacao([FromRoute] Guid id)
+		{
+			await _service.DeletarAvaliacaoAsync(id);
+
+			return NoContent();
+		}
+
 		//Excluir
 		//Buscar por Id
-		//Buscar todos
-		//Atualizar
+		//Buscar todos	
 	}
 }
