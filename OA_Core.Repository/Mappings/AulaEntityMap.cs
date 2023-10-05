@@ -25,6 +25,14 @@ namespace OA_Core.Repository.Mappings
 			builder.HasOne(a => a.curso)
 				.WithMany()
 				.HasForeignKey(a => a.CursoId);
+
+			//Implementa o TPH
+			builder.HasDiscriminator<int>("TipoAulaEnum")
+				.HasValue<AulaOnline>(0)
+				.HasValue<AulaVideo>(1)
+				.HasValue<AulaTexto>(2)
+				.HasValue<AulaDownload>(3);
+
 		}
 	}
 }

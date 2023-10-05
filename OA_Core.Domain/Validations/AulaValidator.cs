@@ -12,17 +12,9 @@ namespace OA_Core.Domain.Validations
     {
         public AulaValidator()
         {
-            RuleFor(u => u.Nome)
+            RuleFor(u => u.Titulo)
                .NotEmpty()
-               .WithMessage("Nome precisa ser preenchido");
-
-            RuleFor(u => u.Descricao)
-                .NotEmpty()
-                .WithMessage("Descricao precisa ser preenchida");
-
-            RuleFor(u => u.Caminho)
-                .NotEmpty()
-                .WithMessage("Caminho precisa ser preenchido");            
+               .WithMessage("Titulo precisa ser preenchido");        
         }
     }
 }

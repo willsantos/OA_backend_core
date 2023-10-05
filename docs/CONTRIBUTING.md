@@ -45,9 +45,11 @@ Assert
 
 ![comentarios_padrao_AAA](images/testes-comentarios-AAA.png)
 
+### Biblioteca de Mocks
+- Utilizar a biblioteca [NSubstitute](https://nsubstitute.github.io/) para Mocks
 ### Utilizar várias condições de testes
 
 - Com [Theory]
-- Com Autofixture + Bogus
+- Com Autofixture e/ou Bogus
 
 ![Utilize o Theory](images/testes-theory.png)

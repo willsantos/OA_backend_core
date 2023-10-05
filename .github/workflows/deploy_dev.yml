@@ -13,8 +13,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
       - name: Install dotnet-ef
         run: dotnet tool install --global dotnet-ef
       - name: Restore with dotnet-ef
@@ -23,4 +21,7 @@ jobs:
           . ~/.bashrc
           dotnet tool restore
       - name: Apply migrations with dotnet-ef-migrations
-        run: dotnet ef database update --verbose --project ./OA_CORE.Repository/OA_Core.Repository.csproj --startup-project ./OA_CORE.Api/OA_Core.Api.csproj --context CoreDbContext --connection ${{secrets.CONNECTION_STRING}}
+        run: dotnet ef database update --verbose -p OA_Core.Repository/OA_Core.Repository.csproj -s OA_Core.Api/OA_Core.Api.csproj -c CoreDbContext
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          AppConfig__ConnectionString: ${{secrets.CONNECTION_STRING}}

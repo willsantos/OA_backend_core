@@ -40,7 +40,8 @@ builder.Services.AddSingleton(appConfig);
 
 builder.Services.AddDbContext<CoreDbContext>(options =>
 {
-    options.UseMySql(appConfig.ConnectionString, ServerVersion.AutoDetect(appConfig.ConnectionString));
+    options.UseMySql(appConfig.ConnectionString, ServerVersion.AutoDetect(appConfig.ConnectionString),
+		mysqlOptions => mysqlOptions.EnableRetryOnFailure());
 });
 
 #endregion

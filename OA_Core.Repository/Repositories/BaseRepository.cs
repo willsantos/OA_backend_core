@@ -26,6 +26,12 @@ namespace OA_Core.Repository.Repositories
 			await _coreDbContext.SaveChangesAsync();
 		}
 
+		public async Task EditarVariosAsync(IEnumerable<T> itens)
+		{
+			_coreDbContext.Set<T>().UpdateRange(itens);
+			await _coreDbContext.SaveChangesAsync();
+		}
+
 		public async Task<T> ObterAsync(Expression<Func<T, bool>> expression)
 		{
 			return await _coreDbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(expression);
