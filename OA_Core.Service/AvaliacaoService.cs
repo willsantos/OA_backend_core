@@ -81,6 +81,13 @@ namespace OA_Core.Service
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao inválida ou não existente");
 			if (await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == entity.Id) is not null)
 				throw new InformacaoException(StatusException.Conflito, $"Essa avaliacao nao pode ser editada");
+
+			if (!entity.Valid)
+			{
+				_notificador.Handle(entity.ValidationResult);
+				throw new InformacaoException(StatusException.FormatoIncorreto, $"AvaliacaoUsuario inválida");
+
+			}
 			entity.Ativa = entidadeMapeada.Ativa;
 			entity.Nome = entidadeMapeada.Nome;
 			entity.Tipo = entidadeMapeada.Tipo;
