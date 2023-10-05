@@ -61,11 +61,15 @@ namespace OA_Core.Service
 		//Caso já exista o relacionamento, ela só pode ser desativada.
 		public async Task DeletarAvaliacaoAsync(Guid id)
 		{
-			if (await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == id) is not null)
-				throw new InformacaoException(StatusException.Conflito, $"Essa avaliacao nao pode ser excluida");
 			var entity = await _repository.ObterPorIdAsync(id);
-			if(entity is null)
+			if (entity is null)
 				throw new InformacaoException(StatusException.FormatoIncorreto, $"Essa avaliacao não existe ou formato está incorreto");
+			if (await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == id) is not null)
+			{
+				entity.DataDelecao = DateTime.Now;
+				await _repository.EditarAsync(entity);
+			}
+			else
 			await _repository.RemoverAsync(entity);
 		}
 

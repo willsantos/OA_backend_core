@@ -67,9 +67,7 @@ namespace OA_Core.Api.Controllers
 			await _service.DeletarAvaliacaoAsync(id);
 
 			return NoContent();
-		}
-
-		//Excluir
+		}	
 		//Buscar por Id
 		//Buscar todos	
 	}
