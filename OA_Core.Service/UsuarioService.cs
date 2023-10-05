@@ -9,8 +9,6 @@ using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 using OA_Core.Domain.Shared;
-using Serilog;
-using Serilog.Events;
 
 namespace OA_Core.Service
 {
