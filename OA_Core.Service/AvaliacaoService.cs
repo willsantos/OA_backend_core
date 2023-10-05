@@ -56,9 +56,7 @@ namespace OA_Core.Service
 			entity.Ativa = ativa;			
 			await _repository.EditarAsync(entity);
 		}
-		//A avaliação só pode ser deletada se não tiver nenhum relacionamento com AvaliacaoUsuario.
-		//Não é softdelete, nesse caso é delete mesmo.
-		//Caso já exista o relacionamento, ela só pode ser desativada.
+		
 		public async Task DeletarAvaliacaoAsync(Guid id)
 		{
 			var entity = await _repository.ObterPorIdAsync(id);
@@ -131,9 +129,16 @@ namespace OA_Core.Service
 			await _avaliacaoUsuarioRepository.AdicionarAsync(entity);
 		}
 
-		public Task<AvaliacaoResponse> ObterAvaliacaoPorIdAsync(Guid id)
+		public async Task<AvaliacaoResponse> ObterAvaliacaoPorIdAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var entity = await _repository.ObterPorIdAsync(id);
+			if(entity is null)
+			{
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {id} inválido ou não existente");
+			}
+			var entityMapeada = _mapper.Map<AvaliacaoResponse>(entity);
+
+			return entityMapeada;
 		}
 
 		public Task<IEnumerable<AvaliacaoResponse>> ObterTodasAvaliacoesAsync(int page, int rows)

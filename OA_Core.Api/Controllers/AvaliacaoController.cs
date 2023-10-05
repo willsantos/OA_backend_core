@@ -67,8 +67,17 @@ namespace OA_Core.Api.Controllers
 			await _service.DeletarAvaliacaoAsync(id);
 
 			return NoContent();
-		}	
-		//Buscar por Id
+		}
+
+		[HttpGet("{id}", Name = "ObterAvaliacaoPorId")]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<AvaliacaoResponse>> ObterAvaliacaoPorId([FromRoute] Guid id)
+		{
+			var response = await _service.ObterAvaliacaoPorIdAsync(id);
+
+			return Ok(response);
+		}
+		
 		//Buscar todos	
 	}
 }
