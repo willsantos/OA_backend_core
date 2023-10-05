@@ -1,5 +1,6 @@
 ﻿using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Contracts.Response;
+using OA_Core.Domain.Entities;
 
 namespace OA_Core.Domain.Interfaces.Service
 {
@@ -7,7 +8,7 @@ namespace OA_Core.Domain.Interfaces.Service
 	{
 		Task<Guid> CadastrarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest);
 		Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest);
-		Task EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest);
+		Task<AvaliacaoResponse> EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest);
 		Task AtivivarDesativarAvaliacaoAsync(Guid id, bool ativa);
 		Task EncerrarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest);
 		Task DeletarAvaliacaoAsync(Guid id);

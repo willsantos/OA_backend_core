@@ -23,7 +23,7 @@ namespace OA_Core.Domain.Entities
 			DataEntrega = dataEntrega;
 			AulaId = aulaId;
 			Validate(this, new AvaliacaoValidator());
-		}
+		}		
 		public Avaliacao(bool ativa) 
 		{
 			Ativa = ativa;

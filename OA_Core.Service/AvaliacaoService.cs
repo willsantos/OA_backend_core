@@ -8,6 +8,7 @@ using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography.X509Certificates;
 
 namespace OA_Core.Service
 {
@@ -45,13 +46,7 @@ namespace OA_Core.Service
 			await _repository.AdicionarAsync(entity);
 			return entity.Id;
 		}
-//		Cenário: Ativar ou desativar uma avaliação pelo id
-//Dado que eu quero ativar ou desativar uma avaliação específica
-//Quando eu faço uma requisição PATCH para a rota /avaliacoes/:id
-//E eu informo o id da avaliação como parâmetro
-//E eu envio o status(ativo ou inativo) da avaliação no corpo da requisição
-//Então eu recebo um status 200 (OK)
-//E eu vejo a avaliação com o status alterado no corpo da resposta
+
 		public async Task AtivivarDesativarAvaliacaoAsync(Guid id, bool ativa)
 		{
 			var entity = await _repository.ObterPorIdAsync(id);
@@ -71,12 +66,30 @@ namespace OA_Core.Service
 
 		//A alteração também é permitida se não existir nenhum relacionamento com AvaliacaoUsuario,
 		//depois que existe o relacionamento não pode mais.
-		public Task EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
+		//usar find.Id para setar id já existente e não criar um novo
+		//Vc pode editar todos os campos, desde que não tenha nenhum relacionamento com o Avaliação usuário.
+		public async Task<AvaliacaoResponse> EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
 		{
-			throw new NotImplementedException();
+			var entity = await _repository.ObterPorIdAsync(id);
+			var entidadeMapeada = _mapper.Map<Avaliacao>(avaliacaoRequest);
+			if(entity is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao inválida ou não existente");
+			if (await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == entity.Id) is not null)
+				throw new InformacaoException(StatusException.Conflito, $"Essa avaliacao nao pode ser editada");
+			entity.Ativa = entidadeMapeada.Ativa;
+			entity.Nome = entidadeMapeada.Nome;
+			entity.Tipo = entidadeMapeada.Tipo;
+			entity.NotaMaxima = entidadeMapeada.NotaMaxima;
+			entity.NotaMinima = entidadeMapeada.NotaMinima;
+			entity.TotalQuestoes = entidadeMapeada.TotalQuestoes;
+			entity.DataEntrega = entidadeMapeada.DataEntrega;
+			entity.AulaId = entidadeMapeada.AulaId;
+			entity.DataAlteracao = DateTime.Now;
+		
+			await _repository.EditarAsync(entity);
+			return _mapper.Map<AvaliacaoResponse>(entity);
 		}
-
-		//O campo Fim deve ser preenchido ao encerrar a avaliação, com a data e hora atual.
+		
 		public async Task EncerrarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
 			var entity = await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == avaliacaoUsuarioRequest.AvaliacaoId && a.UsuarioId == avaliacaoUsuarioRequest.UsuarioId);

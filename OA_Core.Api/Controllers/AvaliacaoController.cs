@@ -41,7 +41,7 @@ namespace OA_Core.Api.Controllers
 			return NoContent();
 		}
 
-		[HttpPatch("AtivarDesativar {id}", Name = "AtivarDesativarAvaliacao")]
+		[HttpPatch("{id}/AtivarDesativar", Name = "AtivarDesativarAvaliacao")]
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> AtivarDesativarAvaliacao([FromBody] bool avaliar, [FromRoute]Guid id)
 		{
@@ -49,5 +49,10 @@ namespace OA_Core.Api.Controllers
 
 			return NoContent();
 		}
+
+		//Excluir
+		//Buscar por Id
+		//Buscar todos
+		//Atualizar
 	}
 }
