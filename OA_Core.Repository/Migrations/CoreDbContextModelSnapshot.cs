@@ -95,10 +95,6 @@ namespace OA_Core.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Caminho")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<Guid>("CursoId")
                         .HasColumnType("char(36)");
 
@@ -111,21 +107,19 @@ namespace OA_Core.Repository.Migrations
                     b.Property<DateTime?>("DataDelecao")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("Duracao")
                         .HasColumnType("int");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("Ordem")
                         .HasColumnType("int");
 
-                    b.Property<string>("Tipo")
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoAulaEnum")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -134,6 +128,10 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("CursoId");
 
                     b.ToTable("Aula", (string)null);
+
+                    b.HasDiscriminator<int>("TipoAulaEnum");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
@@ -335,6 +333,68 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("UsuarioCurso", (string)null);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaDownload", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaOnline", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<DateTime>("HorarioFim")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Aula", null, t =>
+                        {
+                            t.Property("Url")
+                                .HasColumnName("AulaOnline_Url");
+                        });
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaTexto", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Conteudo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaVideo", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Aula", null, t =>
+                        {
+                            t.Property("Url")
+                                .HasColumnName("AulaVideo_Url");
+                        });
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Aluno", b =>
