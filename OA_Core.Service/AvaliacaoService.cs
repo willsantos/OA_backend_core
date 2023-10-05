@@ -14,12 +14,14 @@ namespace OA_Core.Service
 	{
 		private readonly IAulaRepository _aulaRepository;
 		private readonly IAvaliacaoRepository _repository;
+		private  readonly IUsuarioRepository _usuarioRepository;
 		private readonly IAvaliacaoUsuarioRepository _avaliacaoUsuarioRepository;
 		private readonly INotificador _notificador;
 		private readonly IMapper _mapper;
 
-		public AvaliacaoService(IAvaliacaoRepository repository, INotificador notificador, IMapper mapper, IAulaRepository aulaRepository, IAvaliacaoUsuarioRepository avaliacaoUsuarioRepository)
+		public AvaliacaoService(IAvaliacaoRepository repository, IUsuarioRepository usuarioRepository, INotificador notificador, IMapper mapper, IAulaRepository aulaRepository, IAvaliacaoUsuarioRepository avaliacaoUsuarioRepository)
 		{
+			_usuarioRepository = usuarioRepository;
 			_avaliacaoUsuarioRepository = avaliacaoUsuarioRepository;
 			_repository = repository;
 			_notificador = notificador;
@@ -49,27 +51,39 @@ namespace OA_Core.Service
 		}
 		//A avaliação só pode ser deletada se não tiver nenhum relacionamento com AvaliacaoUsuario.
 		//Não é softdelete, nesse caso é delete mesmo.
+		//Caso já exista o relacionamento, ela só pode ser desativada.
 		public Task DeletarAvaliacaoAsync(Guid id)
 		{
 			throw new NotImplementedException();
 		}
 
+		//A alteração também é permitida se não existir nenhum relacionamento com AvaliacaoUsuario,
+		//depois que existe o relacionamento não pode mais.
 		public Task EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task EncerrarAvaliacaoAsync(Guid id)
+		//O campo Fim deve ser preenchido ao encerrar a avaliação, com a data e hora atual.
+		public async Task EncerrarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
-			throw new NotImplementedException();
+			var entity = await _avaliacaoUsuarioRepository.ObterAsync(a => a.AvaliacaoId == avaliacaoUsuarioRequest.AvaliacaoId && a.UsuarioId == avaliacaoUsuarioRequest.UsuarioId);
+			if (entity is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao inválida ou não existente");			
+
+			entity.Fim = DateTime.Now;
+			await _avaliacaoUsuarioRepository.EditarAsync(entity);
 		}
 
 		public async Task IniciarAvaliacaoAsync(AvaliacaoUsuarioRequest avaliacaoUsuarioRequest)
 		{
-			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoUsuarioRequest);
-			//pesquisar usuario pra ver se existe e só assim permitir cadastro
+			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoUsuarioRequest);			
 			if (await _repository.ObterPorIdAsync(avaliacaoUsuarioRequest.AvaliacaoId) is null)
 				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {avaliacaoUsuarioRequest.AvaliacaoId} inválida ou não existente");
+			
+			if (await _usuarioRepository.ObterPorIdAsync(avaliacaoUsuarioRequest.UsuarioId) is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Usuario {avaliacaoUsuarioRequest.UsuarioId} inválido ou não existente");
+			
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);

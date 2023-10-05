@@ -31,5 +31,13 @@ namespace OA_Core.Api.Controllers
 
 			return NoContent();
 		}
+		[HttpPatch("Encerrar", Name = "EncerrarAvaliacaoUsuario")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> EncerrarAvaliacaoUsuario([FromBody] AvaliacaoUsuarioRequest request)
+		{
+			await _service.EncerrarAvaliacaoAsync(request);
+
+			return NoContent();
+		}
 	}
 }
