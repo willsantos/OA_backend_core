@@ -131,14 +131,10 @@ namespace OA_Core.Service
 
 		public async Task<AvaliacaoResponse> ObterAvaliacaoPorIdAsync(Guid id)
 		{
-			var entity = await _repository.ObterPorIdAsync(id);
-			if(entity is null)
-			{
-				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {id} inválido ou não existente");
-			}
-			var entityMapeada = _mapper.Map<AvaliacaoResponse>(entity);
-
-			return entityMapeada;
+			var entity = await _repository.ObterPorIdAsync(id) ?? 
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao {id} inválido ou não existente");		
+			
+			return _mapper.Map<AvaliacaoResponse>(entity); 
 		}
 
 		public Task<IEnumerable<AvaliacaoResponse>> ObterTodasAvaliacoesAsync(int page, int rows)
