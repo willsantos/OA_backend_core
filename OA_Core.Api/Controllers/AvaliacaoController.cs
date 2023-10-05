@@ -77,7 +77,15 @@ namespace OA_Core.Api.Controllers
 
 			return Ok(response);
 		}
-		
-		//Buscar todos	
+
+		[HttpGet]
+		[ProducesResponseType(200)]
+		public async Task<ActionResult<PaginationResponse<AvaliacaoResponse>>> ObterTodasAvaliacoes([FromQuery] int page = 0, [FromQuery] int rows = 25)
+		{
+			var listResponse = await _service.ObterTodasAvaliacoesAsync(page, rows);
+			var paginationResponse = new PaginationResponse<AvaliacaoResponse>(page, rows, listResponse);
+
+			return Ok(paginationResponse);
+		}	
 	}
 }

@@ -137,9 +137,11 @@ namespace OA_Core.Service
 			return _mapper.Map<AvaliacaoResponse>(entity); 
 		}
 
-		public Task<IEnumerable<AvaliacaoResponse>> ObterTodasAvaliacoesAsync(int page, int rows)
+		public async Task<IEnumerable<AvaliacaoResponse>> ObterTodasAvaliacoesAsync(int page, int rows)
 		{
-			throw new NotImplementedException();
+			var listEntity = await _repository.ObterTodosAsync(page, rows);
+
+			return _mapper.Map<IEnumerable<AvaliacaoResponse>>(listEntity);
 		}
 	}
 }
