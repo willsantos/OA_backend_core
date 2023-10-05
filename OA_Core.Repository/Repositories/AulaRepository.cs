@@ -7,6 +7,7 @@ namespace OA_Core.Repository.Repositories
 {
 	public class AulaRepository : BaseRepository<Aula>, IAulaRepository
 	{
+
 		public AulaRepository(CoreDbContext coreDbContext) : base(coreDbContext)
 		{
 		}
