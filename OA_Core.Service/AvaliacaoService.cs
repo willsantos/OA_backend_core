@@ -7,6 +7,7 @@ using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Domain.Interfaces.Service;
+using System.Runtime.Intrinsics.X86;
 
 namespace OA_Core.Service
 {
@@ -44,10 +45,21 @@ namespace OA_Core.Service
 			await _repository.AdicionarAsync(entity);
 			return entity.Id;
 		}
-		public Task AtvivarDesativarAvaliacaoAsync(Guid id)
+//		Cenário: Ativar ou desativar uma avaliação pelo id
+//Dado que eu quero ativar ou desativar uma avaliação específica
+//Quando eu faço uma requisição PATCH para a rota /avaliacoes/:id
+//E eu informo o id da avaliação como parâmetro
+//E eu envio o status(ativo ou inativo) da avaliação no corpo da requisição
+//Então eu recebo um status 200 (OK)
+//E eu vejo a avaliação com o status alterado no corpo da resposta
+		public async Task AtivivarDesativarAvaliacaoAsync(Guid id, bool ativa)
 		{
+			var entity = await _repository.ObterPorIdAsync(id);
+			if (entity is null)
+				throw new InformacaoException(StatusException.NaoEncontrado, $"Avaliacao inválida ou não existente");
 
-			throw new NotImplementedException();
+			entity.Ativa = ativa;			
+			await _repository.EditarAsync(entity);
 		}
 		//A avaliação só pode ser deletada se não tiver nenhum relacionamento com AvaliacaoUsuario.
 		//Não é softdelete, nesse caso é delete mesmo.

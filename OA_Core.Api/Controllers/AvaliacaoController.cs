@@ -31,11 +31,21 @@ namespace OA_Core.Api.Controllers
 
 			return NoContent();
 		}
+
 		[HttpPatch("Encerrar", Name = "EncerrarAvaliacaoUsuario")]
 		[ProducesResponseType(204)]
 		public async Task<ActionResult> EncerrarAvaliacaoUsuario([FromBody] AvaliacaoUsuarioRequest request)
 		{
 			await _service.EncerrarAvaliacaoAsync(request);
+
+			return NoContent();
+		}
+
+		[HttpPatch("AtivarDesativar {id}", Name = "AtivarDesativarAvaliacao")]
+		[ProducesResponseType(204)]
+		public async Task<ActionResult> AtivarDesativarAvaliacao([FromBody] bool avaliar, [FromRoute]Guid id)
+		{
+			await _service.AtivivarDesativarAvaliacaoAsync(id, avaliar);
 
 			return NoContent();
 		}

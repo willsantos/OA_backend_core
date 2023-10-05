@@ -24,7 +24,10 @@ namespace OA_Core.Domain.Entities
 			AulaId = aulaId;
 			Validate(this, new AvaliacaoValidator());
 		}
-
+		public Avaliacao(bool ativa) 
+		{
+			Ativa = ativa;
+		}
 		public string Nome { get; set; }
         public string? Descricao { get; set; }
         public AvaliacaoTipoEnum Tipo { get; set; }
