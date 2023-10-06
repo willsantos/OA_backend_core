@@ -146,7 +146,32 @@ namespace OA_Core.Tests.Controller
 			response.Should().BeOfType<NoContentResult>();
 			(response as NoContentResult).StatusCode.Should().Be(StatusCodes.Status204NoContent);
 		}
-		//Deletar Avaliacao
+
+		[Fact(DisplayName = "Busca todos as avaliacoes")]
+		public async Task AvaliacaoController_BuscarTodosAvaliacoesAsync_DeveBuscarTodos()
+		{
+
+			//Arrange
+			var avaliacaoController = new AvaliacaoController(_avaliacaoSevice);
+
+			var entities = _fixture.Create<List<AvaliacaoResponse>>();
+
+			int page = 0;
+			int rows = 10;
+
+			//Act
+			_avaliacaoSevice.ObterTodasAvaliacoesAsync(page, rows).Returns(entities);
+
+			var controllerResult = await avaliacaoController.ObterTodasAvaliacoes(page, rows);
+
+			//Assert
+			controllerResult.Result.Should().BeOfType<OkObjectResult>();
+
+			var resultValue = (controllerResult.Result as OkObjectResult).Value as PaginationResponse<AvaliacaoResponse>;
+
+			resultValue.Resultado.Should().BeEquivalentTo(entities);
+		}
+
 		//Ativar DesativarAvaliacao
 		//Obter Todos
 	}
