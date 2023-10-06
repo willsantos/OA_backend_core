@@ -131,7 +131,21 @@ namespace OA_Core.Tests.Controller
 
 			resultValue.Should().BeEquivalentTo(entity);
 		}
-		//Obter AvaliacaoPorId
+
+		[Fact(DisplayName = "Deleta avaliacao")]
+		public async Task AvaliacaoController_DeleteAvaliacaoAsync_DeveDeletar()
+		{
+			//Arrange
+			var avaliacaoController = new AvaliacaoController(_avaliacaoSevice);
+			Guid id = Guid.NewGuid();
+			var response = await avaliacaoController.DeletarAvaliacao(id);
+
+			//Assert
+			await _avaliacaoSevice.Received().DeletarAvaliacaoAsync(id);
+
+			response.Should().BeOfType<NoContentResult>();
+			(response as NoContentResult).StatusCode.Should().Be(StatusCodes.Status204NoContent);
+		}
 		//Deletar Avaliacao
 		//Ativar DesativarAvaliacao
 		//Obter Todos
