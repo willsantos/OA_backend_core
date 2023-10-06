@@ -53,7 +53,7 @@ namespace OA_Core.Api.Controllers
 
 		[HttpPut("{id}", Name = "EditarAvaliacao")]
 		[ProducesResponseType(204)]
-		public async Task<ActionResult<AvaliacaoResponse>> EditarAvaliacao([FromBody] AvaliacaoRequest request, [FromRoute] Guid id)
+		public async Task<ActionResult> EditarAvaliacao([FromBody] AvaliacaoRequest request, [FromRoute] Guid id)
 		{
 			var entity = await _service.EditarAvaliacaoAsync(id, request);
 

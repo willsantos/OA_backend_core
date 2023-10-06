@@ -65,7 +65,25 @@ namespace OA_Core.Tests.Controller
 
 
 			Assert.Equal(StatusCodes.Status204NoContent, createdAtRouteResult.StatusCode);	
+		}
 
+		[Fact(DisplayName = "Atualiza avaliar")]
+		public async Task AvaliacaoController_AtualizarAavaliacaoAsync_DeveAtualizar()
+		{
+			//Arrange
+			var avaliacaoController = new AvaliacaoController(_avaliacaoSevice);
+
+			var request = _fixture.Create<AvaliacaoRequest>();
+			Guid id = Guid.NewGuid();
+
+			//Act
+			var response = await avaliacaoController.EditarAvaliacao(request, id);
+
+			//Assert
+			await _avaliacaoSevice.Received().EditarAvaliacaoAsync(id, request);
+
+			var objectResult = Assert.IsType<OkObjectResult>(response);
+			Assert.Equal(StatusCodes.Status200OK, objectResult.StatusCode);
 		}
 	}
 }
