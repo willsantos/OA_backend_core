@@ -21,6 +21,8 @@ namespace OA_Core.Tests.Config
 				cfg.AddProfile(new Api.Profiles.CursoProfessorEntityToContractMap());
 				cfg.AddProfile(new Api.Profiles.AssinaturaEntityToContractMap());
 				cfg.AddProfile(new Api.Profiles.UsuarioCursoEntityToContractMap());
+				cfg.AddProfile(new Api.Profiles.AvaliacaoEntityToContractMap());
+				cfg.AddProfile(new Api.Profiles.AvaliacaoUsuarioToContractMap());
 
 			});
 
