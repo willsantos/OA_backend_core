@@ -4,6 +4,7 @@ using FluentAssertions;
 using NSubstitute;
 using OA_Core.Domain.Contracts.Request;
 using OA_Core.Domain.Entities;
+using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
 using OA_Core.Domain.Interfaces.Repository;
 using OA_Core.Service;
@@ -43,6 +44,42 @@ namespace OA_Core.Tests.Service
 
 			//Assert
 			result.Should().NotBe(Guid.Empty);
+		}
+
+		[Fact(DisplayName = "Cria uma Avaliacao inválida")]
+		public async Task AulaService_CriarAulaComCursoIdInvalido_DeveSerInvalido()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacaoRequest = _fixture.Create<AvaliacaoRequest>();
+
+			//Act
+			//Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => avaliacaoService.CadastrarAvaliacaoAsync(avaliacaoRequest));
+		}
+
+		[Fact(DisplayName = "Atualiza uma Avaliacao")]
+		public async Task AulaService_AtualizarAula_DeveAtualizar()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacaoRequest = _fixture.Create<AvaliacaoRequest>();
+			var avaliacao = _fixture.Create<Avaliacao>();
+
+			//Act
+			mockAvaliacaoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(avaliacao);
+			await avaliacaoService.EditarAvaliacaoAsync(avaliacao.Id, avaliacaoRequest);
+
+			//Assert
+			await mockAvaliacaoRepository.Received().EditarAsync(Arg.Is<Avaliacao>(c => c.Descricao == avaliacaoRequest.Descricao));
 		}
 	}
 }
