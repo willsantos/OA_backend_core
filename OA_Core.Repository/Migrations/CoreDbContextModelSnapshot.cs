@@ -49,7 +49,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Aluno");
+                    b.ToTable("Aluno", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Assinatura", b =>
@@ -86,7 +86,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Assinatura");
+                    b.ToTable("Assinatura", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Aula", b =>
@@ -127,7 +127,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.ToTable("Aula");
+                    b.ToTable("Aula", (string)null);
 
                     b.HasDiscriminator<int>("TipoAulaEnum");
 
@@ -178,7 +178,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("Curso");
+                    b.ToTable("Curso", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.CursoProfessor", b =>
@@ -211,7 +211,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("CursoProfessor");
+                    b.ToTable("CursoProfessor", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Professor", b =>
@@ -252,7 +252,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Professor");
+                    b.ToTable("Professor", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Usuario", b =>
@@ -298,7 +298,7 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.UsuarioCurso", b =>
@@ -332,7 +332,7 @@ namespace OA_Core.Repository.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("UsuarioCurso");
+                    b.ToTable("UsuarioCurso", (string)null);
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.AulaDownload", b =>
@@ -360,7 +360,7 @@ namespace OA_Core.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.ToTable("Aula", t =>
+                    b.ToTable("Aula", null, t =>
                         {
                             t.Property("Url")
                                 .HasColumnName("AulaOnline_Url");
@@ -388,7 +388,7 @@ namespace OA_Core.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.ToTable("Aula", t =>
+                    b.ToTable("Aula", null, t =>
                         {
                             t.Property("Url")
                                 .HasColumnName("AulaVideo_Url");

@@ -9,7 +9,14 @@ namespace OA_Core.Api.Filters
 {
     public class ExceptionFilter : ExceptionFilterAttribute
     {
-        public override Task OnExceptionAsync(ExceptionContext context)
+		private readonly ILogger<ExceptionFilter> _logger;
+
+		public ExceptionFilter(ILogger<ExceptionFilter> logger)
+		{
+			_logger = logger;
+		}
+
+		public override Task OnExceptionAsync(ExceptionContext context)
         {
             var response = new InformacaoResponse();
 			var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -22,7 +29,6 @@ namespace OA_Core.Api.Filters
 
 				if (environment != Environments.Production)
 					response.MensagemDebug = context.Exception.Message;
-				
 			} 
             else
             {
@@ -30,6 +36,7 @@ namespace OA_Core.Api.Filters
                 response.Mensagens = new List<string> { "Erro inesperado " };
 				if (environment != Environments.Production)
 					response.MensagemDebug = context.Exception.Message;
+				_logger.LogError(context.Exception, "Erro inesperado");
 			}
 
             context.Result = new ObjectResult(response)

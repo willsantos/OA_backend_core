@@ -16,7 +16,6 @@ namespace OA_Core.Service
 		private readonly IMapper _mapper;
 		private readonly IUsuarioRepository _repository;
 		private readonly INotificador _notificador;
-
 		public UsuarioService(IUsuarioRepository repository, INotificador notificador, IMapper mapper)
 		{
 			_mapper = mapper;
