@@ -67,6 +67,25 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(StatusCodes.Status204NoContent, createdAtRouteResult.StatusCode);	
 		}
 
+		[Fact(DisplayName = "Encerra uma avaliacao")]
+		public async Task AvaliacaoController_EncerrarAvaliacao_DeveEncerrarAvaliacaoUsuario()
+		{
+			var avaliacaoController = new AvaliacaoController(_avaliacaoSevice);
+
+			var avaliacaoRequest = _fixture.Create<AvaliacaoUsuarioRequest>();
+
+			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoRequest);
+
+			await _avaliacaoSevice.EncerrarAvaliacaoAsync(avaliacaoRequest);
+
+			var controllerResult = await avaliacaoController.EncerrarAvaliacaoUsuario(avaliacaoRequest);
+			var actionResult = Assert.IsType<NoContentResult>(controllerResult);
+			var createdAtRouteResult = Assert.IsType<NoContentResult>(actionResult);
+
+
+			Assert.Equal(StatusCodes.Status204NoContent, createdAtRouteResult.StatusCode);
+		}
+
 		[Fact(DisplayName = "Atualiza avaliar")]
 		public async Task AvaliacaoController_AtualizarAavaliacaoAsync_DeveAtualizar()
 		{
