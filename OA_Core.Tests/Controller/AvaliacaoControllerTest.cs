@@ -47,5 +47,25 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(entity.Id, createdAtRouteResult.Value);		
 			
 		}
+
+		[Fact(DisplayName = "Inicia uma avaliacao")]
+		public async Task AvaliacaoController_IniciaAvaliacao_DeveCriarAvaliacaoUsuario()
+		{
+			var avaliacaoController = new AvaliacaoController(_avaliacaoSevice);
+
+			var avaliacaoRequest = _fixture.Create<AvaliacaoUsuarioRequest>();
+
+			var entity = _mapper.Map<AvaliacaoUsuario>(avaliacaoRequest);
+
+			await _avaliacaoSevice.IniciarAvaliacaoAsync(avaliacaoRequest);
+
+			var controllerResult = await avaliacaoController.IniciarAvaliacaoUsuario(avaliacaoRequest);
+			var actionResult = Assert.IsType<NoContentResult>(controllerResult);
+			var createdAtRouteResult = Assert.IsType<NoContentResult>(actionResult);
+
+
+			Assert.Equal(StatusCodes.Status204NoContent, createdAtRouteResult.StatusCode);	
+
+		}
 	}
 }
