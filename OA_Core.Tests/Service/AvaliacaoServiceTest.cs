@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
 using OA_Core.Domain.Contracts.Request;
+using OA_Core.Domain.Contracts.Response;
 using OA_Core.Domain.Entities;
 using OA_Core.Domain.Exceptions;
 using OA_Core.Domain.Interfaces.Notifications;
@@ -97,6 +98,26 @@ namespace OA_Core.Tests.Service
 			//Act
 			//Assert
 			await Assert.ThrowsAsync<InformacaoException>(() => avaliacaoService.EditarAvaliacaoAsync(Guid.NewGuid(), avaliacaoRequest));
+		}
+
+		[Fact(DisplayName = "Obtém uma Avaliacao pelo Id")]
+		public async Task AvaliacaoService_ObterAvaliacaoPorId_DeveObterUm()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacao = _fixture.Create<Avaliacao>();
+			var avaliacaoResponse = _mapper.Map<AvaliacaoResponse>(avaliacao);
+
+			//Act
+			mockAvaliacaoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(avaliacao);
+			var result = await avaliacaoService.ObterAvaliacaoPorIdAsync(avaliacao.Id);
+
+			//Assert
+			result.Should().BeEquivalentTo(avaliacaoResponse);
 		}
 	}
 }
