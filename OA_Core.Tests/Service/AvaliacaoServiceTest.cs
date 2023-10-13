@@ -79,7 +79,7 @@ namespace OA_Core.Tests.Service
 			await avaliacaoService.EditarAvaliacaoAsync(avaliacao.Id, avaliacaoRequest);
 
 			//Assert
-			await mockAvaliacaoRepository.Received().EditarAsync(Arg.Is<Avaliacao>(c => c.Descricao == avaliacaoRequest.Descricao));
+			await mockAvaliacaoRepository.Received().EditarAsync(Arg.Is<Avaliacao>(c => c.AulaId == avaliacaoRequest.AulaId));
 		}
 	}
 }
