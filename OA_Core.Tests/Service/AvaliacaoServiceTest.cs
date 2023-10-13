@@ -81,5 +81,22 @@ namespace OA_Core.Tests.Service
 			//Assert
 			await mockAvaliacaoRepository.Received().EditarAsync(Arg.Is<Avaliacao>(c => c.AulaId == avaliacaoRequest.AulaId));
 		}
+
+		[Fact(DisplayName = "Atualiza uma AVALIACAO com Id inválido")]
+		public async Task AvaliacaoService_AtualizarAvaliacaoComIdInvalido_DeveSerInvalido()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacaoRequest = _fixture.Create<AvaliacaoRequest>();
+			
+
+			//Act
+			//Assert
+			await Assert.ThrowsAsync<InformacaoException>(() => avaliacaoService.EditarAvaliacaoAsync(Guid.NewGuid(), avaliacaoRequest));
+		}
 	}
 }
