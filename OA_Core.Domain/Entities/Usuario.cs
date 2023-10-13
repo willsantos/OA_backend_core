@@ -24,6 +24,6 @@ namespace OA_Core.Domain.Entities
         public string Endereco { get; set; }
 
 		public virtual ICollection<UsuarioCurso> UsuarioCursos { get; set; } = new List<UsuarioCurso>();
-
+		public virtual ICollection<UsuarioAula> UsuarioAulas { get; set; } = new List<UsuarioAula>();
 	}
 }

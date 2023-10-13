@@ -31,5 +31,7 @@ namespace OA_Core.Domain.Entities
         public TipoAula Tipo { get; set; }
         public Guid CursoId { get; set; }
 		public virtual Curso curso { get; set; }
-    }
+
+		public virtual ICollection<UsuarioAula> UsuarioAulas { get; set; } = new List<UsuarioAula>();
+	}
 }
