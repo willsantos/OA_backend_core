@@ -134,5 +134,24 @@ namespace OA_Core.Tests.Service
 			//Assert
 			await Assert.ThrowsAsync<InformacaoException>(() => avaliacaoService.ObterAvaliacaoPorIdAsync(Guid.NewGuid()));
 		}
+
+		[Fact(DisplayName = "Deleta uma Avaliacao Válida")]
+		public async Task AulaService_DeletaAula_DeveDeletar()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacao = _fixture.Create<Avaliacao>();
+
+			//Act
+			mockAvaliacaoRepository.ObterPorIdAsync(Arg.Any<Guid>()).Returns(avaliacao);
+			await avaliacaoService.DeletarAvaliacaoAsync(avaliacao.Id);
+
+			//Assert
+			await mockAvaliacaoRepository.Received().RemoverAsync(avaliacao);
+		}
 	}
 }
