@@ -168,5 +168,24 @@ namespace OA_Core.Tests.Service
 			//Assert
 			await Assert.ThrowsAsync<InformacaoException>(() => avaliacaoService.DeletarAvaliacaoAsync(Guid.NewGuid()));
 		}
+
+		[Fact(DisplayName = "Obtém todas as Avaliacoes")]
+		public async Task AvaliacaoService_ObterTodosAvaliacoes_DeveObter()
+		{
+			//Arrange
+			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();
+			var MockAulaRepository = Substitute.For<IAulaRepository>();
+			var MockUsuarioRepository = Substitute.For<IUsuarioRepository>();
+			var MockAvaliacaoUsuarioRepository = Substitute.For<IAvaliacaoUsuarioRepository>();
+			var avaliacaoService = new AvaliacaoService(mockAvaliacaoRepository, MockUsuarioRepository, _notifier, _mapper, MockAulaRepository, MockAvaliacaoUsuarioRepository);
+			var avaliacoes = _fixture.CreateMany<Avaliacao>(5);
+
+			//Act
+			mockAvaliacaoRepository.ObterTodosAsync(Arg.Any<int>(), Arg.Any<int>()).Returns(avaliacoes);
+			var result = await avaliacaoService.ObterTodasAvaliacoesAsync(1, 5);
+
+			//Assert
+			result.Should().HaveCount(5);
+		}
 	}
 }
