@@ -11,5 +11,6 @@ namespace OA_Core.Domain.Interfaces.Repository
 		Task AdicionarAsync(T item);
 		Task RemoverAsync(T item);
 		Task EditarAsync(T item);
+		Task EditarVariosAsync(IEnumerable<T> itens);
 	}
 }
