@@ -186,9 +186,6 @@ namespace OA_Core.Tests.Service
 
 			//Assert
 			result.Should().HaveCount(5);
-		}
-		// teste ativar
-		//teste encerrar
-		//teste iniciar
+		}	
 	}
 }
