@@ -35,8 +35,7 @@ namespace OA_Core.Service
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);
-				return Guid.Empty;
-
+				throw new InformacaoException(StatusException.FormatoIncorreto, $"Avaliacao inválida"); 
 			}
 
 			await _repository.AdicionarAsync(entity);
