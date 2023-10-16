@@ -61,12 +61,9 @@ namespace OA_Core.Service
 			{
 				entity.DataDelecao = DateTime.Now;
 				await _repository.EditarAsync(entity);
-			}
+			}				
 			else
-			{
 				await _repository.RemoverAsync(entity);
-			}
-			
 		}
 
 		public async Task<AvaliacaoResponse> EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
