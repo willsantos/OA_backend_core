@@ -63,7 +63,10 @@ namespace OA_Core.Service
 				await _repository.EditarAsync(entity);
 			}
 			else
-			await _repository.RemoverAsync(entity);
+			{
+				await _repository.RemoverAsync(entity);
+			}
+			
 		}
 
 		public async Task<AvaliacaoResponse> EditarAvaliacaoAsync(Guid id, AvaliacaoRequest avaliacaoRequest)
