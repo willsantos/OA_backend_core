@@ -9,7 +9,7 @@ namespace OA_Core.Domain.Entities
 		public Avaliacao(string nome, string? descricao, 
 						AvaliacaoTipoEnum tipo, double? notaMaxima, 
 						double? notaMinima, DateTime? tempo, int? totalQuestoes, 
-						bool ativa, DateTime? dataEntrega, Guid aulaId)
+						bool ativa, DateTime? dataEntrega)
 		{
 			Id = Guid.NewGuid();
 			Nome = nome;
@@ -20,8 +20,7 @@ namespace OA_Core.Domain.Entities
 			Tempo = tempo;
 			TotalQuestoes = totalQuestoes;
 			Ativa = ativa;
-			DataEntrega = dataEntrega;
-			AulaId = aulaId;
+			DataEntrega = dataEntrega;		
 			Validate(this, new AvaliacaoValidator());
 		}		
 		public Avaliacao(bool ativa) 
@@ -36,8 +35,6 @@ namespace OA_Core.Domain.Entities
 		public DateTime? Tempo { get; set; }
 		public int? TotalQuestoes { get; set; } 
 		public bool Ativa { get; set; }
-        public DateTime? DataEntrega { get; set; }
-        public Guid AulaId { get; set; }
-		public virtual Aula Aula { get; set; }
+        public DateTime? DataEntrega { get; set; }       
     }
 }

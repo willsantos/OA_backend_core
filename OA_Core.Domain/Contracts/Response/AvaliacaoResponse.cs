@@ -13,6 +13,5 @@ namespace OA_Core.Domain.Contracts.Response
 		public int TotalQuestoes { get; set; }
 		public bool Ativa { get; set; }
 		public DateTime DataEntrega { get; set; }
-		public Guid AulaId { get; set; }
 	}
 }

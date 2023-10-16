@@ -13,29 +13,25 @@ using System.Security.Cryptography.X509Certificates;
 namespace OA_Core.Service
 {
 	public class AvaliacaoService : IAvaliacaoService
-	{
-		private readonly IAulaRepository _aulaRepository;
+	{		
 		private readonly IAvaliacaoRepository _repository;
 		private  readonly IUsuarioRepository _usuarioRepository;
 		private readonly IAvaliacaoUsuarioRepository _avaliacaoUsuarioRepository;
 		private readonly INotificador _notificador;
 		private readonly IMapper _mapper;
 
-		public AvaliacaoService(IAvaliacaoRepository repository, IUsuarioRepository usuarioRepository, INotificador notificador, IMapper mapper, IAulaRepository aulaRepository, IAvaliacaoUsuarioRepository avaliacaoUsuarioRepository)
+		public AvaliacaoService(IAvaliacaoRepository repository, IUsuarioRepository usuarioRepository, INotificador notificador, IMapper mapper, IAvaliacaoUsuarioRepository avaliacaoUsuarioRepository)
 		{
 			_usuarioRepository = usuarioRepository;
 			_avaliacaoUsuarioRepository = avaliacaoUsuarioRepository;
 			_repository = repository;
 			_notificador = notificador;
-			_mapper = mapper;
-			_aulaRepository = aulaRepository;			
+			_mapper = mapper;				
 		}
 
 		public async Task<Guid> CadastrarAvaliacaoAsync(AvaliacaoRequest avaliacaoRequest)
 		{
-			var entity = _mapper.Map<Avaliacao>(avaliacaoRequest);
-			if (await _aulaRepository.ObterPorIdAsync(avaliacaoRequest.AulaId) is null)
-				throw new InformacaoException(StatusException.NaoEncontrado, $"AulaId {avaliacaoRequest.AulaId} inválida ou não existente");
+			var entity = _mapper.Map<Avaliacao>(avaliacaoRequest);			
 			if (!entity.Valid)
 			{
 				_notificador.Handle(entity.ValidationResult);
@@ -92,8 +88,7 @@ namespace OA_Core.Service
 			entity.NotaMaxima = entidadeMapeada.NotaMaxima;
 			entity.NotaMinima = entidadeMapeada.NotaMinima;
 			entity.TotalQuestoes = entidadeMapeada.TotalQuestoes;
-			entity.DataEntrega = entidadeMapeada.DataEntrega;
-			entity.AulaId = entidadeMapeada.AulaId;
+			entity.DataEntrega = entidadeMapeada.DataEntrega;	
 			entity.DataAlteracao = DateTime.Now;
 			
 			await _repository.EditarAsync(entity);

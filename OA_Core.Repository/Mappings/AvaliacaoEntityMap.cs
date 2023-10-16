@@ -11,12 +11,7 @@ namespace OA_Core.Repository.Mappings
 			builder.Ignore(a => a.Valid).Ignore(a => a.ValidationResult);
 
 			//Filtro para não buscar entidades deletadas
-			builder.HasQueryFilter(c => c.DataDelecao == null);
-
-			//Mapeamento de relações
-			builder.HasOne(a => a.Aula)
-			.WithMany()
-			.HasForeignKey(a => a.AulaId);
+			builder.HasQueryFilter(c => c.DataDelecao == null);	
 
 		}
 	}
