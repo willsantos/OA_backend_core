@@ -47,7 +47,7 @@ namespace OA_Core.Tests.Service
 		}
 
 		[Fact(DisplayName = "Cria uma Avaliacao inválida")]
-		public async Task AulaService_CriarAulaComCursoIdInvalido_DeveSerInvalido()
+		public async Task AulaService_CriarAvaliacaoComNomeInvalido_DeveSerInvalido()
 		{
 			//Arrange
 			var mockAvaliacaoRepository = Substitute.For<IAvaliacaoRepository>();		

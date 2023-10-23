@@ -91,7 +91,7 @@ namespace OA_Core.Tests.Controller
 			Assert.Equal(StatusCodes.Status204NoContent, createdAtRouteResult.StatusCode);
 		}
 
-		[Fact(DisplayName = "Atualiza avaliar")]
+		[Fact(DisplayName = "Atualiza avaliacao")]
 		public async Task AvaliacaoController_AtualizarAavaliacaoAsync_DeveAtualizar()
 		{
 			//Arrange
@@ -172,7 +172,7 @@ namespace OA_Core.Tests.Controller
 			resultValue.Resultado.Should().BeEquivalentTo(entities);
 		}
 
-		[Fact(DisplayName = "AtivaEDesativa uma avaliacao")]
+		[Fact(DisplayName = "Ativa E Desativa uma avaliacao")]
 		public async Task AvaliacaoController_AtivarDesativarAvaliacao_DeveEncerrarAvaliacaoUsuario()
 		{
 			//Arrange
