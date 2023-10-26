@@ -11,8 +11,8 @@ using OA_Core.Repository.Context;
 namespace OA_Core.Repository.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20230926160257_RetirandoConfigDataDelecao")]
-    partial class RetirandoConfigDataDelecao
+    [Migration("20231016130945_CorrigindoCamposAvaliacao")]
+    partial class CorrigindoCamposAvaliacao
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,10 +98,6 @@ namespace OA_Core.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Caminho")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<Guid>("CursoId")
                         .HasColumnType("char(36)");
 
@@ -114,21 +110,19 @@ namespace OA_Core.Repository.Migrations
                     b.Property<DateTime?>("DataDelecao")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("Duracao")
                         .HasColumnType("int");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("Ordem")
                         .HasColumnType("int");
 
-                    b.Property<string>("Tipo")
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoAulaEnum")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -137,6 +131,85 @@ namespace OA_Core.Repository.Migrations
                     b.HasIndex("CursoId");
 
                     b.ToTable("Aula");
+
+                    b.HasDiscriminator<int>("TipoAulaEnum");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.Avaliacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Ativa")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataDelecao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DataEntrega")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<double?>("NotaMaxima")
+                        .HasColumnType("double");
+
+                    b.Property<double?>("NotaMinima")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime?>("Tempo")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalQuestoes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Avaliacao");
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AvaliacaoUsuario", b =>
+                {
+                    b.Property<Guid>("AvaliacaoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Aprovado")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("Fim")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<double?>("NotaObtida")
+                        .HasColumnType("double");
+
+                    b.HasKey("AvaliacaoId", "UsuarioId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("AvaliacaoUsuario");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
@@ -306,6 +379,102 @@ namespace OA_Core.Repository.Migrations
                     b.ToTable("Usuario");
                 });
 
+            modelBuilder.Entity("OA_Core.Domain.Entities.UsuarioCurso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CursoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Progresso")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CursoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("UsuarioCurso");
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaDownload", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaOnline", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<DateTime>("HorarioFim")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("HorarioInicio")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Aula", t =>
+                        {
+                            t.Property("Url")
+                                .HasColumnName("AulaOnline_Url");
+                        });
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaTexto", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Conteudo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AulaVideo", b =>
+                {
+                    b.HasBaseType("OA_Core.Domain.Entities.Aula");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.ToTable("Aula", t =>
+                        {
+                            t.Property("Url")
+                                .HasColumnName("AulaVideo_Url");
+                        });
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
             modelBuilder.Entity("OA_Core.Domain.Entities.Aluno", b =>
                 {
                     b.HasOne("OA_Core.Domain.Entities.Usuario", "usuario")
@@ -337,6 +506,25 @@ namespace OA_Core.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("curso");
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.AvaliacaoUsuario", b =>
+                {
+                    b.HasOne("OA_Core.Domain.Entities.Avaliacao", "Avaliacao")
+                        .WithMany()
+                        .HasForeignKey("AvaliacaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OA_Core.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Avaliacao");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
@@ -380,14 +568,40 @@ namespace OA_Core.Repository.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("OA_Core.Domain.Entities.UsuarioCurso", b =>
+                {
+                    b.HasOne("OA_Core.Domain.Entities.Curso", "Curso")
+                        .WithMany("UsuarioCursos")
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OA_Core.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("UsuarioCursos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("OA_Core.Domain.Entities.Curso", b =>
                 {
                     b.Navigation("CursoProfessores");
+
+                    b.Navigation("UsuarioCursos");
                 });
 
             modelBuilder.Entity("OA_Core.Domain.Entities.Professor", b =>
                 {
                     b.Navigation("CursoProfessores");
+                });
+
+            modelBuilder.Entity("OA_Core.Domain.Entities.Usuario", b =>
+                {
+                    b.Navigation("UsuarioCursos");
                 });
 #pragma warning restore 612, 618
         }

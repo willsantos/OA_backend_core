@@ -5,7 +5,7 @@
 namespace OA_Core.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class RetirandoConfigDataDelecao : Migration
+    public partial class AvaliacaoMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

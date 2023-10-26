@@ -14,6 +14,8 @@ namespace OA_Core.Repository.Context
 		public DbSet<Assinatura> Assinatura { get; set; }
 		public DbSet<CursoProfessor> CursoProfessor { get; set; }
 		public DbSet<UsuarioCurso> UsuarioCurso { get; set; }
+		public DbSet<Avaliacao> Avaliacao { get; set; }
+		public DbSet<AvaliacaoUsuario> AvaliacaoUsuario { get; set; }
 
 		public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
@@ -29,6 +31,8 @@ namespace OA_Core.Repository.Context
 			modelBuilder.Entity<CursoProfessor>(new CursoProfessorEntityMap().Configure);
 			modelBuilder.Entity<UsuarioCurso>(new UsuarioCursoEntityMap().Configure);
 			modelBuilder.Entity<Assinatura>(new AssinaturaEntityMap().Configure);
+			modelBuilder.Entity<Avaliacao>(new AvaliacaoEntityMap().Configure);
+			modelBuilder.Entity<AvaliacaoUsuario>(new AvaliacaoUsuarioEntityMap().Configure);
 		}
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
